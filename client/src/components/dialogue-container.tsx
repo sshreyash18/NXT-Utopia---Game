@@ -88,6 +88,7 @@ export default function DialogueContainer({ sceneData, currentScene }: DialogueC
   };
 
   const handleChoiceClick = async (choice: Choice) => {
+    console.log('handleChoiceClick called with:', choice, 'currentScene:', currentScene);
     setIsLoading(true);
     playTypingSound();
     
@@ -97,12 +98,17 @@ export default function DialogueContainer({ sceneData, currentScene }: DialogueC
     
     try {
       const staticScenes = ['intro', 'awaken'];
+      console.log('Static scenes check:', staticScenes.includes(currentScene));
       
       // For static scenes, just transition directly
       if (staticScenes.includes(currentScene)) {
+        console.log('Processing static scene transition...');
         await new Promise(resolve => setTimeout(resolve, 1500));
         const nextScene = getNextScene(currentScene);
+        console.log('Next scene determined:', nextScene);
+        console.log('Calling changeScene...');
         changeScene(nextScene);
+        console.log('changeScene called');
         return;
       }
       
@@ -238,7 +244,10 @@ export default function DialogueContainer({ sceneData, currentScene }: DialogueC
             {dynamicSceneData.choices.map((choice, index) => (
               <button
                 key={index}
-                onClick={() => handleChoiceClick(choice)}
+                onClick={() => {
+                  console.log('Button clicked for choice:', choice.text, 'in scene:', currentScene);
+                  handleChoiceClick(choice);
+                }}
                 className="w-full bg-gray-800/80 hover:bg-cyan-700/80 border border-cyan-500/50 hover:border-cyan-400 text-cyan-100 hover:text-white px-6 py-4 rounded-xl transition-all duration-300 text-left group"
               >
                 <span className="block font-medium">{choice.text}</span>
