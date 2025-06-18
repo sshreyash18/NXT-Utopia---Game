@@ -96,10 +96,20 @@ export default function DialogueContainer({ sceneData, currentScene }: DialogueC
     setPreviousChoices(newChoices);
     
     try {
+      const staticScenes = ['intro', 'awaken'];
+      
+      // For static scenes, just transition directly
+      if (staticScenes.includes(currentScene)) {
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        const nextScene = getNextScene(currentScene);
+        changeScene(nextScene);
+        return;
+      }
+      
+      // For dynamic scenes, use AI processing
       const userId = 1;
       const sessionId = `session-${Date.now()}`;
       
-      // Generate AI response for the choice
       const response = await apiRequest('POST', `/api/generate-dialogue/${currentScene}`, { 
         userChoice: choice.text,
         previousChoices: newChoices,
@@ -121,7 +131,7 @@ export default function DialogueContainer({ sceneData, currentScene }: DialogueC
         setBehaviorAnalysis(data.behaviorAnalysis);
       }
       
-      // Auto-transition to next scene based on game flow
+      // Auto-transition to next scene
       await new Promise(resolve => setTimeout(resolve, 2000));
       
       if (data.nextScene) {
@@ -133,6 +143,9 @@ export default function DialogueContainer({ sceneData, currentScene }: DialogueC
       
     } catch (error) {
       console.error('Failed to process choice:', error);
+      // Still transition on error for static scenes
+      const nextScene = getNextScene(currentScene);
+      changeScene(nextScene);
     } finally {
       stopTypingSound();
       setIsLoading(false);
