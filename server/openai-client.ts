@@ -1,6 +1,6 @@
 import OpenAI from "openai";
 
-// the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+// Azure OpenAI configuration for gpt-4o-mini deployment
 const openai = new OpenAI({
   apiKey: "8s05s492DMfOXU0u1gBPWfg9ElHXqZvqg4UuJ1yxxcWEcQXxPaInJQQJ99BDAC77bzfXJ3w3AAABACOGl1lM",
   baseURL: "https://shrutiaiinstance.openai.azure.com/openai/deployments/gpt-4o-mini",
