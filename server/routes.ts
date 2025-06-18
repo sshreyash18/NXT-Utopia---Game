@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertGameStateSchema, insertDialogueChoiceSchema } from "@shared/schema";
 import { z } from "zod";
+import { generateDialogue, generateFinalSummary } from "./openai-client";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Game state endpoints
