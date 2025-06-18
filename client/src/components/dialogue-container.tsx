@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useGameState } from "@/hooks/use-game-state";
 import { useAudio } from "@/hooks/use-audio";
 import { apiRequest } from "@/lib/queryClient";
+import EndingScene from "./ending-scene";
 
 interface Choice {
   text: string;
@@ -69,13 +70,9 @@ export default function DialogueContainer({ sceneData, currentScene }: DialogueC
     
     try {
       // Generate AI response for the choice
-      const response = await apiRequest({
-        url: `/api/generate-dialogue/${currentScene}`,
-        method: 'POST',
-        body: { 
-          userChoice: choice.text,
-          previousChoices: newChoices
-        }
+      const response = await apiRequest('POST', `/api/generate-dialogue/${currentScene}`, { 
+        userChoice: choice.text,
+        previousChoices: newChoices
       });
       
       // Auto-transition to next scene based on game flow
@@ -110,13 +107,9 @@ export default function DialogueContainer({ sceneData, currentScene }: DialogueC
     
     try {
       // Generate AI response for core puzzle
-      const response = await apiRequest({
-        url: `/api/generate-dialogue/core`,
-        method: 'POST',
-        body: { 
-          userChoice: puzzleInput,
-          previousChoices: [...previousChoices, puzzleInput]
-        }
+      const response = await apiRequest('POST', `/api/generate-dialogue/core`, { 
+        userChoice: puzzleInput,
+        previousChoices: [...previousChoices, puzzleInput]
       });
       
       await new Promise(resolve => setTimeout(resolve, 1500));
@@ -218,25 +211,13 @@ export default function DialogueContainer({ sceneData, currentScene }: DialogueC
 
         {/* Ending Scene */}
         {!isLoading && currentScene === 'end' && (
-          <div className="space-y-6 animate-slide-up text-center">
-            <div className="text-cyan-100 text-lg leading-relaxed">
-              {dynamicSceneData.dialogue}
-            </div>
-            <div className="border-t border-cyan-500/30 pt-6">
-              <p className="text-cyan-400 font-orbitron text-lg mb-4">
-                👁️‍🗨️ Built by AdaptNXT. We're not just tech. We're the future.
-              </p>
-              <button
-                onClick={() => {
-                  setPreviousChoices([]);
-                  changeScene('awaken');
-                }}
-                className="bg-cyan-600 hover:bg-cyan-500 text-white px-8 py-3 rounded-lg font-medium transition-all duration-300 animate-pulse-glow"
-              >
-                Restart Simulation
-              </button>
-            </div>
-          </div>
+          <EndingScene 
+            choices={previousChoices}
+            onRestart={() => {
+              setPreviousChoices([]);
+              changeScene('awaken');
+            }}
+          />
         )}
       </div>
 
