@@ -3,6 +3,7 @@ import { useGameState } from "@/hooks/use-game-state";
 import { useAudio } from "@/hooks/use-audio";
 import { apiRequest } from "@/lib/queryClient";
 import EndingScene from "./ending-scene";
+import GlitchEffects from "./glitch-effects";
 
 interface Choice {
   text: string;
@@ -27,6 +28,9 @@ export default function DialogueContainer({ sceneData, currentScene }: DialogueC
   const [puzzleInput, setPuzzleInput] = useState("");
   const [dynamicSceneData, setDynamicSceneData] = useState(sceneData);
   const [previousChoices, setPreviousChoices] = useState<string[]>([]);
+  const [glitchEffects, setGlitchEffects] = useState<any>(null);
+  const [agentLogs, setAgentLogs] = useState<any>(null);
+  const [behaviorAnalysis, setBehaviorAnalysis] = useState<any>(null);
   const { changeScene } = useGameState();
   const { playTypingSound, stopTypingSound } = useAudio();
 
@@ -44,7 +48,14 @@ export default function DialogueContainer({ sceneData, currentScene }: DialogueC
     playTypingSound();
     
     try {
-      const response = await apiRequest('POST', `/api/generate-dialogue/${currentScene}`, { previousChoices });
+      const userId = 1; 
+      const sessionId = `session-${Date.now()}`;
+      
+      const response = await apiRequest('POST', `/api/generate-dialogue/${currentScene}`, { 
+        previousChoices,
+        userId,
+        sessionId
+      });
       const data = await response.json();
       
       setDynamicSceneData(prev => ({
@@ -52,6 +63,20 @@ export default function DialogueContainer({ sceneData, currentScene }: DialogueC
         dialogue: data.dialogue || prev.dialogue,
         choices: data.choices || prev.choices
       }));
+
+      // Handle multi-agent system outputs
+      if (data.glitchEffects) {
+        setGlitchEffects(data.glitchEffects);
+      }
+      
+      if (data.logs) {
+        setAgentLogs(data.logs);
+      }
+      
+      if (data.behaviorAnalysis) {
+        setBehaviorAnalysis(data.behaviorAnalysis);
+      }
+      
     } catch (error) {
       console.error('Failed to load AI content:', error);
     } finally {
