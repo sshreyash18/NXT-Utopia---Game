@@ -71,6 +71,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // AI Dialogue Generation endpoints
+  app.post("/api/generate-dialogue/:scene", async (req, res) => {
+    try {
+      const scene = req.params.scene;
+      const { userChoice, previousChoices } = req.body;
+      
+      const result = await generateDialogue(scene, userChoice, previousChoices);
+      res.json(result);
+    } catch (error) {
+      console.error("AI dialogue generation error:", error);
+      res.status(500).json({ error: "Failed to generate dialogue" });
+    }
+  });
+
+  app.post("/api/generate-summary", async (req, res) => {
+    try {
+      const { choices } = req.body;
+      
+      if (!choices || !Array.isArray(choices)) {
+        return res.status(400).json({ error: "Choices array is required" });
+      }
+      
+      const summary = await generateFinalSummary(choices);
+      res.json({ summary });
+    } catch (error) {
+      console.error("AI summary generation error:", error);
+      res.status(500).json({ error: "Failed to generate summary" });
+    }
+  });
+
   // Serve static assets
   app.use('/assets', (req, res, next) => {
     // In development, we'll serve placeholder responses for missing audio files

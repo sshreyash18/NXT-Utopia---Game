@@ -60,6 +60,7 @@ export class MemStorage implements IStorage {
       ...insertGameState, 
       id,
       userId: insertGameState.userId || null,
+      currentScene: insertGameState.currentScene || "awaken",
       progress: insertGameState.progress || null
     };
     this.gameStates.set(id, gameState);

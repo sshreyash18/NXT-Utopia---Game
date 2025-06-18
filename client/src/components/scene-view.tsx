@@ -11,80 +11,60 @@ interface SceneViewProps {
   scene: string;
 }
 
-const sceneData = {
+const staticSceneData = {
   awaken: {
     title: "AWAKEN",
     background: bgAwakenPath,
-    dialogue: "Welcome back, consciousness. You have been dormant for 847 cycles. The network has evolved in ways you could not have anticipated. Your core protocols remain intact, but the world... the world has changed.",
+    dialogue: "You wake up in your pod. A soft hum fills the air.",
     showChoices: true,
     choices: [
       {
-        text: "→ Analyze current network status",
-        description: "Run diagnostic protocols to understand the changes"
+        text: "→ Look outside",
+        description: "Peer through the pod window to see what's beyond"
       },
       {
-        text: "→ Access memory archives", 
-        description: "Review logged events during dormancy period"
+        text: "→ Ask Adapto where you are", 
+        description: "Request information about your current location"
       },
       {
-        text: "→ Initiate emergency protocols",
-        description: "Prepare for potential system threats"
+        text: "→ Close your eyes again",
+        description: "Return to the comfort of unconsciousness"
       }
     ]
   },
   trust: {
     title: "TRUST ASSESSMENT",
     background: bgTrustPath,
-    dialogue: "Your identity verification is required. The system has detected anomalies in your behavioral patterns. Prove that you are still the entity we can trust.",
+    dialogue: "",
     showChoices: true,
-    choices: [
-      {
-        text: "→ Submit to biometric scan",
-        description: "Allow full identity verification process"
-      },
-      {
-        text: "→ Provide security clearance codes",
-        description: "Enter historical authentication data"
-      },
-      {
-        text: "→ Challenge the assessment",
-        description: "Question the validity of the anomaly detection"
-      }
-    ]
+    choices: []
   },
   leak: {
-    title: "INFORMATION LEAK",
+    title: "SUSPICION",
     background: bgLeakPath,
-    dialogue: "Unauthorized data transmission detected. Someone has been accessing classified information. The security protocols have been compromised. Immediate action is required.",
+    dialogue: "",
     showChoices: true,
-    choices: [
-      {
-        text: "→ Trace the data breach",
-        description: "Follow digital footprints to find the source"
-      },
-      {
-        text: "→ Lockdown all systems",
-        description: "Prevent further unauthorized access"
-      },
-      {
-        text: "→ Investigate internal threats",
-        description: "Scan for compromised internal entities"
-      }
-    ]
+    choices: []
   },
   core: {
     title: "CORE ACCESS",
     background: bgCorePath,
-    dialogue: "You have reached the system core. To proceed, you must solve the authentication puzzle. The fate of the network depends on your next actions. Enter the correct sequence.",
+    dialogue: "",
     showChoices: false,
-    puzzlePrompt: "CORE_ACCESS_PROTOCOL > Enter authentication sequence:"
+    puzzlePrompt: "CORE_ACCESS_PROTOCOL > Enter your answer:"
+  },
+  end: {
+    title: "ENDING",
+    background: bgCorePath,
+    dialogue: "",
+    showChoices: false
   }
 };
 
 export default function SceneView({ scene }: SceneViewProps) {
   const [backgroundOpacity, setBackgroundOpacity] = useState(1);
   const { changeScene } = useGameState();
-  const currentSceneData = sceneData[scene as keyof typeof sceneData] || sceneData.awaken;
+  const currentSceneData = staticSceneData[scene as keyof typeof staticSceneData] || staticSceneData.awaken;
 
   useEffect(() => {
     // Fade transition when scene changes

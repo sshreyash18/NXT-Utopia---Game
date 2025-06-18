@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useGameState } from "@/hooks/use-game-state";
+import { useAudio } from "@/hooks/use-audio";
+import { apiRequest } from "@/lib/queryClient";
 
 interface Choice {
   text: string;
@@ -22,36 +24,111 @@ interface DialogueContainerProps {
 export default function DialogueContainer({ sceneData, currentScene }: DialogueContainerProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [puzzleInput, setPuzzleInput] = useState("");
+  const [dynamicSceneData, setDynamicSceneData] = useState(sceneData);
+  const [previousChoices, setPreviousChoices] = useState<string[]>([]);
   const { changeScene } = useGameState();
+  const { playTypingSound, stopTypingSound } = useAudio();
+
+  // Load AI-generated content for dynamic scenes
+  useEffect(() => {
+    if (currentScene !== 'awaken' && (!dynamicSceneData.dialogue || dynamicSceneData.choices?.length === 0)) {
+      loadAIContent();
+    }
+  }, [currentScene]);
+
+  const loadAIContent = async () => {
+    if (currentScene === 'awaken') return;
+    
+    setIsLoading(true);
+    playTypingSound();
+    
+    try {
+      const response = await apiRequest('POST', `/api/generate-dialogue/${currentScene}`, { previousChoices });
+      const data = await response.json();
+      
+      setDynamicSceneData(prev => ({
+        ...prev,
+        dialogue: data.dialogue || prev.dialogue,
+        choices: data.choices || prev.choices
+      }));
+    } catch (error) {
+      console.error('Failed to load AI content:', error);
+    } finally {
+      stopTypingSound();
+      setIsLoading(false);
+    }
+  };
 
   const handleChoiceClick = async (choice: Choice) => {
     setIsLoading(true);
+    playTypingSound();
     
-    // Simulate AI processing time
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    // Add choice to history
+    const newChoices = [...previousChoices, choice.text];
+    setPreviousChoices(newChoices);
     
-    setIsLoading(false);
-    
-    // For demo purposes, cycle through scenes
-    const scenes = ['awaken', 'trust', 'leak', 'core'];
-    const currentIndex = scenes.indexOf(currentScene);
-    const nextScene = scenes[(currentIndex + 1) % scenes.length];
-    changeScene(nextScene);
+    try {
+      // Generate AI response for the choice
+      const response = await apiRequest({
+        url: `/api/generate-dialogue/${currentScene}`,
+        method: 'POST',
+        body: { 
+          userChoice: choice.text,
+          previousChoices: newChoices
+        }
+      });
+      
+      // Auto-transition to next scene based on game flow
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      const nextScene = getNextScene(currentScene);
+      changeScene(nextScene);
+      
+    } catch (error) {
+      console.error('Failed to process choice:', error);
+    } finally {
+      stopTypingSound();
+      setIsLoading(false);
+    }
+  };
+
+  const getNextScene = (current: string): string => {
+    const sceneFlow: Record<string, string> = {
+      'awaken': 'trust',
+      'trust': 'leak', 
+      'leak': 'core',
+      'core': 'end'
+    };
+    return sceneFlow[current] || 'awaken';
   };
 
   const handlePuzzleSubmit = async () => {
     if (!puzzleInput.trim()) return;
     
     setIsLoading(true);
+    playTypingSound();
     
-    // Simulate puzzle validation
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    setIsLoading(false);
-    
-    // Reset for demo
-    setPuzzleInput("");
-    changeScene('awaken');
+    try {
+      // Generate AI response for core puzzle
+      const response = await apiRequest({
+        url: `/api/generate-dialogue/core`,
+        method: 'POST',
+        body: { 
+          userChoice: puzzleInput,
+          previousChoices: [...previousChoices, puzzleInput]
+        }
+      });
+      
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      changeScene('end');
+      
+    } catch (error) {
+      console.error('Failed to process puzzle:', error);
+    } finally {
+      stopTypingSound();
+      setIsLoading(false);
+      setPuzzleInput("");
+    }
   };
 
   const sceneIndex = ['awaken', 'trust', 'leak', 'core'].indexOf(currentScene) + 1;
@@ -90,15 +167,15 @@ export default function DialogueContainer({ sceneData, currentScene }: DialogueC
         {!isLoading && (
           <div className="dialogue-text animate-slide-up">
             <p className="text-gray-100 text-lg md:text-xl leading-relaxed font-medium">
-              {sceneData.dialogue}
+              {dynamicSceneData.dialogue}
             </p>
           </div>
         )}
 
         {/* Choice Buttons */}
-        {!isLoading && sceneData.showChoices && sceneData.choices && (
+        {!isLoading && dynamicSceneData.showChoices && dynamicSceneData.choices && dynamicSceneData.choices.length > 0 && (
           <div className="space-y-3 animate-slide-up" style={{ animationDelay: '0.3s' }}>
-            {sceneData.choices.map((choice, index) => (
+            {dynamicSceneData.choices.map((choice, index) => (
               <button
                 key={index}
                 onClick={() => handleChoiceClick(choice)}
@@ -114,18 +191,18 @@ export default function DialogueContainer({ sceneData, currentScene }: DialogueC
         )}
 
         {/* Core Puzzle Input */}
-        {!isLoading && !sceneData.showChoices && (
+        {!isLoading && !dynamicSceneData.showChoices && currentScene === 'core' && (
           <div className="space-y-4 animate-slide-up" style={{ animationDelay: '0.3s' }}>
             <div className="space-y-2">
               <label className="block text-cyan-300 font-medium font-mono text-sm">
-                {sceneData.puzzlePrompt}
+                {dynamicSceneData.puzzlePrompt}
               </label>
               <input
                 type="text"
                 value={puzzleInput}
-                onChange={(e) => setPuzzleInput(e.target.value.toUpperCase())}
+                onChange={(e) => setPuzzleInput(e.target.value)}
                 className="w-full bg-gray-900/80 border border-cyan-500/50 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 text-cyan-100 px-4 py-3 rounded-lg font-mono transition-all duration-300 outline-none"
-                placeholder="_ _ _ _ _ _ _ _"
+                placeholder="Type your answer here..."
               />
             </div>
             
@@ -134,8 +211,31 @@ export default function DialogueContainer({ sceneData, currentScene }: DialogueC
               disabled={!puzzleInput.trim()}
               className="w-full bg-cyan-600 hover:bg-cyan-500 disabled:bg-gray-600 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 animate-pulse-glow"
             >
-              SUBMIT SEQUENCE
+              SUBMIT ANSWER
             </button>
+          </div>
+        )}
+
+        {/* Ending Scene */}
+        {!isLoading && currentScene === 'end' && (
+          <div className="space-y-6 animate-slide-up text-center">
+            <div className="text-cyan-100 text-lg leading-relaxed">
+              {dynamicSceneData.dialogue}
+            </div>
+            <div className="border-t border-cyan-500/30 pt-6">
+              <p className="text-cyan-400 font-orbitron text-lg mb-4">
+                👁️‍🗨️ Built by AdaptNXT. We're not just tech. We're the future.
+              </p>
+              <button
+                onClick={() => {
+                  setPreviousChoices([]);
+                  changeScene('awaken');
+                }}
+                className="bg-cyan-600 hover:bg-cyan-500 text-white px-8 py-3 rounded-lg font-medium transition-all duration-300 animate-pulse-glow"
+              >
+                Restart Simulation
+              </button>
+            </div>
           </div>
         )}
       </div>
