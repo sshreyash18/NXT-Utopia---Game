@@ -14,20 +14,14 @@ export function useGameState() {
   });
 
   const changeScene = useCallback((newScene: string) => {
-    console.log('changeScene function called with:', newScene);
-    setGameState(prev => {
-      console.log('Setting game state from', prev.currentScene, 'to', newScene);
-      const newState = {
-        ...prev,
-        currentScene: newScene,
-        progress: {
-          ...prev.progress,
-          [prev.currentScene]: true
-        }
-      };
-      console.log('New game state:', newState);
-      return newState;
-    });
+    setGameState(prev => ({
+      ...prev,
+      currentScene: newScene,
+      progress: {
+        ...prev.progress,
+        [prev.currentScene]: true
+      }
+    }));
   }, []);
 
   const setLoading = useCallback((loading: boolean) => {
