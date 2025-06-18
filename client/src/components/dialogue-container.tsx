@@ -106,9 +106,7 @@ export default function DialogueContainer({ sceneData, currentScene }: DialogueC
     try {
       // Handle static scene transitions
       if (currentScene === 'intro') {
-        console.log('Intro scene choice clicked, calling changeScene');
         changeScene('awaken');
-        console.log('After changeScene call');
         setIsLoading(false);
         return;
       }

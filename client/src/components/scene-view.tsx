@@ -76,7 +76,6 @@ const staticSceneData = {
 
 export default function SceneView({ scene }: SceneViewProps) {
   const [backgroundOpacity, setBackgroundOpacity] = useState(1);
-  const { changeScene } = useGameState();
   const currentSceneData = staticSceneData[scene as keyof typeof staticSceneData] || staticSceneData.intro;
 
   useEffect(() => {
@@ -122,38 +121,7 @@ export default function SceneView({ scene }: SceneViewProps) {
         />
       </div>
 
-      {/* Debug Scene Navigation */}
-      <div className="fixed top-4 left-4 z-50 space-y-2">
-        <div className="bg-black/80 backdrop-blur-sm rounded-lg p-3 border border-cyan-500/30">
-          <h3 className="text-cyan-400 font-mono text-xs mb-2">SCENE_SELECT</h3>
-          <div className="grid grid-cols-2 gap-2">
-            <button 
-              onClick={() => changeScene('awaken')}
-              className="px-3 py-1 bg-gray-800 hover:bg-cyan-700 text-cyan-300 text-xs rounded transition-all duration-200"
-            >
-              AWAKEN
-            </button>
-            <button 
-              onClick={() => changeScene('trust')}
-              className="px-3 py-1 bg-gray-800 hover:bg-cyan-700 text-cyan-300 text-xs rounded transition-all duration-200"
-            >
-              TRUST
-            </button>
-            <button 
-              onClick={() => changeScene('leak')}
-              className="px-3 py-1 bg-gray-800 hover:bg-cyan-700 text-cyan-300 text-xs rounded transition-all duration-200"
-            >
-              LEAK
-            </button>
-            <button 
-              onClick={() => changeScene('core')}
-              className="px-3 py-1 bg-gray-800 hover:bg-cyan-700 text-cyan-300 text-xs rounded transition-all duration-200"
-            >
-              CORE
-            </button>
-          </div>
-        </div>
-      </div>
+
     </div>
   );
 }
