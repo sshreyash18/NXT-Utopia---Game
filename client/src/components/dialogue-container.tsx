@@ -34,6 +34,12 @@ export default function DialogueContainer({ sceneData, currentScene }: DialogueC
   const { changeScene } = useGameState();
   const { playTypingSound, stopTypingSound } = useAudio();
 
+  // Update scene data when the scene prop changes
+  useEffect(() => {
+    setDynamicSceneData(sceneData);
+    setIsLoading(false);
+  }, [sceneData, currentScene]);
+
   // Load AI-generated content for dynamic scenes
   useEffect(() => {
     const staticScenes = ['intro', 'awaken', 'end'];
@@ -102,8 +108,9 @@ export default function DialogueContainer({ sceneData, currentScene }: DialogueC
       
       // For static scenes, just transition directly
       if (staticScenes.includes(currentScene)) {
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        await new Promise(resolve => setTimeout(resolve, 1000));
         const nextScene = getNextScene(currentScene);
+        console.log('Transitioning from', currentScene, 'to', nextScene);
         changeScene(nextScene);
         return;
       }
@@ -197,7 +204,7 @@ export default function DialogueContainer({ sceneData, currentScene }: DialogueC
       {/* Scene Title */}
       <div className="text-center mb-6">
         <h1 className="font-orbitron text-cyan-400 text-lg font-bold tracking-[0.2em] mb-2">
-          {sceneData.title}
+          {dynamicSceneData.title}
         </h1>
         <h2 
           className="glitch-text font-orbitron text-4xl md:text-5xl font-black tracking-wider" 
@@ -205,6 +212,9 @@ export default function DialogueContainer({ sceneData, currentScene }: DialogueC
         >
           ADAPTO
         </h2>
+        <div className="text-xs text-yellow-400 mt-2">
+          Current: {currentScene} | Title: {dynamicSceneData.title} | Loading: {isLoading ? 'YES' : 'NO'}
+        </div>
       </div>
 
 
