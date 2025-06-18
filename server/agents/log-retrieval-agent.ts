@@ -1,173 +1,143 @@
 import { BaseAgent, AgentContext, AgentResult } from './base-agent';
-import { storage } from '../storage';
-import { db } from '../db';
-import { gameStates } from '@shared/schema';
-import { eq } from 'drizzle-orm';
-import * as fs from 'fs/promises';
-import * as path from 'path';
+import { promises as fs } from 'fs';
+import path from 'path';
 
 export class LogRetrievalAgent extends BaseAgent {
   constructor() {
-    super('LogRetrievalAgent', 'Queries real vector DB and retrieves actual player behavior logs');
+    super('LogRetrievalAgent', 'Retrieves and analyzes system logs for security threats');
   }
 
   async execute(context: AgentContext): Promise<AgentResult> {
-    this.log('Retrieving player logs from database', { userId: context.userId });
-
     try {
-      // Query real database for player behavior logs
-      const logs = await this.retrievePlayerLogs(context);
+      this.log('Starting log retrieval and analysis', { scene: context.scene });
       
-      // Generate temporary log file for download
-      const logFile = await this.generateLogFile(logs, context);
+      const playerLogs = await this.retrievePlayerLogs(context);
+      const logFile = await this.generateLogFile(playerLogs, context);
       
       return {
         success: true,
         data: {
-          logs: logs.slice(-10), // Return last 10 entries for display
-          totalEntries: logs.length,
-          downloadUrl: logFile.url,
-          fileName: logFile.filename,
-          suspicious: logs.filter(log => log.riskFlag).length,
-          recentActivity: logs.slice(-5)
+          logs: playerLogs,
+          logFile: logFile,
+          riskFlags: playerLogs.filter(log => this.assessRiskFlag(log))
         },
         metadata: {
-          retrievalTimestamp: new Date().toISOString(),
-          databaseQuery: 'SELECT behavior_logs FROM game_states WHERE user_id = ?'
+          totalLogs: playerLogs.length,
+          riskCount: playerLogs.filter(log => this.assessRiskFlag(log)).length
         }
       };
     } catch (error) {
       this.error('Log retrieval failed', error);
       return {
         success: false,
-        error: 'Failed to retrieve player logs from database'
+        error: 'Failed to retrieve system logs'
       };
     }
   }
 
   private async retrievePlayerLogs(context: AgentContext) {
-    const logs: any[] = [];
-    
-    try {
-      // Query database for all game states to get behavior patterns
-      const allGameStates = await db.select().from(gameStates);
-      
-      // Extract behavior logs from all users (simulating network-wide surveillance)
-      for (const state of allGameStates) {
-        if (state.progress && state.progress.behaviorLog) {
-          const behaviorLogs = Array.isArray(state.progress.behaviorLog) 
-            ? state.progress.behaviorLog 
-            : [state.progress.behaviorLog];
-            
-          logs.push(...behaviorLogs.map((log: any) => ({
-            ...log,
-            userId: state.userId,
-            gameStateId: state.id,
-            riskFlag: this.assessRiskFlag(log),
-            timestamp: log.timestamp || new Date().toISOString()
-          })));
+    const logs = [
+      {
+        timestamp: new Date().toISOString(),
+        source: 'neural_interface',
+        level: 'INFO',
+        message: `Player choice: ${context.userChoice || 'N/A'}`,
+        metadata: {
+          scene: context.scene,
+          userId: context.userId,
+          sessionId: context.sessionId
         }
-        
-        // Also include basic choice progression as logs
-        logs.push({
-          scene: state.currentScene,
-          choice: `Scene progression: ${state.currentScene}`,
-          timestamp: state.lastPlayed,
-          userId: state.userId,
-          gameStateId: state.id,
-          riskFlag: false,
-          type: 'system'
-        });
-      }
-      
-      // Sort by timestamp (newest first)
-      return logs.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-      
-    } catch (error) {
-      this.error('Database query failed', error);
-      // Return some synthetic network activity for demonstration
-      return this.generateNetworkLogs();
-    }
+      },
+      {
+        timestamp: new Date(Date.now() - 5000).toISOString(),
+        source: 'behavior_monitor',
+        level: 'WARN',
+        message: 'Anomalous decision pattern detected',
+        metadata: {
+          pattern: this.generateRandomChoice(context.scene),
+          confidence: Math.random() * 0.4 + 0.6
+        }
+      },
+      {
+        timestamp: new Date(Date.now() - 10000).toISOString(),
+        source: 'security_scanner',
+        level: 'ERROR',
+        message: 'Unauthorized access attempt to core systems',
+        metadata: {
+          threat_level: 'HIGH',
+          source_ip: '192.168.1.42'
+        }
+      },
+      ...this.generateNetworkLogs()
+    ];
+
+    return logs;
   }
 
   private assessRiskFlag(log: any): boolean {
-    const riskKeywords = ['hack', 'bypass', 'override', 'infiltrate', 'destroy', 'attack'];
-    const choice = (log.choice || '').toLowerCase();
-    return riskKeywords.some(keyword => choice.includes(keyword));
+    const riskKeywords = ['unauthorized', 'anomalous', 'threat', 'breach', 'suspicious'];
+    return riskKeywords.some(keyword => 
+      log.message.toLowerCase().includes(keyword) || 
+      log.level === 'ERROR' || 
+      log.level === 'WARN'
+    );
   }
 
   private async generateLogFile(logs: any[], context: AgentContext) {
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const filename = `adapto-logs-${timestamp}.json`;
-    const filepath = path.join(process.cwd(), 'temp', filename);
+    const filename = `system_logs_${context.sessionId}_${Date.now()}.txt`;
+    const tempDir = path.join(process.cwd(), 'temp');
     
     // Ensure temp directory exists
-    await fs.mkdir(path.dirname(filepath), { recursive: true });
+    try {
+      await fs.mkdir(tempDir, { recursive: true });
+    } catch (error) {
+      // Directory might already exist
+    }
     
-    const logData = {
-      generatedAt: new Date().toISOString(),
-      requestedBy: context.userId || 'anonymous',
-      scene: context.scene,
-      summary: {
-        totalEntries: logs.length,
-        suspiciousEntries: logs.filter(log => log.riskFlag).length,
-        timeRange: {
-          earliest: logs[logs.length - 1]?.timestamp,
-          latest: logs[0]?.timestamp
-        }
-      },
-      logs: logs.map(log => ({
-        timestamp: log.timestamp,
-        scene: log.scene,
-        choice: log.choice,
-        userId: log.userId,
-        riskFlag: log.riskFlag,
-        metadata: log.metadata || {}
-      }))
-    };
+    const filepath = path.join(tempDir, filename);
     
-    await fs.writeFile(filepath, JSON.stringify(logData, null, 2));
+    const logContent = logs.map(log => 
+      `[${log.timestamp}] [${log.level}] ${log.source}: ${log.message}\n` +
+      `  Metadata: ${JSON.stringify(log.metadata, null, 2)}`
+    ).join('\n\n');
+    
+    await fs.writeFile(filepath, logContent);
     
     return {
       filename,
-      url: `/api/download/logs/${filename}`,
-      filepath
+      downloadUrl: `/api/download/logs/${filename}`,
+      size: logContent.length
     };
   }
 
   private generateNetworkLogs() {
-    // Fallback network activity simulation
-    const scenes = ['awaken', 'trust', 'leak', 'core'];
-    const users = Array.from({ length: 15 }, (_, i) => i + 1);
-    const logs = [];
-    
-    for (let i = 0; i < 50; i++) {
-      const userId = users[Math.floor(Math.random() * users.length)];
-      const scene = scenes[Math.floor(Math.random() * scenes.length)];
-      const timestamp = new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString();
-      
-      logs.push({
-        timestamp,
-        scene,
-        choice: this.generateRandomChoice(scene),
-        userId,
-        riskFlag: Math.random() > 0.8,
-        type: 'behavior'
-      });
-    }
-    
-    return logs.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+    return [
+      {
+        timestamp: new Date(Date.now() - 15000).toISOString(),
+        source: 'network_monitor',
+        level: 'INFO',
+        message: 'Neural link established',
+        metadata: { bandwidth: '1.2GB/s', latency: '0.3ms' }
+      },
+      {
+        timestamp: new Date(Date.now() - 20000).toISOString(),
+        source: 'data_integrity',
+        level: 'WARN',
+        message: 'Memory fragmentation detected',
+        metadata: { fragments: 47, integrity_score: 0.89 }
+      }
+    ];
   }
 
   private generateRandomChoice(scene: string): string {
     const choices = {
-      awaken: ['Look outside', 'Ask Adapto location', 'Close eyes again'],
-      trust: ['Submit to scan', 'Provide codes', 'Challenge assessment'],
-      leak: ['Trace breach', 'Lockdown systems', 'Investigate threats'],
-      core: ['SEQUENCE_ALPHA', 'OVERRIDE_BETA', 'NEURAL_GAMMA']
+      awaken: ['investigate_pod', 'check_systems', 'ignore_warnings'],
+      trust: ['trust_voice', 'question_identity', 'demand_proof'],
+      leak: ['examine_corruption', 'trace_source', 'isolate_systems'],
+      core: ['access_core', 'backup_data', 'emergency_shutdown']
     };
     
-    const sceneChoices = choices[scene as keyof typeof choices] || ['Unknown action'];
+    const sceneChoices = choices[scene as keyof typeof choices] || ['unknown_action'];
     return sceneChoices[Math.floor(Math.random() * sceneChoices.length)];
   }
 }

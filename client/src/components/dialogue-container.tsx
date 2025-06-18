@@ -94,11 +94,30 @@ export default function DialogueContainer({ sceneData, currentScene }: DialogueC
     setPreviousChoices(newChoices);
     
     try {
+      const userId = 1;
+      const sessionId = `session-${Date.now()}`;
+      
       // Generate AI response for the choice
       const response = await apiRequest('POST', `/api/generate-dialogue/${currentScene}`, { 
         userChoice: choice.text,
-        previousChoices: newChoices
+        previousChoices: newChoices,
+        userId,
+        sessionId
       });
+      const data = await response.json();
+      
+      // Handle multi-agent system outputs
+      if (data.glitchEffects) {
+        setGlitchEffects(data.glitchEffects);
+      }
+      
+      if (data.logs) {
+        setAgentLogs(data.logs);
+      }
+      
+      if (data.behaviorAnalysis) {
+        setBehaviorAnalysis(data.behaviorAnalysis);
+      }
       
       // Auto-transition to next scene based on game flow
       await new Promise(resolve => setTimeout(resolve, 1500));
@@ -166,29 +185,55 @@ export default function DialogueContainer({ sceneData, currentScene }: DialogueC
         </h2>
       </div>
 
-      {/* Dialogue Content */}
-      <div className="space-y-6">
-        
-        {/* AI Thinking Indicator */}
-        {isLoading && (
-          <div className="flex items-center justify-center py-4">
-            <div className="typing-indicator">
-              <span className="text-cyan-300 font-medium mr-2">Adapto is processing</span>
-              <div className="typing-dot"></div>
-              <div className="typing-dot"></div>
-              <div className="typing-dot"></div>
-            </div>
+      {/* Agent Analysis Display */}
+      {behaviorAnalysis && (
+        <div className="mb-4 p-3 bg-red-900/20 border border-red-500/30 rounded-lg">
+          <h3 className="text-red-400 font-mono text-sm mb-2">BEHAVIORAL ANALYSIS</h3>
+          <div className="text-xs text-red-300 space-y-1">
+            <div>Threat Level: {behaviorAnalysis.threatLevel}</div>
+            <div>Anomaly Score: {behaviorAnalysis.anomalyScore}</div>
+            <div>Dominant Trait: {behaviorAnalysis.dominantTrait}</div>
           </div>
-        )}
+        </div>
+      )}
 
-        {/* Dialogue Text */}
-        {!isLoading && (
-          <div className="dialogue-text animate-slide-up">
-            <p className="text-gray-100 text-lg md:text-xl leading-relaxed font-medium">
-              {dynamicSceneData.dialogue}
-            </p>
-          </div>
-        )}
+      {/* Log File Download */}
+      {agentLogs && (
+        <div className="mb-4 p-3 bg-yellow-900/20 border border-yellow-500/30 rounded-lg">
+          <h3 className="text-yellow-400 font-mono text-sm mb-2">SYSTEM LOGS AVAILABLE</h3>
+          <button 
+            onClick={() => window.open(agentLogs.downloadUrl, '_blank')}
+            className="text-xs text-yellow-300 underline hover:text-yellow-100"
+          >
+            Download Log File: {agentLogs.filename}
+          </button>
+        </div>
+      )}
+
+      {/* Dialogue Content */}
+      <GlitchEffects effects={glitchEffects}>
+        <div className="space-y-6">
+          
+          {/* AI Thinking Indicator */}
+          {isLoading && (
+            <div className="flex items-center justify-center py-4">
+              <div className="typing-indicator">
+                <span className="text-cyan-300 font-medium mr-2">Adapto is processing</span>
+                <div className="typing-dot"></div>
+                <div className="typing-dot"></div>
+                <div className="typing-dot"></div>
+              </div>
+            </div>
+          )}
+
+          {/* Dialogue Text */}
+          {!isLoading && (
+            <div className="dialogue-text animate-slide-up">
+              <p className="text-gray-100 text-lg md:text-xl leading-relaxed font-medium">
+                {dynamicSceneData.dialogue}
+              </p>
+            </div>
+          )}
 
         {/* Choice Buttons */}
         {!isLoading && dynamicSceneData.showChoices && dynamicSceneData.choices && dynamicSceneData.choices.length > 0 && (
@@ -245,6 +290,7 @@ export default function DialogueContainer({ sceneData, currentScene }: DialogueC
           />
         )}
       </div>
+      </GlitchEffects>
 
       {/* Status Bar */}
       <div className="mt-8 pt-6 border-t border-gray-700/50 flex items-center justify-between text-sm">
