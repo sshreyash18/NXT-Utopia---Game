@@ -34,7 +34,7 @@ export function useGameState() {
   const initializeGame = useCallback(() => {
     // Initialize game state
     setGameState({
-      currentScene: 'awaken',
+      currentScene: 'intro',
       progress: {},
       isLoading: false
     });

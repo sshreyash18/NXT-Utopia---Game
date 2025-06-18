@@ -77,7 +77,7 @@ const staticSceneData = {
 export default function SceneView({ scene }: SceneViewProps) {
   const [backgroundOpacity, setBackgroundOpacity] = useState(1);
   const { changeScene } = useGameState();
-  const currentSceneData = staticSceneData[scene as keyof typeof staticSceneData] || staticSceneData.awaken;
+  const currentSceneData = staticSceneData[scene as keyof typeof staticSceneData] || staticSceneData.intro;
 
   useEffect(() => {
     // Fade transition when scene changes
