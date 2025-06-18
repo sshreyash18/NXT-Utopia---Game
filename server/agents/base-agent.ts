@@ -4,6 +4,7 @@ export interface AgentContext {
   previousChoices: string[];
   userId?: number;
   sessionId?: string;
+  metadata?: Record<string, any>;
 }
 
 export interface AgentResult {

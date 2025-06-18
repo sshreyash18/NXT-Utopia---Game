@@ -4,6 +4,8 @@ import { storage } from "./storage";
 import { insertGameStateSchema, insertDialogueChoiceSchema } from "@shared/schema";
 import { z } from "zod";
 import { generateDialogue, generateFinalSummary } from "./openai-client";
+import { promises as fs } from 'fs';
+import path from 'path';
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Game state endpoints
@@ -71,17 +73,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // AI Dialogue Generation endpoints
+  // MCP Agent System endpoints
   app.post("/api/generate-dialogue/:scene", async (req, res) => {
     try {
       const scene = req.params.scene;
-      const { userChoice, previousChoices } = req.body;
+      const { userChoice, previousChoices, userId, sessionId } = req.body;
       
-      const result = await generateDialogue(scene, userChoice, previousChoices);
+      // Use Multi-Agent Control Panel for enhanced processing
+      const { MultiAgentControlPanel } = await import('./agents/mcp');
+      const mcp = new MultiAgentControlPanel();
+      
+      const context = {
+        scene,
+        userChoice,
+        previousChoices: previousChoices || [],
+        userId: userId || 1,
+        sessionId: sessionId || `session-${Date.now()}`
+      };
+      
+      const result = await mcp.processUserAction(context);
       res.json(result);
     } catch (error) {
-      console.error("AI dialogue generation error:", error);
-      res.status(500).json({ error: "Failed to generate dialogue" });
+      console.error("MCP processing error:", error);
+      res.status(500).json({ error: "Failed to process with agent system" });
     }
   });
 
@@ -101,14 +115,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Serve static assets
-  app.use('/assets', (req, res, next) => {
-    // In development, we'll serve placeholder responses for missing audio files
-    if (req.path.endsWith('.mp3')) {
-      res.status(404).json({ error: 'Audio file not found' });
-      return;
+  // Log file download endpoint
+  app.get("/api/download/logs/:filename", async (req, res) => {
+    try {
+      const filename = req.params.filename;
+      const filepath = path.join(process.cwd(), 'temp', filename);
+      
+      if (await fs.access(filepath).then(() => true).catch(() => false)) {
+        res.download(filepath, filename, (err) => {
+          if (err) {
+            console.error('Download error:', err);
+            res.status(500).json({ error: 'Download failed' });
+          }
+        });
+      } else {
+        res.status(404).json({ error: 'Log file not found' });
+      }
+    } catch (error) {
+      console.error('Log download error:', error);
+      res.status(500).json({ error: 'Failed to download logs' });
     }
-    next();
+  });
+
+  // Serve static assets including audio files
+  app.use('/assets', (req, res) => {
+    const filepath = path.join(process.cwd(), 'attached_assets', req.path);
+    res.sendFile(filepath, (err) => {
+      if (err) {
+        res.status(404).json({ error: 'Asset not found' });
+      }
+    });
   });
 
   const httpServer = createServer(app);
