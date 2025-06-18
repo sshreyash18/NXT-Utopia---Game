@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useGameState } from "@/hooks/use-game-state";
 import { useAudio } from "@/hooks/use-audio";
 import { apiRequest } from "@/lib/queryClient";
 import EndingScene from "./ending-scene";
@@ -21,9 +20,10 @@ interface SceneData {
 interface DialogueContainerProps {
   sceneData: SceneData;
   currentScene: string;
+  onSceneChange: (newScene: string) => void;
 }
 
-export default function DialogueContainer({ sceneData, currentScene }: DialogueContainerProps) {
+export default function DialogueContainer({ sceneData, currentScene, onSceneChange }: DialogueContainerProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [puzzleInput, setPuzzleInput] = useState("");
   const [dynamicSceneData, setDynamicSceneData] = useState(sceneData);
@@ -31,7 +31,6 @@ export default function DialogueContainer({ sceneData, currentScene }: DialogueC
   const [glitchEffects, setGlitchEffects] = useState<any>(null);
   const [agentLogs, setAgentLogs] = useState<any>(null);
   const [behaviorAnalysis, setBehaviorAnalysis] = useState<any>(null);
-  const { changeScene } = useGameState();
   const { playTypingSound, stopTypingSound } = useAudio();
 
   // Update scene data when the scene prop changes
@@ -106,7 +105,7 @@ export default function DialogueContainer({ sceneData, currentScene }: DialogueC
     try {
       // Handle static scene transitions
       if (currentScene === 'intro') {
-        changeScene('awaken');
+        onSceneChange('awaken');
         setIsLoading(false);
         return;
       }
@@ -117,8 +116,7 @@ export default function DialogueContainer({ sceneData, currentScene }: DialogueC
       if (staticScenes.includes(currentScene)) {
         await new Promise(resolve => setTimeout(resolve, 1000));
         const nextScene = getNextScene(currentScene);
-        console.log('Transitioning from', currentScene, 'to', nextScene);
-        changeScene(nextScene);
+        onSceneChange(nextScene);
         setIsLoading(false);
         return;
       }
@@ -152,17 +150,17 @@ export default function DialogueContainer({ sceneData, currentScene }: DialogueC
       await new Promise(resolve => setTimeout(resolve, 2000));
       
       if (data.nextScene) {
-        changeScene(data.nextScene);
+        onSceneChange(data.nextScene);
       } else {
         const nextScene = getNextScene(currentScene);
-        changeScene(nextScene);
+        onSceneChange(nextScene);
       }
       
     } catch (error) {
       console.error('Failed to process choice:', error);
       // Still transition on error for static scenes
       const nextScene = getNextScene(currentScene);
-      changeScene(nextScene);
+      onSceneChange(nextScene);
     } finally {
       stopTypingSound();
       setIsLoading(false);
