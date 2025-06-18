@@ -104,6 +104,18 @@ export default function DialogueContainer({ sceneData, currentScene }: DialogueC
     setPreviousChoices(newChoices);
     
     try {
+      // For intro scene, hardcode the transition to awaken
+      if (currentScene === 'intro') {
+        console.log('About to transition from intro to awaken');
+        // Use setTimeout to ensure state update happens after current render cycle
+        setTimeout(() => {
+          console.log('Executing changeScene to awaken');
+          changeScene('awaken');
+          setIsLoading(false);
+        }, 1000);
+        return;
+      }
+      
       const staticScenes = ['intro', 'awaken'];
       
       // For static scenes, just transition directly
@@ -112,6 +124,7 @@ export default function DialogueContainer({ sceneData, currentScene }: DialogueC
         const nextScene = getNextScene(currentScene);
         console.log('Transitioning from', currentScene, 'to', nextScene);
         changeScene(nextScene);
+        setIsLoading(false);
         return;
       }
       
@@ -213,7 +226,7 @@ export default function DialogueContainer({ sceneData, currentScene }: DialogueC
           ADAPTO
         </h2>
         <div className="text-xs text-yellow-400 mt-2">
-          Current: {currentScene} | Title: {dynamicSceneData.title} | Loading: {isLoading ? 'YES' : 'NO'}
+          Current: {currentScene} | Title: {dynamicSceneData.title} | Loading: {isLoading ? 'YES' : 'NO'} | Prop Scene: {currentScene}
         </div>
       </div>
 

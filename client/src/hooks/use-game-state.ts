@@ -14,14 +14,21 @@ export function useGameState() {
   });
 
   const changeScene = useCallback((newScene: string) => {
-    setGameState(prev => ({
-      ...prev,
-      currentScene: newScene,
-      progress: {
-        ...prev.progress,
-        [prev.currentScene]: true
-      }
-    }));
+    console.log('changeScene called with:', newScene);
+    setGameState(prev => {
+      console.log('Previous state:', prev);
+      // Force a completely new object to ensure React detects the change
+      const newState = {
+        currentScene: newScene,
+        progress: {
+          ...prev.progress,
+          [prev.currentScene]: true
+        },
+        isLoading: false
+      };
+      console.log('New state:', newState);
+      return newState;
+    });
   }, []);
 
   const setLoading = useCallback((loading: boolean) => {
@@ -33,6 +40,7 @@ export function useGameState() {
 
   const initializeGame = useCallback(() => {
     // Initialize game state
+    console.log('Initializing game state to intro');
     setGameState({
       currentScene: 'intro',
       progress: {},
