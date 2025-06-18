@@ -36,13 +36,15 @@ export default function DialogueContainer({ sceneData, currentScene }: DialogueC
 
   // Load AI-generated content for dynamic scenes
   useEffect(() => {
-    if (currentScene !== 'awaken' && (!dynamicSceneData.dialogue || dynamicSceneData.choices?.length === 0)) {
+    const staticScenes = ['intro', 'awaken', 'end'];
+    if (!staticScenes.includes(currentScene) && (!dynamicSceneData.dialogue || dynamicSceneData.choices?.length === 0)) {
       loadAIContent();
     }
   }, [currentScene]);
 
   const loadAIContent = async () => {
-    if (currentScene === 'awaken') return;
+    const staticScenes = ['intro', 'awaken', 'end'];
+    if (staticScenes.includes(currentScene)) return;
     
     setIsLoading(true);
     playTypingSound();
@@ -173,7 +175,7 @@ export default function DialogueContainer({ sceneData, currentScene }: DialogueC
     }
   };
 
-  const sceneIndex = ['awaken', 'trust', 'leak', 'core'].indexOf(currentScene) + 1;
+  const sceneIndex = ['intro', 'awaken', 'trust', 'leak', 'core'].indexOf(currentScene) + 1;
 
   return (
     <div className="bg-black/70 backdrop-blur-md rounded-2xl border border-cyan-500/30 max-w-3xl w-full p-8 animate-fade-in">
@@ -275,20 +277,10 @@ export default function DialogueContainer({ sceneData, currentScene }: DialogueC
       </GlitchEffects>
 
       {/* Status Bar */}
-      <div className="mt-8 pt-6 border-t border-gray-700/50 flex items-center justify-between text-sm">
-        <div className="flex items-center space-x-4">
-          <span className="text-cyan-400 font-mono">STATUS:</span>
-          <span className="text-green-400 font-mono">ONLINE</span>
-          <span className="text-gray-500">|</span>
-          <span className="text-cyan-400 font-mono">SCENE:</span>
-          <span className="text-yellow-400 font-mono">
-            {String(sceneIndex).padStart(2, '0')}_{currentScene.toUpperCase()}
-          </span>
-        </div>
-        
+      <div className="mt-8 pt-6 border-t border-gray-700/50 flex items-center justify-center text-sm">
         <div className="flex items-center space-x-2">
           <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-          <span className="text-gray-400 font-mono text-xs">NEURAL_LINK_ACTIVE</span>
+          <span className="text-gray-400 font-mono text-xs">NEURAL LINK ACTIVE</span>
         </div>
       </div>
     </div>

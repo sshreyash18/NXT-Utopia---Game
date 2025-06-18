@@ -97,6 +97,10 @@ The application follows a **monorepo structure** with clear separation between c
 ```
 Changelog:
 - June 18, 2025. Initial setup
+- June 18, 2025. Implemented complete multi-agent AI system with real tool execution
+- June 18, 2025. Added UtopiaNXT world introduction scene with narrative context
+- June 18, 2025. Fixed game progression and removed debug UI elements
+- June 18, 2025. Integrated Azure OpenAI for behavioral analysis and glitch effects
 ```
 
 ## User Preferences
