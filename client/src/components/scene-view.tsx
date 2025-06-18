@@ -74,7 +74,12 @@ const staticSceneData = {
   }
 };
 
-export default function SceneView({ scene }: SceneViewProps) {
+interface SceneViewProps {
+  scene: string;
+  onSceneChange: (newScene: string) => void;
+}
+
+export default function SceneView({ scene, onSceneChange }: SceneViewProps) {
   const [backgroundOpacity, setBackgroundOpacity] = useState(1);
   const currentSceneData = staticSceneData[scene as keyof typeof staticSceneData] || staticSceneData.intro;
 
@@ -118,6 +123,7 @@ export default function SceneView({ scene }: SceneViewProps) {
         <DialogueContainer 
           sceneData={currentSceneData}
           currentScene={scene}
+          onSceneChange={onSceneChange}
         />
       </div>
 

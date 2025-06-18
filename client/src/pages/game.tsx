@@ -12,7 +12,7 @@ export default function Game() {
   return (
     <div className="min-h-screen overflow-hidden">
       <title>Adapto - Sci-Fi Narrative Game</title>
-      <SceneView scene={currentScene} />
+      <SceneView scene={currentScene} onSceneChange={changeScene} />
     </div>
   );
 }

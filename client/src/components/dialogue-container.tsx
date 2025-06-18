@@ -192,7 +192,7 @@ export default function DialogueContainer({ sceneData, currentScene, onSceneChan
       });
       
       await new Promise(resolve => setTimeout(resolve, 1500));
-      changeScene('end');
+      onSceneChange('end');
       
     } catch (error) {
       console.error('Failed to process puzzle:', error);
@@ -299,7 +299,7 @@ export default function DialogueContainer({ sceneData, currentScene, onSceneChan
             choices={previousChoices}
             onRestart={() => {
               setPreviousChoices([]);
-              changeScene('awaken');
+              onSceneChange('awaken');
             }}
           />
         )}
