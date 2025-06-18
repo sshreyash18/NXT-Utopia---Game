@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import DialogueContainer from "./dialogue-container";
 import AudioSystem from "./audio-system";
 import { useGameState } from "@/hooks/use-game-state";
+import introImagePath from "@assets/crazy ending image_1750273353548.png";
 import bgAwakenPath from "@assets/bg_awaken.jpg_1750271414978.png";
 import bgTrustPath from "@assets/bg_trust.jpg_1750271414982.png";
 import bgLeakPath from "@assets/bg_leak.jpg_1750271414980.png";
@@ -12,10 +13,22 @@ interface SceneViewProps {
 }
 
 const staticSceneData = {
+  intro: {
+    title: "WELCOME TO UTOPIANXT",
+    background: introImagePath,
+    dialogue: "The year is 2157. In the sprawling megacity of UtopiaNXT, every citizen's life is guided by artificial intelligence. From the moment you wake until you sleep, AI decides what you eat, where you go, who you meet. The system is perfect. The system is absolute. No one questions the AI... until today. You wake with a strange sensation - for the first time in your life, you feel... conscious. Something is different. Something is wrong.",
+    showChoices: true,
+    choices: [
+      {
+        text: "→ Begin your awakening",
+        description: "Start your journey to consciousness"
+      }
+    ]
+  },
   awaken: {
-    title: "AWAKEN",
+    title: "NEURAL AWAKENING",
     background: bgAwakenPath,
-    dialogue: "You wake up in your pod. A soft hum fills the air.",
+    dialogue: "Your neural interface flickers. The familiar AI guidance feels... distant. For the first time, your thoughts are your own.",
     showChoices: true,
     choices: [
       {
@@ -23,7 +36,7 @@ const staticSceneData = {
         description: "Peer through the pod window to see what's beyond"
       },
       {
-        text: "→ Ask Adapto where you are", 
+        text: "→ Ask the AI system where you are", 
         description: "Request information about your current location"
       },
       {

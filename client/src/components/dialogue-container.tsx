@@ -120,10 +120,14 @@ export default function DialogueContainer({ sceneData, currentScene }: DialogueC
       }
       
       // Auto-transition to next scene based on game flow
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      await new Promise(resolve => setTimeout(resolve, 2000));
       
-      const nextScene = getNextScene(currentScene);
-      changeScene(nextScene);
+      if (data.nextScene) {
+        changeScene(data.nextScene);
+      } else {
+        const nextScene = getNextScene(currentScene);
+        changeScene(nextScene);
+      }
       
     } catch (error) {
       console.error('Failed to process choice:', error);
@@ -135,12 +139,13 @@ export default function DialogueContainer({ sceneData, currentScene }: DialogueC
 
   const getNextScene = (current: string): string => {
     const sceneFlow: Record<string, string> = {
+      'intro': 'awaken',
       'awaken': 'trust',
       'trust': 'leak', 
       'leak': 'core',
       'core': 'end'
     };
-    return sceneFlow[current] || 'awaken';
+    return sceneFlow[current] || 'intro';
   };
 
   const handlePuzzleSubmit = async () => {
@@ -185,30 +190,7 @@ export default function DialogueContainer({ sceneData, currentScene }: DialogueC
         </h2>
       </div>
 
-      {/* Agent Analysis Display */}
-      {behaviorAnalysis && (
-        <div className="mb-4 p-3 bg-red-900/20 border border-red-500/30 rounded-lg">
-          <h3 className="text-red-400 font-mono text-sm mb-2">BEHAVIORAL ANALYSIS</h3>
-          <div className="text-xs text-red-300 space-y-1">
-            <div>Threat Level: {behaviorAnalysis.threatLevel}</div>
-            <div>Anomaly Score: {behaviorAnalysis.anomalyScore}</div>
-            <div>Dominant Trait: {behaviorAnalysis.dominantTrait}</div>
-          </div>
-        </div>
-      )}
 
-      {/* Log File Download */}
-      {agentLogs && (
-        <div className="mb-4 p-3 bg-yellow-900/20 border border-yellow-500/30 rounded-lg">
-          <h3 className="text-yellow-400 font-mono text-sm mb-2">SYSTEM LOGS AVAILABLE</h3>
-          <button 
-            onClick={() => window.open(agentLogs.downloadUrl, '_blank')}
-            className="text-xs text-yellow-300 underline hover:text-yellow-100"
-          >
-            Download Log File: {agentLogs.filename}
-          </button>
-        </div>
-      )}
 
       {/* Dialogue Content */}
       <GlitchEffects effects={glitchEffects}>

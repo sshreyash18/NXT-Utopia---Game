@@ -8,7 +8,7 @@ interface GameState {
 
 export function useGameState() {
   const [gameState, setGameState] = useState<GameState>({
-    currentScene: 'awaken',
+    currentScene: 'intro',
     progress: {},
     isLoading: false
   });
