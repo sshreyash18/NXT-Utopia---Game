@@ -104,6 +104,13 @@ Changelog:
 - June 19, 2025. Fixed crash issues and implemented terminal-style agent chat interface
 - June 19, 2025. Reduced dialogue text size for better readability
 - June 19, 2025. Added custom terminal/hacker aesthetic image for puzzle scenes
+- June 19, 2025. Implemented Neural Awakening scene with three branching paths
+- June 19, 2025. Added "Outside View" scene with cityscape image and suspense music
+- June 19, 2025. Created "Close Eyes" scene with static sound and Cipher warnings
+- June 19, 2025. Built "Break Silence" scene with Adapto interrogation dialogue
+- June 19, 2025. Updated Trust Assessment to philosophical AI dependence questions
+- June 19, 2025. Added conditional Cipher responses based on Trust Assessment choices
+- June 19, 2025. Integrated typing sound effects for Neural Chat agent conversations
 ```
 
 ## User Preferences

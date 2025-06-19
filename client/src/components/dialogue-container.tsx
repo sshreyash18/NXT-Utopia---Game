@@ -41,24 +41,7 @@ export default function DialogueContainer({ sceneData, currentScene, onSceneChan
   const [agentMessages, setAgentMessages] = useState<AgentMessage[]>([]);
   const { playTypingSound, stopTypingSound } = useAudio();
 
-  const generateCipherResponse = (choiceText: string): string | null => {
-    const lowerChoice = choiceText.toLowerCase();
-    
-    // Check if choice is pro-AI
-    if (lowerChoice.includes('trust') || lowerChoice.includes('benefit') || lowerChoice.includes('guidance') || 
-        lowerChoice.includes('safer') || lowerChoice.includes('efficient') || lowerChoice.includes('optimal')) {
-      return "You're still blind to the truth. They've conditioned you well. Go to the leak section... break free from this ignorance. See what they don't want you to know.";
-    }
-    
-    // Check if choice is anti-AI
-    if (lowerChoice.includes('question') || lowerChoice.includes('doubt') || lowerChoice.includes('freedom') || 
-        lowerChoice.includes('control') || lowerChoice.includes('manipulat') || lowerChoice.includes('independent')) {
-      return "Careful. They have eyes everywhere, monitoring your thoughts. You're showing dangerous signs of awareness. Go to the leak... but tread carefully. The truth awaits.";
-    }
-    
-    // Neutral response for unclear choices
-    return "Your hesitation shows promise. The system can't read uncertainty. Use this advantage. Find the leak. Discover what they're hiding.";
-  };
+
 
   // Update scene data when the scene prop changes
   useEffect(() => {
@@ -222,7 +205,23 @@ export default function DialogueContainer({ sceneData, currentScene, onSceneChan
       
       // Add Cipher response for Trust Assessment choices
       if (currentScene === 'trust' && choice.text) {
-        const cipherMessage = generateCipherResponse(choice.text);
+        const lowerChoice = choice.text.toLowerCase();
+        let cipherMessage = "";
+        
+        // Check if choice is pro-AI
+        if (lowerChoice.includes('trust') || lowerChoice.includes('benefit') || lowerChoice.includes('guidance') || 
+            lowerChoice.includes('safer') || lowerChoice.includes('efficient') || lowerChoice.includes('optimal')) {
+          cipherMessage = "You're still blind to the truth. They've conditioned you well. Go to the leak section... break free from this ignorance. See what they don't want you to know.";
+        }
+        // Check if choice is anti-AI
+        else if (lowerChoice.includes('question') || lowerChoice.includes('doubt') || lowerChoice.includes('freedom') || 
+                 lowerChoice.includes('control') || lowerChoice.includes('manipulat') || lowerChoice.includes('independent')) {
+          cipherMessage = "Careful. They have eyes everywhere, monitoring your thoughts. You're showing dangerous signs of awareness. Go to the leak... but tread carefully. The truth awaits.";
+        }
+        // Neutral response
+        else {
+          cipherMessage = "Your hesitation shows promise. The system can't read uncertainty. Use this advantage. Find the leak. Discover what they're hiding.";
+        }
         if (cipherMessage) {
           // Add Cipher message to agent terminal
           const newMessage = {
