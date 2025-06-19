@@ -228,7 +228,7 @@ export default function DialogueContainer({ sceneData, currentScene, onSceneChan
     const sceneFlow: Record<string, string> = {
       'intro': 'awaken',
       'awaken': 'trust',
-      'outside_view': 'trust',
+      'outside_view': 'awaken',
       'trust': 'leak', 
       'leak': 'core',
       'core': 'end'

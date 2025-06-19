@@ -181,7 +181,7 @@ export default function SceneView({ scene, onSceneChange }: SceneViewProps) {
           <DelayedDialogue
             title={currentSceneData.title}
             delayedText="Was it always like this? The city moves with eerie precision, like everyone knows their role—except me. Why does everything feel familiar yet strange? And those AdaptNXT towers… what really goes on inside them?"
-            onContinue={() => onSceneChange('trust')}
+            onContinue={() => onSceneChange('awaken')}
           />
         ) : (
           <DialogueContainer 
