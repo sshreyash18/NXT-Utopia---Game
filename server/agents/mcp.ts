@@ -14,6 +14,9 @@ export interface MCPResult {
   logs?: any;
   behaviorAnalysis?: any;
   insights?: any;
+  agentConflict?: any;
+  puzzleResult?: any;
+  puzzlePrompt?: string;
 }
 
 export class MultiAgentControlPanel {
@@ -187,15 +190,35 @@ export class MultiAgentControlPanel {
   }
   
   private calculateTrustLevel(previousChoices: string[]): number {
-    // Placeholder for trust level calculation
-    console.warn("Calculating trust level is not implemented.");
-    return 0.5;
+    let trustScore = 0.5; // Base trust level
+    
+    previousChoices.forEach(choice => {
+      if (choice.includes('AI system') || choice.includes('protocol') || choice.includes('comply') || choice.includes('trust')) {
+        trustScore += 0.1;
+      } else if (choice.includes('resist') || choice.includes('question') || choice.includes('investigate') || choice.includes('doubt')) {
+        trustScore -= 0.15;
+      } else if (choice.includes('help') || choice.includes('cooperate')) {
+        trustScore += 0.05;
+      }
+    });
+    
+    return Math.max(0, Math.min(1, trustScore));
   }
 
   private calculateSuspicionLevel(previousChoices: string[]): number {
-    // Placeholder for suspicion level calculation
-    console.warn("Calculating suspicion level is not implemented.");
-    return 0.5;
+    let suspicionScore = 0.2; // Base suspicion level
+    
+    previousChoices.forEach(choice => {
+      if (choice.includes('question') || choice.includes('investigate') || choice.includes('probe') || choice.includes('analyze')) {
+        suspicionScore += 0.2;
+      } else if (choice.includes('comply') || choice.includes('accept') || choice.includes('trust')) {
+        suspicionScore -= 0.1;
+      } else if (choice.includes('escape') || choice.includes('break') || choice.includes('free') || choice.includes('resist')) {
+        suspicionScore += 0.3;
+      }
+    });
+    
+    return Math.max(0, Math.min(1, suspicionScore));
   }
 
   private getFallbackDialogue(scene: string): string {
@@ -205,9 +228,21 @@ export class MultiAgentControlPanel {
   }
   
   private determineNextScene(context: AgentContext): string {
-    // Placeholder for determining next scene
-    console.warn("Determining next scene is not implemented.");
-    return "core";
+    const suspicionLevel = this.calculateSuspicionLevel(context.previousChoices);
+    const trustLevel = this.calculateTrustLevel(context.previousChoices);
+    
+    const sceneFlow: Record<string, string> = {
+      'trust': suspicionLevel > 0.6 ? 'leak' : 'core',
+      'leak': trustLevel < 0.3 ? 'log_analysis' : 'network_topology', 
+      'log_analysis': 'memory_reconstruction',
+      'memory_reconstruction': 'network_topology',
+      'network_topology': 'identity_revealed',
+      'identity_revealed': 'escape_route',
+      'escape_route': 'core',
+      'core': 'end'
+    };
+    
+    return sceneFlow[context.scene] || 'end';
   }
 
   private generateMemoryFragments(context: AgentContext): any {

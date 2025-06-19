@@ -86,21 +86,27 @@ export default function DialogueContainer({ sceneData, currentScene, onSceneChan
       
       if (data.logs) {
         setAgentLogs(data.logs);
-        
-        // Convert agent conflict to terminal messages
-        if (data.logs.agentConflict) {
-          const messages: AgentMessage[] = [
-            {
-              agent: 'adapto',
-              message: data.logs.agentConflict.adapto,
-              timestamp: Date.now()
-            },
-            {
-              agent: 'cipher',
-              message: data.logs.agentConflict.cipher,
-              timestamp: Date.now() + 100
-            }
-          ];
+      }
+
+      // Handle agent conflicts from multiple sources
+      const agentConflict = data.agentConflict || data.logs?.agentConflict;
+      if (agentConflict) {
+        const messages: AgentMessage[] = [];
+        if (agentConflict.adapto) {
+          messages.push({
+            agent: 'adapto',
+            message: agentConflict.adapto,
+            timestamp: Date.now()
+          });
+        }
+        if (agentConflict.cipher) {
+          messages.push({
+            agent: 'cipher',
+            message: agentConflict.cipher,
+            timestamp: Date.now() + 100
+          });
+        }
+        if (messages.length > 0) {
           setAgentMessages(prev => [...prev, ...messages]);
         }
       }
