@@ -122,9 +122,22 @@ const staticSceneData = {
   leak_choices: {
     title: "DATA BREACH",
     background: bgLeakPath,
-    dialogue: "",
+    dialogue: "You've stepped into the unknown. What will you investigate first?",
     showChoices: true,
-    choices: []
+    choices: [
+      {
+        text: "→ Signal Vault",
+        description: "Scan old transmissions for hidden patterns."
+      },
+      {
+        text: "→ Echo Node", 
+        description: "Listen in on suppressed AI conversations."
+      },
+      {
+        text: "→ Glitch Path",
+        description: "Follow trails of broken system code."
+      }
+    ]
   },
   core: {
     title: "CORE ACCESS",
