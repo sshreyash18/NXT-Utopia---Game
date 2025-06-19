@@ -19,6 +19,7 @@ interface SceneData {
   showChoices: boolean;
   choices?: Choice[];
   puzzlePrompt?: string;
+  puzzleData?: string;
 }
 
 interface DialogueContainerProps {
@@ -85,20 +86,27 @@ export default function DialogueContainer({ sceneData, currentScene, onSceneChan
       
       if (data.logs) {
         setAgentLogs(data.logs);
+        
+        // Convert agent conflict to terminal messages
+        if (data.logs.agentConflict) {
+          const messages: AgentMessage[] = [
+            {
+              agent: 'adapto',
+              message: data.logs.agentConflict.adapto,
+              timestamp: Date.now()
+            },
+            {
+              agent: 'cipher',
+              message: data.logs.agentConflict.cipher,
+              timestamp: Date.now() + 100
+            }
+          ];
+          setAgentMessages(prev => [...prev, ...messages]);
+        }
       }
       
       if (data.behaviorAnalysis) {
         setBehaviorAnalysis(data.behaviorAnalysis);
-      }
-
-      // Add agent conversations to terminal
-      if (data.agentConversation) {
-        const newMessages = data.agentConversation.map((msg: any) => ({
-          agent: msg.agent,
-          message: msg.message,
-          timestamp: Date.now()
-        }));
-        setAgentMessages(prev => [...prev, ...newMessages]);
       }
       
     } catch (error) {
@@ -264,8 +272,8 @@ export default function DialogueContainer({ sceneData, currentScene, onSceneChan
 
   return (
     <div className="bg-black/70 backdrop-blur-md rounded-2xl border border-cyan-500/30 max-w-3xl w-full p-8 animate-fade-in">
-      {/* Scene Title */}
-      <div className="text-center mb-6">
+      {/* Scene Title and Terminal Button */}
+      <div className="text-center mb-6 relative">
         <h1 className="font-orbitron text-cyan-400 text-lg font-bold tracking-[0.2em] mb-2">
           {dynamicSceneData.title}
         </h1>
@@ -275,7 +283,22 @@ export default function DialogueContainer({ sceneData, currentScene, onSceneChan
         >
           ADAPTO
         </h2>
-
+        
+        {/* Terminal Access Button */}
+        <Button
+          onClick={() => setTerminalOpen(true)}
+          variant="ghost"
+          size="sm"
+          className="absolute top-0 right-0 text-cyan-400 hover:text-cyan-300 hover:bg-cyan-500/10 border border-cyan-500/30"
+        >
+          <Terminal className="w-4 h-4 mr-2" />
+          Neural Chat
+          {agentMessages.length > 0 && (
+            <span className="ml-2 bg-cyan-500 text-black text-xs px-2 py-1 rounded-full">
+              {agentMessages.length}
+            </span>
+          )}
+        </Button>
       </div>
 
 
@@ -299,7 +322,7 @@ export default function DialogueContainer({ sceneData, currentScene, onSceneChan
           {/* Dialogue Text */}
           {!isLoading && (
             <div className="dialogue-text animate-slide-up">
-              <p className="text-gray-100 text-lg md:text-xl leading-relaxed font-medium">
+              <p className="text-gray-100 text-sm md:text-base leading-relaxed font-medium">
                 {dynamicSceneData.dialogue}
               </p>
             </div>
@@ -350,19 +373,7 @@ export default function DialogueContainer({ sceneData, currentScene, onSceneChan
           </div>
         )}
 
-        {/* Agent Conflict Display */}
-        {!isLoading && agentLogs?.agentConflict && (
-          <div className="mb-6 space-y-3">
-            <div className="p-3 bg-blue-900/50 border border-blue-500/30 rounded-lg">
-              <div className="text-blue-300 font-bold text-sm">ADAPTO:</div>
-              <div className="text-blue-100 text-sm">{agentLogs.agentConflict.adapto}</div>
-            </div>
-            <div className="p-3 bg-red-900/50 border border-red-500/30 rounded-lg animate-pulse">
-              <div className="text-red-300 font-bold text-sm">CIPHER [ENCRYPTED]:</div>
-              <div className="text-red-100 text-sm font-mono">{agentLogs.agentConflict.cipher}</div>
-            </div>
-          </div>
-        )}
+
 
         {/* Puzzle Input */}
         {!isLoading && !dynamicSceneData.showChoices && (currentScene === 'core' || currentScene.includes('_')) && (
@@ -410,6 +421,13 @@ export default function DialogueContainer({ sceneData, currentScene, onSceneChan
           <span className="text-gray-400 font-mono text-xs">NEURAL LINK ACTIVE</span>
         </div>
       </div>
+
+      {/* Agent Terminal */}
+      <AgentTerminal
+        isOpen={terminalOpen}
+        onClose={() => setTerminalOpen(false)}
+        messages={agentMessages}
+      />
     </div>
   );
 }
