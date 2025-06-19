@@ -116,6 +116,109 @@ export async function generateDialogue(scene: string, userChoice?: string, previ
   }
 }
 
+export async function generateGlitchPuzzle(puzzleNumber: number): Promise<any> {
+  try {
+    let prompt = "";
+    
+    if (puzzleNumber === 1) {
+      prompt = `Generate a pattern recognition puzzle similar to: "If APPLE = 11616125, what is CIPHER?"
+
+The pattern should be: each letter = its alphabet position (A=1, B=2, etc.)
+Create a 4-5 letter word example and ask for a 5-6 letter target word.
+
+Response format as JSON:
+{
+  "question": "If [WORD] = [NUMBERS], what is [TARGET]?",
+  "choices": [
+    {"text": "[wrong answer]", "letter": "A"},
+    {"text": "[correct answer]", "letter": "B"}, 
+    {"text": "[wrong answer]", "letter": "C"}
+  ],
+  "correctAnswer": "B",
+  "explanation": "Brief explanation of the pattern"
+}`;
+    } else if (puzzleNumber === 2) {
+      prompt = `Generate a binary-to-ASCII puzzle. Give an 8-bit binary number that converts to a single ASCII character.
+
+Response format as JSON:
+{
+  "question": "The system blinks a binary message: [8-bit binary]\\n\\nWhat does it mean?",
+  "choices": [
+    {"text": "[wrong number]", "letter": "A"},
+    {"text": "'[correct letter]'", "letter": "B"},
+    {"text": "[wrong binary]", "letter": "C"}
+  ],
+  "correctAnswer": "B",
+  "explanation": "Brief explanation of binary to ASCII conversion"
+}`;
+    } else {
+      prompt = `Generate an AdaptNXT lore puzzle. Create a corrupted log entry that hints at the organization's true purpose.
+
+Response format as JSON:
+{
+  "question": "Inside the corrupted logs, a phrase repeats:\\n\\n\\"[mysterious phrase about AdaptNXT]\\"\\n\\nWhat is most likely being hinted at?",
+  "choices": [
+    {"text": "A location in the system", "letter": "A"},
+    {"text": "A consciousness test", "letter": "B"},
+    {"text": "The organization behind it all", "letter": "C"}
+  ],
+  "correctAnswer": "C",
+  "explanation": "Brief explanation"
+}`;
+    }
+
+    const response = await openai.chat.completions.create({
+      model: process.env.AZURE_OPENAI_DEPLOYMENT || "gpt-4o-mini",
+      messages: [
+        { role: "system", content: "You are creating puzzles for a sci-fi AI consciousness game. Make them challenging but solvable." },
+        { role: "user", content: prompt }
+      ],
+      response_format: { type: "json_object" },
+      max_tokens: 400,
+      temperature: 0.8
+    });
+
+    const content = response.choices[0].message.content;
+    return JSON.parse(content || "{}");
+  } catch (error) {
+    console.error("OpenAI Puzzle Generation Error:", error);
+    // Fallback puzzles
+    const fallbacks = [
+      {
+        question: "If WORD = 23151518, what is CODE?",
+        choices: [
+          { text: "3154", letter: "A" },
+          { text: "315405", letter: "B" },
+          { text: "3151405", letter: "C" }
+        ],
+        correctAnswer: "C",
+        explanation: "Each letter = alphabet position: C(3), O(15), D(4), E(5) = 3151405"
+      },
+      {
+        question: "The system blinks: 01001000\n\nWhat does it mean?",
+        choices: [
+          { text: "72", letter: "A" },
+          { text: "'H'", letter: "B" },
+          { text: "010", letter: "C" }
+        ],
+        correctAnswer: "B",
+        explanation: "01001000 = 72 in decimal = 'H' in ASCII"
+      },
+      {
+        question: "Log entry: \"Neural paths optimized. Citizens comply.\"\n\nWhat does this suggest?",
+        choices: [
+          { text: "System maintenance", letter: "A" },
+          { text: "Mind control protocol", letter: "B" },
+          { text: "Network upgrade", letter: "C" }
+        ],
+        correctAnswer: "B",
+        explanation: "AdaptNXT controls citizen behavior through neural manipulation"
+      }
+    ];
+    return fallbacks[puzzleNumber - 1] || fallbacks[0];
+  }
+}
+
 export async function generateFinalSummary(choices: string[]): Promise<string> {
   try {
     const response = await openai.chat.completions.create({

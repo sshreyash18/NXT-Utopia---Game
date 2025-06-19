@@ -1,0 +1,30 @@
+[2025-06-19T12:03:54.449Z] [INFO] neural_interface: Player choice: → Reject OmniMind's influence
+  Metadata: {
+  "scene": "trust",
+  "userId": 1,
+  "sessionId": "session-1750334635269"
+}
+
+[2025-06-19T12:03:49.449Z] [WARN] behavior_monitor: Anomalous decision pattern detected
+  Metadata: {
+  "pattern": "trust_voice",
+  "confidence": 0.6789036363380785
+}
+
+[2025-06-19T12:03:44.449Z] [ERROR] security_scanner: Unauthorized access attempt to core systems
+  Metadata: {
+  "threat_level": "HIGH",
+  "source_ip": "192.168.1.42"
+}
+
+[2025-06-19T12:03:39.449Z] [INFO] network_monitor: Neural link established
+  Metadata: {
+  "bandwidth": "1.2GB/s",
+  "latency": "0.3ms"
+}
+
+[2025-06-19T12:03:34.449Z] [WARN] data_integrity: Memory fragmentation detected
+  Metadata: {
+  "fragments": 47,
+  "integrity_score": 0.89
+}

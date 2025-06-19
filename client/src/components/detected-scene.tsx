@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
-import detectedImagePath from "@assets/ChatGPT Image Jun 19, 2025, 05_16_32 PM_1750333620987.png";
-import detectedMusicPath from "@assets/creepy-halloween-bell-trap-melody-247720_1750333922182.mp3";
+import { Button } from "@/components/ui/button";
+import detectedImagePath from "@assets/ChatGPT Image Jun 19, 2025, 05_16_32 PM_1750334767301.png";
+import detectedMusicPath from "@assets/creepy-halloween-bell-trap-melody-247720_1750334772208.mp3";
 
 interface DetectedSceneProps {
   onRestart: () => void;
@@ -12,43 +13,31 @@ export default function DetectedScene({ onRestart }: DetectedSceneProps) {
   useEffect(() => {
     console.log('DetectedScene mounted');
     
-    // Play the creepy music
-    if (audioRef.current) {
-      audioRef.current.volume = 0.7;
-      audioRef.current.currentTime = 0;
-      
-      // Try to play with user interaction requirement workaround
-      const playPromise = audioRef.current.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(error => {
+    // Play the creepy music with user interaction
+    const playAudio = () => {
+      if (audioRef.current) {
+        audioRef.current.volume = 0.8;
+        audioRef.current.currentTime = 0;
+        audioRef.current.play().catch(error => {
           console.log('Audio playback failed:', error);
-          // Try again after a short delay
-          setTimeout(() => {
-            if (audioRef.current) {
-              audioRef.current.play().catch(e => console.log('Second audio attempt failed:', e));
-            }
-          }, 100);
         });
       }
-    }
+    };
 
-    // Auto-restart after 10 seconds
-    const timer = setTimeout(() => {
-      console.log('Auto-restarting from detected scene');
-      onRestart();
-    }, 10000);
+    // Try to play immediately
+    playAudio();
 
+    // Cleanup
     return () => {
-      clearTimeout(timer);
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current.currentTime = 0;
       }
     };
-  }, [onRestart]);
+  }, []);
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
       {/* Audio */}
       <audio ref={audioRef} src={detectedMusicPath} />
       
@@ -57,6 +46,16 @@ export default function DetectedScene({ onRestart }: DetectedSceneProps) {
         className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: `url(${detectedImagePath})` }}
       />
+      
+      {/* Restart Button - positioned at bottom */}
+      <div className="absolute bottom-20 z-10">
+        <Button 
+          onClick={onRestart}
+          className="bg-red-600 hover:bg-red-700 text-white font-mono text-xl px-12 py-4 rounded-lg border border-red-500/50 hover:border-red-400 transition-all duration-300 shadow-lg"
+        >
+          → Start Over
+        </Button>
+      </div>
     </div>
   );
 }

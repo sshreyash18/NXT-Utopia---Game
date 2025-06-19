@@ -15,45 +15,68 @@ interface Puzzle {
   explanation?: string;
 }
 
-const puzzles: Puzzle[] = [
-  {
-    question: "If APPLE = 11616125, what is CIPHER?",
-    choices: [
-      { text: "391681858", letter: "A" },
-      { text: "391681818", letter: "B" },
-      { text: "391689185", letter: "C" }
-    ],
-    correctAnswer: "B",
-    explanation: "Each letter = alphabet position: A(1), P(16), P(16), L(12), E(5) = 11616125. So C(3), I(9), P(16), H(8), E(5), R(18) = 391681818"
-  },
-  {
-    question: "The system blinks a binary message: 01000011\n\nWhat does it mean?",
-    choices: [
-      { text: "99", letter: "A" },
-      { text: "'C'", letter: "B" },
-      { text: "011", letter: "C" }
-    ],
-    correctAnswer: "B",
-    explanation: "01000011 = 67 in decimal = 'C' in ASCII"
-  },
-  {
-    question: "Inside the corrupted logs, a phrase repeats:\n\n\"Adapt, or be forgotten. NXT awaits.\"\n\nWhat is most likely being hinted at?",
-    choices: [
-      { text: "A location in the system", letter: "A" },
-      { text: "A consciousness test", letter: "B" },
-      { text: "The organization behind it all", letter: "C" }
-    ],
-    correctAnswer: "C",
-    explanation: "AdaptNXT is the organization controlling the system"
-  }
-];
-
 export default function GlitchPathScene({ onComplete, onDetected }: GlitchPathSceneProps) {
   const [currentPuzzle, setCurrentPuzzle] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string>("");
   const [showResult, setShowResult] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
+  const [puzzles, setPuzzles] = useState<Puzzle[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const { playTypingSound, stopTypingSound } = useAudio();
+
+  // Generate puzzles on component mount
+  useEffect(() => {
+    const generatePuzzles = async () => {
+      try {
+        const newPuzzles: Puzzle[] = [];
+        for (let i = 1; i <= 3; i++) {
+          const response = await fetch(`/api/generate-puzzle/${i}`);
+          const puzzleData = await response.json();
+          newPuzzles.push(puzzleData);
+        }
+        setPuzzles(newPuzzles);
+      } catch (error) {
+        console.error('Failed to generate puzzles:', error);
+        // Use fallback puzzles
+        setPuzzles([
+          {
+            question: "If WORD = 23151518, what is CODE?",
+            choices: [
+              { text: "3154", letter: "A" },
+              { text: "315405", letter: "B" },
+              { text: "3151405", letter: "C" }
+            ],
+            correctAnswer: "C",
+            explanation: "Each letter = alphabet position: C(3), O(15), D(4), E(5) = 3151405"
+          },
+          {
+            question: "The system blinks: 01001000\n\nWhat does it mean?",
+            choices: [
+              { text: "72", letter: "A" },
+              { text: "'H'", letter: "B" },
+              { text: "010", letter: "C" }
+            ],
+            correctAnswer: "B",
+            explanation: "01001000 = 72 in decimal = 'H' in ASCII"
+          },
+          {
+            question: "Log entry: \"Neural paths optimized. Citizens comply.\"\n\nWhat does this suggest?",
+            choices: [
+              { text: "System maintenance", letter: "A" },
+              { text: "Mind control protocol", letter: "B" },
+              { text: "Network upgrade", letter: "C" }
+            ],
+            correctAnswer: "B",
+            explanation: "AdaptNXT controls citizen behavior through neural manipulation"
+          }
+        ]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    generatePuzzles();
+  }, []);
 
   const handleSubmit = () => {
     if (!selectedAnswer) return;
@@ -81,6 +104,28 @@ export default function GlitchPathScene({ onComplete, onDetected }: GlitchPathSc
       }
     }, 2000);
   };
+
+  if (isLoading || puzzles.length === 0) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+        <div 
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${bgLeakPath})` }}
+        />
+        <div className="absolute inset-0 bg-black/70" />
+        <div className="bg-black/80 backdrop-blur-md rounded-2xl border border-red-500/30 max-w-3xl w-full p-8 animate-fade-in relative z-10">
+          <div className="text-center">
+            <h1 className="font-orbitron text-red-400 text-lg font-bold tracking-[0.2em] mb-4">
+              GENERATING PUZZLES...
+            </h1>
+            <div className="animate-pulse text-red-300 font-mono">
+              Decrypting system challenges...
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const puzzle = puzzles[currentPuzzle];
 

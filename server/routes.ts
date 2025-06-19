@@ -125,6 +125,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get("/api/generate-puzzle/:puzzleNumber", async (req, res) => {
+    try {
+      const puzzleNumber = parseInt(req.params.puzzleNumber);
+      const { generateGlitchPuzzle } = await import('./openai-client');
+      const puzzle = await generateGlitchPuzzle(puzzleNumber);
+      res.json(puzzle);
+    } catch (error) {
+      console.error('Failed to generate puzzle:', error);
+      res.status(500).json({ error: "Failed to generate puzzle" });
+    }
+  });
+
   // Log file download endpoint
   app.get("/api/download/logs/:filename", async (req, res) => {
     try {
