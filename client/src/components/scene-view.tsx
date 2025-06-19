@@ -229,7 +229,10 @@ export default function SceneView({ scene, onSceneChange }: SceneViewProps) {
         ) : scene === 'glitch_path' ? (
           <GlitchPathScene 
             onComplete={() => onSceneChange('core')} 
-            onDetected={() => onSceneChange('detected')} 
+            onDetected={() => {
+              console.log('onDetected called - changing to detected scene');
+              onSceneChange('detected');
+            }} 
           />
         ) : scene === 'detected' ? (
           <DetectedScene onRestart={() => onSceneChange('intro')} />

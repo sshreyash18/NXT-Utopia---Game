@@ -1,0 +1,30 @@
+[2025-06-19T12:13:41.687Z] [INFO] neural_interface: Player choice: → Reject the AI's control, arguing that true freedom lies in human decision-making, no matter the chaos it may bring.
+  Metadata: {
+  "scene": "trust",
+  "userId": 1,
+  "sessionId": "session-1750335222511"
+}
+
+[2025-06-19T12:13:36.687Z] [WARN] behavior_monitor: Anomalous decision pattern detected
+  Metadata: {
+  "pattern": "demand_proof",
+  "confidence": 0.7324397247240295
+}
+
+[2025-06-19T12:13:31.687Z] [ERROR] security_scanner: Unauthorized access attempt to core systems
+  Metadata: {
+  "threat_level": "HIGH",
+  "source_ip": "192.168.1.42"
+}
+
+[2025-06-19T12:13:26.687Z] [INFO] network_monitor: Neural link established
+  Metadata: {
+  "bandwidth": "1.2GB/s",
+  "latency": "0.3ms"
+}
+
+[2025-06-19T12:13:21.687Z] [WARN] data_integrity: Memory fragmentation detected
+  Metadata: {
+  "fragments": 47,
+  "integrity_score": 0.89
+}

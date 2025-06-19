@@ -11,7 +11,7 @@ export default function DetectedScene({ onRestart }: DetectedSceneProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
-    console.log('DetectedScene mounted');
+    console.log('DetectedScene mounted - should show image and play audio');
     
     // Play the creepy music with user interaction
     const playAudio = () => {
