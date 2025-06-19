@@ -18,6 +18,7 @@ export default function AudioSystem({ scene }: AudioSystemProps) {
     // Change background music when scene changes
     const musicFiles = {
       awaken: '/assets/awaken_theme.mp3_1750271483516.mp3',
+      outside_view: '/assets/suspense-tense-background-music-360497_1750325188238.mp3',
       trust: '/assets/trust_theme.mp3_1750271483518.mp3', 
       leak: '/assets/leak_theme.mp3_1750271483517.mp3',
       core: '/assets/core_theme.mp3_1750271483517.mp3'
