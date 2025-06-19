@@ -53,15 +53,15 @@ Response format as JSON:
   ]
 }`,
 
-  leak_choices: `You are presenting choices after the user has explored the dead zone. They need options to investigate the anomalies and data they discovered. Generate 3 choice options about investigating different types of data or anomalies.
+  leak_choices: `You are presenting investigation choices in the dead zone. Use these exact options:
 
 Response format as JSON:
 {
   "dialogue": "You've stepped into the unknown. What will you investigate first?",
   "choices": [
-    {"text": "→ Choice 1", "description": "brief explanation"},
-    {"text": "→ Choice 2", "description": "brief explanation"},
-    {"text": "→ Choice 3", "description": "brief explanation"}
+    {"text": "→ Signal Vault", "description": "Scan old transmissions for hidden patterns."},
+    {"text": "→ Echo Node", "description": "Listen in on suppressed AI conversations."},
+    {"text": "→ Glitch Path", "description": "Follow trails of broken system code."}
   ]
 }`,
 
