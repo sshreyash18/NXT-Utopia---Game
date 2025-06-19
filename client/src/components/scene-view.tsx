@@ -160,7 +160,7 @@ export default function SceneView({ scene, onSceneChange }: SceneViewProps) {
           opacity: backgroundOpacity
         }}
       >
-        <div className="absolute inset-0 bg-black/40" />
+        <div className="absolute inset-0 bg-black/20" />
       </div>
 
       {/* Audio System */}
@@ -180,7 +180,7 @@ export default function SceneView({ scene, onSceneChange }: SceneViewProps) {
         {scene === 'outside_view' ? (
           <DelayedDialogue
             title={currentSceneData.title}
-            delayedText="Was it always like this? Why does the world feel new, controlled? Why do I feel like I have been controlled or manipulated all my life? What happens inside those AdaptNXT towers I wonder..."
+            delayedText="Was it always like this? The city moves with eerie precision, like everyone knows their role—except me. Why does everything feel familiar yet strange? And those AdaptNXT towers… what really goes on inside them?"
             onContinue={() => onSceneChange('trust')}
           />
         ) : (

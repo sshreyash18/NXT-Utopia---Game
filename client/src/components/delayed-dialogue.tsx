@@ -32,7 +32,7 @@ export default function DelayedDialogue({ title, delayedText, onContinue }: Dela
   }, [showText, currentIndex, delayedText]);
 
   return (
-    <div className="bg-black/70 backdrop-blur-md rounded-2xl border border-cyan-500/30 max-w-3xl w-full p-8 animate-fade-in">
+    <div className="bg-black/40 backdrop-blur-sm rounded-2xl border border-cyan-500/20 max-w-3xl w-full p-8 animate-fade-in">
       {/* Scene Title */}
       <div className="text-center mb-6">
         <h1 className="font-orbitron text-cyan-400 text-lg font-bold tracking-[0.2em] mb-2">
