@@ -5,6 +5,8 @@ import AudioSystem from "./audio-system";
 import CloseEyesScene from "./close-eyes-scene";
 import BreakSilenceScene from "./break-silence-scene";
 import LeakScene from "./leak-scene";
+import GlitchPathScene from "./glitch-path-scene";
+import DetectedScene from "./detected-scene";
 import { useGameState } from "@/hooks/use-game-state";
 import introImagePath from "@assets/crazy ending image_1750273353548.png";
 import bgAwakenPath from "@assets/bg_awaken.jpg_1750271414978.png";
@@ -139,6 +141,18 @@ const staticSceneData = {
       }
     ]
   },
+  glitch_path: {
+    title: "GLITCH PATH",
+    background: bgLeakPath,
+    dialogue: "",
+    showChoices: false
+  },
+  detected: {
+    title: "DETECTED",
+    background: bgCorePath,
+    dialogue: "",
+    showChoices: false
+  },
   core: {
     title: "CORE ACCESS",
     background: bgCorePath,
@@ -212,6 +226,13 @@ export default function SceneView({ scene, onSceneChange }: SceneViewProps) {
           />
         ) : scene === 'leak' ? (
           <LeakScene onContinue={() => onSceneChange('leak_choices')} />
+        ) : scene === 'glitch_path' ? (
+          <GlitchPathScene 
+            onComplete={() => onSceneChange('core')} 
+            onDetected={() => onSceneChange('detected')} 
+          />
+        ) : scene === 'detected' ? (
+          <DetectedScene onRestart={() => onSceneChange('intro')} />
         ) : (
           <DialogueContainer 
             sceneData={currentSceneData}

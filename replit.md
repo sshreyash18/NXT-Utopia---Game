@@ -114,6 +114,8 @@ Changelog:
 - June 19, 2025. Fixed Trust Assessment routing to always go to leak scene
 - June 19, 2025. Added custom "dead zone" text for leak scene with automatic Cipher warning
 - June 19, 2025. Improved typing sound with background music volume ducking
+- June 19, 2025. Created Glitch Path puzzle system with three progressive challenges
+- June 19, 2025. Added detection/game over screen for wrong puzzle answers
 ```
 
 ## User Preferences

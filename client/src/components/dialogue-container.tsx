@@ -167,7 +167,24 @@ export default function DialogueContainer({ sceneData, currentScene, onSceneChan
         }
       }
       
-      const staticScenes = ['intro', 'awaken', 'outside_view'];
+      // Handle leak_choices button routing
+      if (currentScene === 'leak_choices') {
+        if (choice.text.includes('Glitch Path')) {
+          onSceneChange('glitch_path');
+          setIsLoading(false);
+          return;
+        } else if (choice.text.includes('Signal Vault')) {
+          onSceneChange('memory_reconstruction'); // Route to puzzle scene
+          setIsLoading(false);
+          return;
+        } else if (choice.text.includes('Echo Node')) {
+          onSceneChange('log_analysis'); // Route to puzzle scene
+          setIsLoading(false);
+          return;
+        }
+      }
+      
+      const staticScenes = ['intro', 'awaken', 'outside_view', 'leak_choices'];
       
       // For static scenes, just transition directly
       if (staticScenes.includes(currentScene)) {
