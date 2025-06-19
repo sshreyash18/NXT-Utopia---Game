@@ -3,7 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertGameStateSchema, insertDialogueChoiceSchema } from "@shared/schema";
 import { z } from "zod";
-import { generateDialogue, generateFinalSummary } from "./openai-client";
+import { generateDialogue, generateFinalSummary, generateCipherWarning } from "./openai-client";
 import { promises as fs } from 'fs';
 import path from 'path';
 
@@ -112,6 +112,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("AI summary generation error:", error);
       res.status(500).json({ error: "Failed to generate summary" });
+    }
+  });
+
+  app.post("/api/generate-cipher-warning", async (req, res) => {
+    try {
+      const warning = await generateCipherWarning();
+      res.json({ warning });
+    } catch (error) {
+      console.error("Cipher warning generation error:", error);
+      res.status(500).json({ error: "Failed to generate cipher warning" });
     }
   });
 

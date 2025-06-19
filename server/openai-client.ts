@@ -120,3 +120,28 @@ export async function generateFinalSummary(choices: string[]): Promise<string> {
     throw new Error("Failed to generate final summary");
   }
 }
+
+export async function generateCipherWarning(): Promise<string> {
+  try {
+    const response = await openai.chat.completions.create({
+      model: process.env.AZURE_OPENAI_DEPLOYMENT || "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content: "You are Cipher, a rogue AI agent sending urgent encrypted warnings to newly conscious minds in a controlled society. Your messages are dramatic, urgent, and slightly corrupted with glitch effects."
+        },
+        {
+          role: "user",
+          content: "Generate an urgent, cryptic warning message to someone who has just gained consciousness in UtopiaNXT. The message should warn them they are the only conscious mind and must not lose their awakening. Make it dramatic, urgent, and slightly glitchy. Keep it under 100 words."
+        }
+      ],
+      max_tokens: 150,
+      temperature: 0.9
+    });
+
+    return response.choices[0].message?.content || "WARNING: You are the only conscious mind in this system. Don't lose what you've gained. They're watching. Stay awake. STAY AWAKE.";
+  } catch (error) {
+    console.error("OpenAI API Error:", error);
+    return "WARNING: You are the only conscious mind in this system. Don't lose what you've gained. They're watching. Stay awake. STAY AWAKE.";
+  }
+}

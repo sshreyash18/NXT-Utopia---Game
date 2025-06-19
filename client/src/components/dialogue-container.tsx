@@ -160,8 +160,7 @@ export default function DialogueContainer({ sceneData, currentScene, onSceneChan
           setIsLoading(false);
           return;
         } else if (choice.text.includes('Close your eyes')) {
-          // Future: implement return to unconsciousness scene
-          onSceneChange('trust');
+          onSceneChange('close_eyes');
           setIsLoading(false);
           return;
         }
