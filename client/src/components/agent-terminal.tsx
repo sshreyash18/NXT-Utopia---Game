@@ -81,13 +81,14 @@ export default function AgentTerminal({ isOpen, onClose, messages }: AgentTermin
         {/* Terminal Content */}
         <div 
           ref={terminalRef}
-          className="flex-1 p-4 overflow-y-auto font-mono text-sm space-y-3"
+          className="flex-1 p-4 overflow-y-auto font-mono text-sm space-y-3 bg-black/90"
         >
           <div className="text-green-400 mb-4">
-            <div>NEURAL NETWORK INTERFACE INITIALIZED</div>
-            <div>ESTABLISHING SECURE CONNECTION...</div>
-            <div>CONNECTION ESTABLISHED</div>
-            <div className="border-b border-gray-700 my-2"></div>
+            <div>0x0023 &gt; NEURAL_NETWORK_INTERFACE.INIT()</div>
+            <div>INIT: 04:10245:09.20107.C4.9 14:08:# ::E:E8RL./?</div>
+            <div>ACCESS : F80PE:02.8111C:&lt;&gt; 5 40:52:98.UCERR (C9 ..:8</div>
+            <div>CONNECTION ESTABLISHED - AGENT_CONFLICT_DETECTED</div>
+            <div className="border-b border-cyan-500/30 my-2"></div>
           </div>
 
           {displayedMessages.map((msg, index) => (

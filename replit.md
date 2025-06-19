@@ -101,6 +101,9 @@ Changelog:
 - June 18, 2025. Added UtopiaNXT world introduction scene with narrative context
 - June 18, 2025. Fixed game progression and removed debug UI elements
 - June 18, 2025. Integrated Azure OpenAI for behavioral analysis and glitch effects
+- June 19, 2025. Fixed crash issues and implemented terminal-style agent chat interface
+- June 19, 2025. Reduced dialogue text size for better readability
+- June 19, 2025. Added custom terminal/hacker aesthetic image for puzzle scenes
 ```
 
 ## User Preferences

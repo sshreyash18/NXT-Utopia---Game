@@ -7,6 +7,7 @@ import bgAwakenPath from "@assets/bg_awaken.jpg_1750271414978.png";
 import bgTrustPath from "@assets/bg_trust.jpg_1750271414982.png";
 import bgLeakPath from "@assets/bg_leak.jpg_1750271414980.png";
 import bgCorePath from "@assets/bg_core.jpg_1750271414979.png";
+import logAnalysisImagePath from "@assets/ChatGPT Image Jun 19, 2025, 01_43_31 PM_1750320867604.png";
 
 interface SceneViewProps {
   scene: string;
@@ -34,14 +35,14 @@ const staticSceneData = {
   },
   log_analysis: {
     title: "SYSTEM LOG ANALYSIS", 
-    background: bgCorePath, // Will replace with custom image
+    background: logAnalysisImagePath,
     dialogue: "",
     showChoices: false,
     puzzlePrompt: "LOG_ANALYZER > Enter awakening timestamp:"
   },
   network_topology: {
     title: "NETWORK ESCAPE",
-    background: bgCorePath, // Will replace with custom image  
+    background: logAnalysisImagePath,
     dialogue: "",
     showChoices: false,
     puzzlePrompt: "ROUTE_PLANNER > Enter server sequence:"
