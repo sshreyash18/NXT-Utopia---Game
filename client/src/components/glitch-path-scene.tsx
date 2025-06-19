@@ -19,12 +19,12 @@ const puzzles: Puzzle[] = [
   {
     question: "If APPLE = 11616125, what is CIPHER?",
     choices: [
-      { text: "391689185", letter: "A" },
-      { text: "3916891859", letter: "B" },
-      { text: "39168918518", letter: "C" }
+      { text: "391681858", letter: "A" },
+      { text: "391681818", letter: "B" },
+      { text: "391689185", letter: "C" }
     ],
     correctAnswer: "B",
-    explanation: "Each letter corresponds to its position in alphabet: C(3), I(9), P(16), H(8), E(5), R(18) = 391689185"
+    explanation: "Each letter = alphabet position: A(1), P(16), P(16), L(12), E(5) = 11616125. So C(3), I(9), P(16), H(8), E(5), R(18) = 391681818"
   },
   {
     question: "The system blinks a binary message: 01000011\n\nWhat does it mean?",
