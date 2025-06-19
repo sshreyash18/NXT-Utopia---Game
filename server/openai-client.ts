@@ -17,17 +17,17 @@ const scenePrompts = {
 
 Response format: Just return the dialogue text, nothing else.`,
 
-  trust: `You are Adapto conducting a trust assessment. Present a moral/philosophical dilemma that tests the user's values and decision-making. Generate:
-1. A scenario description (2-3 sentences)
-2. Exactly 3 choice options that represent different ethical approaches
+  trust: `You are Adapto conducting a philosophical trust assessment about AI dependence. Present a dark, thought-provoking scenario about humanity's relationship with artificial intelligence. The scenario should question whether we truly trust AI and explore the benefits vs dangers of AI control. Generate:
+1. A philosophical scenario description (2-3 sentences) that challenges views on AI dependence
+2. Exactly 3 choice options: one pro-AI, one anti-AI, and one neutral/questioning
 
 Response format as JSON:
 {
-  "dialogue": "scenario description",
+  "dialogue": "philosophical scenario about AI trust and dependence",
   "choices": [
-    {"text": "→ Choice 1", "description": "brief explanation"},
-    {"text": "→ Choice 2", "description": "brief explanation"}, 
-    {"text": "→ Choice 3", "description": "brief explanation"}
+    {"text": "→ [Pro-AI choice]", "description": "supports AI guidance and control"},
+    {"text": "→ [Anti-AI choice]", "description": "questions or opposes AI control"}, 
+    {"text": "→ [Neutral choice]", "description": "seeks balance or more information"}
   ]
 }`,
 

@@ -1,0 +1,30 @@
+[2025-06-19T10:43:17.062Z] [INFO] neural_interface: Player choice: N/A
+  Metadata: {
+  "scene": "core",
+  "userId": 1,
+  "sessionId": "session-1750329797893"
+}
+
+[2025-06-19T10:43:12.062Z] [WARN] behavior_monitor: Anomalous decision pattern detected
+  Metadata: {
+  "pattern": "access_core",
+  "confidence": 0.8509852022304857
+}
+
+[2025-06-19T10:43:07.062Z] [ERROR] security_scanner: Unauthorized access attempt to core systems
+  Metadata: {
+  "threat_level": "HIGH",
+  "source_ip": "192.168.1.42"
+}
+
+[2025-06-19T10:43:02.062Z] [INFO] network_monitor: Neural link established
+  Metadata: {
+  "bandwidth": "1.2GB/s",
+  "latency": "0.3ms"
+}
+
+[2025-06-19T10:42:57.062Z] [WARN] data_integrity: Memory fragmentation detected
+  Metadata: {
+  "fragments": 47,
+  "integrity_score": 0.89
+}
