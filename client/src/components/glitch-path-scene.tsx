@@ -68,6 +68,7 @@ export default function GlitchPathScene({ onComplete, onDetected }: GlitchPathSc
       stopTypingSound();
       
       if (!correct) {
+        console.log('Wrong answer - calling onDetected()');
         onDetected();
       } else if (currentPuzzle < puzzles.length - 1) {
         // Next puzzle

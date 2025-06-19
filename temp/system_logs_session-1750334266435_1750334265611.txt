@@ -1,0 +1,30 @@
+[2025-06-19T11:57:45.610Z] [INFO] neural_interface: Player choice: → Reject the AI
+  Metadata: {
+  "scene": "trust",
+  "userId": 1,
+  "sessionId": "session-1750334266435"
+}
+
+[2025-06-19T11:57:40.610Z] [WARN] behavior_monitor: Anomalous decision pattern detected
+  Metadata: {
+  "pattern": "demand_proof",
+  "confidence": 0.9969633867372859
+}
+
+[2025-06-19T11:57:35.610Z] [ERROR] security_scanner: Unauthorized access attempt to core systems
+  Metadata: {
+  "threat_level": "HIGH",
+  "source_ip": "192.168.1.42"
+}
+
+[2025-06-19T11:57:30.610Z] [INFO] network_monitor: Neural link established
+  Metadata: {
+  "bandwidth": "1.2GB/s",
+  "latency": "0.3ms"
+}
+
+[2025-06-19T11:57:25.610Z] [WARN] data_integrity: Memory fragmentation detected
+  Metadata: {
+  "fragments": 47,
+  "integrity_score": 0.89
+}
