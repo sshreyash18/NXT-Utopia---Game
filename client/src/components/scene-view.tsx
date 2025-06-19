@@ -187,6 +187,11 @@ export default function SceneView({ scene, onSceneChange }: SceneViewProps) {
     return () => clearTimeout(timer);
   }, [scene]);
 
+  // Special handling for detected scene - render it without any background interference
+  if (scene === 'detected') {
+    return <DetectedScene onRestart={() => onSceneChange('intro')} />;
+  }
+
   return (
     <div className="relative min-h-screen overflow-hidden">
       {/* Background Container */}
