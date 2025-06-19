@@ -31,13 +31,21 @@ Response format as JSON:
   ]
 }`,
 
-  leak: `You are Adapto dealing with an information leak situation. The user has made choices that led to suspicions. Present a scenario involving betrayal, secrets, or loyalty. Generate:
-1. A tense scenario description (2-3 sentences)
-2. Exactly 3 choice options dealing with truth, deception, or loyalty
+  leak: `You are presenting the leak scene where the user enters a dangerous system dead zone. Use this exact text as dialogue:
+
+"You're in a dead zone of the system — unindexed, unstable, and not meant for citizen access.
+Here, protocols falter. Firewalls flicker. Responses twist.
+You might uncover something the AI buried — anomalies, suppressed data, forbidden truths.
+But make no mistake:
+You are being watched.
+The system doesn't like unpredictability.
+Not everything here plays fair — and your choices might not be entirely your own."
+
+Then generate 3 choice options about investigating anomalies or data.
 
 Response format as JSON:
 {
-  "dialogue": "scenario description",
+  "dialogue": "[Use the exact text above]",
   "choices": [
     {"text": "→ Choice 1", "description": "brief explanation"},
     {"text": "→ Choice 2", "description": "brief explanation"},

@@ -1,0 +1,30 @@
+[2025-06-19T10:54:30.118Z] [INFO] neural_interface: Player choice: → Seek a balanced approach
+  Metadata: {
+  "scene": "trust",
+  "userId": 1,
+  "sessionId": "session-1750330470941"
+}
+
+[2025-06-19T10:54:25.118Z] [WARN] behavior_monitor: Anomalous decision pattern detected
+  Metadata: {
+  "pattern": "question_identity",
+  "confidence": 0.7106196933843199
+}
+
+[2025-06-19T10:54:20.118Z] [ERROR] security_scanner: Unauthorized access attempt to core systems
+  Metadata: {
+  "threat_level": "HIGH",
+  "source_ip": "192.168.1.42"
+}
+
+[2025-06-19T10:54:15.118Z] [INFO] network_monitor: Neural link established
+  Metadata: {
+  "bandwidth": "1.2GB/s",
+  "latency": "0.3ms"
+}
+
+[2025-06-19T10:54:10.118Z] [WARN] data_integrity: Memory fragmentation detected
+  Metadata: {
+  "fragments": 47,
+  "integrity_score": 0.89
+}

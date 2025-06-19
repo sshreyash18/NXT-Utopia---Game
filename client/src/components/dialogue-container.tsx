@@ -203,7 +203,7 @@ export default function DialogueContainer({ sceneData, currentScene, onSceneChan
         setBehaviorAnalysis(data.behaviorAnalysis);
       }
       
-      // Add Cipher response for Trust Assessment choices
+      // Add Cipher responses for specific scenes
       if (currentScene === 'trust' && choice.text) {
         const lowerChoice = choice.text.toLowerCase();
         let cipherMessage = "";
@@ -231,6 +231,17 @@ export default function DialogueContainer({ sceneData, currentScene, onSceneChan
           };
           setAgentMessages(prev => [...prev, newMessage]);
         }
+      }
+      
+      // Add Cipher warning for leak scene
+      if (currentScene === 'leak' && !choice.text) {
+        // First time entering leak scene, add Cipher warning
+        const cipherWarning = {
+          agent: 'cipher' as const,
+          message: '[glitch] "They\'ll twist your will... if you let them." —Cipher',
+          timestamp: Date.now()
+        };
+        setAgentMessages(prev => [...prev, cipherWarning]);
       }
       
       // Auto-transition to next scene

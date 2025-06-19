@@ -111,6 +111,9 @@ Changelog:
 - June 19, 2025. Updated Trust Assessment to philosophical AI dependence questions
 - June 19, 2025. Added conditional Cipher responses based on Trust Assessment choices
 - June 19, 2025. Integrated typing sound effects for Neural Chat agent conversations
+- June 19, 2025. Fixed Trust Assessment routing to always go to leak scene
+- June 19, 2025. Added custom "dead zone" text for leak scene with automatic Cipher warning
+- June 19, 2025. Improved typing sound with background music volume ducking
 ```
 
 ## User Preferences

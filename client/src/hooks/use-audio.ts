@@ -52,7 +52,13 @@ export function useAudio() {
 
   const playTypingSound = useCallback(() => {
     if (typingSound.current) {
-      typingSound.current.volume = 0.3;
+      // Duck background music volume when typing plays
+      if (backgroundMusic.current && !backgroundMusic.current.paused) {
+        backgroundMusic.current.volume = 0.1; // Reduce to 10%
+      }
+      
+      typingSound.current.currentTime = 0;
+      typingSound.current.volume = 1.0; // Full volume for typing
       typingSound.current.play().catch(error => {
         console.log('Typing sound failed:', error);
       });
@@ -63,6 +69,11 @@ export function useAudio() {
     if (typingSound.current) {
       typingSound.current.pause();
       typingSound.current.currentTime = 0;
+      
+      // Restore background music volume
+      if (backgroundMusic.current && !backgroundMusic.current.paused) {
+        backgroundMusic.current.volume = 0.5; // Back to normal
+      }
     }
   }, []);
 
