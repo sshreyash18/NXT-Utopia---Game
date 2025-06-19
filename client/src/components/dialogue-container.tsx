@@ -343,7 +343,10 @@ export default function DialogueContainer({ sceneData, currentScene, onSceneChan
         
         {/* Terminal Access Button */}
         <Button
-          onClick={() => setTerminalOpen(true)}
+          onClick={() => {
+            setTerminalOpen(true);
+            playTypingSound();
+          }}
           variant="ghost"
           size="sm"
           className="absolute top-0 right-0 text-cyan-400 hover:text-cyan-300 hover:bg-cyan-500/10 border border-cyan-500/30"

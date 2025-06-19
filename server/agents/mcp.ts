@@ -233,7 +233,7 @@ export class MultiAgentControlPanel {
     const trustLevel = this.calculateTrustLevel(context.previousChoices);
     
     const sceneFlow: Record<string, string> = {
-      'trust': suspicionLevel > 0.6 ? 'leak' : 'core',
+      'trust': 'leak',
       'leak': trustLevel < 0.3 ? 'log_analysis' : 'network_topology', 
       'log_analysis': 'memory_reconstruction',
       'memory_reconstruction': 'network_topology',
