@@ -98,14 +98,14 @@ export async function generateDialogue(scene: string, userChoice?: string, previ
         { role: "system", content: systemMessage },
         { role: "user", content: userMessage }
       ],
-      response_format: scene === "trust" || scene === "leak" ? { type: "json_object" } : undefined,
+      response_format: scene === "trust" || scene === "leak" || scene === "leak_choices" ? { type: "json_object" } : undefined,
       max_tokens: 500,
       temperature: 0.7
     });
 
     const content = response.choices[0].message.content;
     
-    if (scene === "trust" || scene === "leak") {
+    if (scene === "trust" || scene === "leak" || scene === "leak_choices") {
       return JSON.parse(content || "{}");
     }
     
