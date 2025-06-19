@@ -1,8 +1,12 @@
 import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Terminal } from "lucide-react";
 import { useAudio } from "@/hooks/use-audio";
 import { apiRequest } from "@/lib/queryClient";
 import EndingScene from "./ending-scene";
 import GlitchEffects from "./glitch-effects";
+import AgentTerminal, { type AgentMessage } from "./agent-terminal";
 
 interface Choice {
   text: string;
@@ -32,6 +36,8 @@ export default function DialogueContainer({ sceneData, currentScene, onSceneChan
   const [agentLogs, setAgentLogs] = useState<any>(null);
   const [behaviorAnalysis, setBehaviorAnalysis] = useState<any>(null);
   const [puzzleAttempts, setPuzzleAttempts] = useState<number>(0);
+  const [terminalOpen, setTerminalOpen] = useState(false);
+  const [agentMessages, setAgentMessages] = useState<AgentMessage[]>([]);
   const { playTypingSound, stopTypingSound } = useAudio();
 
   // Update scene data when the scene prop changes
@@ -84,9 +90,26 @@ export default function DialogueContainer({ sceneData, currentScene, onSceneChan
       if (data.behaviorAnalysis) {
         setBehaviorAnalysis(data.behaviorAnalysis);
       }
+
+      // Add agent conversations to terminal
+      if (data.agentConversation) {
+        const newMessages = data.agentConversation.map((msg: any) => ({
+          agent: msg.agent,
+          message: msg.message,
+          timestamp: Date.now()
+        }));
+        setAgentMessages(prev => [...prev, ...newMessages]);
+      }
       
     } catch (error) {
       console.error('Failed to load AI content:', error);
+      setDynamicSceneData(prev => ({
+        ...prev,
+        dialogue: "Connection lost... attempting to reconnect to the neural network...",
+        choices: [
+          { text: "→ Try again", description: "Reconnect to the system" }
+        ]
+      }));
     } finally {
       stopTypingSound();
       setIsLoading(false);
