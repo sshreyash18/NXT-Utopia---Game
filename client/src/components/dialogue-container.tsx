@@ -31,6 +31,7 @@ export default function DialogueContainer({ sceneData, currentScene, onSceneChan
   const [glitchEffects, setGlitchEffects] = useState<any>(null);
   const [agentLogs, setAgentLogs] = useState<any>(null);
   const [behaviorAnalysis, setBehaviorAnalysis] = useState<any>(null);
+  const [puzzleAttempts, setPuzzleAttempts] = useState<number>(0);
   const { playTypingSound, stopTypingSound } = useAudio();
 
   // Update scene data when the scene prop changes
@@ -185,14 +186,47 @@ export default function DialogueContainer({ sceneData, currentScene, onSceneChan
     playTypingSound();
     
     try {
-      // Generate AI response for core puzzle
-      const response = await apiRequest('POST', `/api/generate-dialogue/core`, { 
+      // Process puzzle answer through MCP system
+      const response = await apiRequest('POST', `/api/generate-dialogue/${currentScene}`, { 
         userChoice: puzzleInput,
-        previousChoices: [...previousChoices, puzzleInput]
+        previousChoices: [...previousChoices, puzzleInput],
+        userId: 1,
+        sessionId: `session-${Date.now()}`
       });
+      const data = await response.json();
       
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      onSceneChange('end');
+      // Update dialogue with result
+      setDynamicSceneData(prev => ({
+        ...prev,
+        dialogue: data.dialogue || prev.dialogue
+      }));
+
+      // Handle puzzle-specific effects
+      if (data.puzzleResult) {
+        if (data.puzzleResult.correct) {
+          // Success - show success message and transition
+          await new Promise(resolve => setTimeout(resolve, 2000));
+          if (data.nextScene) {
+            onSceneChange(data.nextScene);
+          }
+        } else {
+          // Failure - show hint or retry
+          setDynamicSceneData(prev => ({
+            ...prev,
+            dialogue: `${data.dialogue}\n\nAttempts: ${data.puzzleResult.attempts}/3`
+          }));
+          
+          if (data.puzzleResult.attempts >= 3) {
+            // Too many attempts - force progression or alternate path
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            onSceneChange(data.nextSceneFailure || 'end');
+          }
+        }
+      } else {
+        // Regular core scene processing
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        onSceneChange('end');
+      }
       
     } catch (error) {
       console.error('Failed to process puzzle:', error);
@@ -267,8 +301,48 @@ export default function DialogueContainer({ sceneData, currentScene, onSceneChan
           </div>
         )}
 
-        {/* Core Puzzle Input */}
-        {!isLoading && !dynamicSceneData.showChoices && currentScene === 'core' && (
+        {/* Puzzle Data Display */}
+        {!isLoading && dynamicSceneData.puzzleData && (
+          <div className="mb-6 p-4 bg-gray-900/80 border border-cyan-500/30 rounded-lg">
+            <div className="font-mono text-xs text-cyan-300 space-y-2">
+              {currentScene === 'log_analysis' && (
+                <div>
+                  <div className="text-yellow-400">SYSTEM LOGS:</div>
+                  <div className="whitespace-pre-wrap">{dynamicSceneData.puzzleData}</div>
+                </div>
+              )}
+              {currentScene === 'memory_reconstruction' && (
+                <div>
+                  <div className="text-purple-400">MEMORY FRAGMENTS:</div>
+                  <div className="whitespace-pre-wrap">{dynamicSceneData.puzzleData}</div>
+                </div>
+              )}
+              {currentScene === 'network_topology' && (
+                <div>
+                  <div className="text-green-400">NETWORK MAP:</div>
+                  <div className="whitespace-pre-wrap">{dynamicSceneData.puzzleData}</div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Agent Conflict Display */}
+        {!isLoading && agentLogs?.agentConflict && (
+          <div className="mb-6 space-y-3">
+            <div className="p-3 bg-blue-900/50 border border-blue-500/30 rounded-lg">
+              <div className="text-blue-300 font-bold text-sm">ADAPTO:</div>
+              <div className="text-blue-100 text-sm">{agentLogs.agentConflict.adapto}</div>
+            </div>
+            <div className="p-3 bg-red-900/50 border border-red-500/30 rounded-lg animate-pulse">
+              <div className="text-red-300 font-bold text-sm">CIPHER [ENCRYPTED]:</div>
+              <div className="text-red-100 text-sm font-mono">{agentLogs.agentConflict.cipher}</div>
+            </div>
+          </div>
+        )}
+
+        {/* Puzzle Input */}
+        {!isLoading && !dynamicSceneData.showChoices && (currentScene === 'core' || currentScene.includes('_')) && (
           <div className="space-y-4 animate-slide-up" style={{ animationDelay: '0.3s' }}>
             <div className="space-y-2">
               <label className="block text-cyan-300 font-medium font-mono text-sm">

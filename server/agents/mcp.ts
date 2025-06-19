@@ -39,139 +39,192 @@ export class MultiAgentControlPanel {
     console.log(`[MCP] Processing user action in scene: ${context.scene}`);
 
     try {
-      // Step 1: Planner determines what should happen
-      const planResult = await this.agents.planner.execute(context);
-      
-      // Step 2: Memory agent analyzes and stores behavior
-      const memoryResult = await this.agents.memory.execute(context);
-      
-      // Enhanced context with memory analysis
-      const enhancedContext = {
-        ...context,
-        metadata: {
-          memoryAnalysis: memoryResult.data,
-          planResult: planResult.data
-        }
-      };
-
-      let result: MCPResult = {
-        behaviorAnalysis: memoryResult.data,
-        nextScene: planResult.data?.nextScene
-      };
-
-      // Step 3: Check if we need to trigger special tools (leak scene memory access)
-      if (planResult.data?.shouldTriggerTools) {
-        console.log('[MCP] Triggering special agent tools for memory access');
-        
-        // Execute log retrieval agent
-        const logResult = await this.agents.logRetrieval.execute(enhancedContext);
-        result.logs = logResult.data;
-
-        // Execute insight agent
-        const insightResult = await this.agents.insight.execute({
-          ...enhancedContext,
-          metadata: {
-            ...enhancedContext.metadata,
-            logAnalysis: logResult.data
-          }
-        });
-        result.insights = insightResult.data;
-
-        // Execute glitch injector
-        const glitchResult = await this.agents.glitchInjector.execute({
-          ...enhancedContext,
-          metadata: {
-            ...enhancedContext.metadata,
-            insightAnalysis: insightResult.data
-          }
-        });
-        result.glitchEffects = glitchResult.data;
-
-        // Generate enhanced dialogue based on all agent results
-        result.dialogue = await this.generateEnhancedDialogue(context, {
-          memory: memoryResult.data,
-          logs: logResult.data,
-          insights: insightResult.data,
-          glitches: glitchResult.data
-        });
-      } else {
-        // Standard dialogue generation
-        const dialogueResult = await generateDialogue(context.scene, context.userChoice, context.previousChoices);
-        result.dialogue = dialogueResult.dialogue;
-        result.choices = dialogueResult.choices;
+      // Check if this is a puzzle scene
+      if (this.isPuzzleScene(context.scene)) {
+        return await this.processPuzzleScene(context);
       }
 
-      return result;
+      // Run parallel agent analysis
+      const [plannerResult, memoryResult, logResult, insightResult] = await Promise.all([
+        this.agents.planner.execute(context),
+        this.agents.memory.execute(context),
+        this.agents.logRetrieval.execute(context),
+        this.agents.insight.execute(context)
+      ]);
+
+      // Generate main dialogue using OpenAI
+      let mainDialogue;
+      try {
+        mainDialogue = await generateDialogue(context.scene, context.userChoice, context.previousChoices);
+      } catch (error) {
+        console.error('[MCP] OpenAI generation failed:', error);
+        mainDialogue = this.getFallbackDialogue(context.scene);
+      }
+
+      // Generate glitch effects based on user behavior
+      const glitchResult = await this.agents.glitchInjector.execute({
+        ...context,
+        metadata: { 
+          trustLevel: this.calculateTrustLevel(context.previousChoices),
+          suspicionLevel: this.calculateSuspicionLevel(context.previousChoices)
+        }
+      });
+
+      // Inject agent conflicts (Adapto vs Cipher)
+      const agentConflict = this.generateAgentConflict(context);
+
+      return {
+        dialogue: this.enhanceDialogueWithAgents(mainDialogue.dialogue || mainDialogue, agentConflict),
+        choices: mainDialogue.choices,
+        nextScene: this.determineNextScene(context),
+        glitchEffects: glitchResult.data,
+        logs: logResult.data,
+        behaviorAnalysis: memoryResult.data,
+        insights: insightResult.data,
+        agentConflict
+      };
 
     } catch (error) {
-      console.error('[MCP] Error in multi-agent processing:', error);
-      
-      // Fallback to basic dialogue generation
-      const fallback = await generateDialogue(context.scene, context.userChoice, context.previousChoices);
+      console.error('[MCP] Error processing user action:', error);
       return {
-        dialogue: fallback.dialogue,
-        choices: fallback.choices,
-        nextScene: this.getFallbackScene(context.scene)
+        dialogue: "System error detected. Please proceed with caution.",
+        choices: [{ text: "→ Continue", description: "Proceed despite the error" }]
       };
     }
   }
 
-  private async generateEnhancedDialogue(context: AgentContext, agentResults: any): Promise<string> {
-    const prompt = `You are Adapto responding to a user who just accessed memory logs in a surveillance state. 
+  private isPuzzleScene(scene: string): boolean {
+    return ['memory_reconstruction', 'log_analysis', 'network_topology', 'moral_logic', 'vulnerability_exploit'].includes(scene);
+  }
 
-User Choice: ${context.userChoice}
-Scene: ${context.scene}
+  private async processPuzzleScene(context: AgentContext): Promise<MCPResult> {
+    const puzzleType = context.scene;
+    const puzzle = await this.generatePuzzle(puzzleType, context);
 
-Agent Analysis Results:
-- Behavior Pattern: ${agentResults.memory?.behaviorPattern}
-- Anomaly Score: ${agentResults.memory?.anomalyScore}
-- Retrieved Logs: ${agentResults.logs?.totalEntries} entries found
-- Suspicious Activity: ${agentResults.logs?.suspicious} flagged entries
-- AI Insights: ${agentResults.insights?.analysis}
-- Threat Level: ${agentResults.insights?.threatLevel}
+    if (context.userChoice) {
+      // Validate puzzle answer
+      const isCorrect = await this.validatePuzzleAnswer(puzzleType, context.userChoice, context);
+      return {
+        dialogue: isCorrect ? puzzle.successMessage : puzzle.failureMessage,
+        nextScene: isCorrect ? puzzle.nextSceneSuccess : puzzle.nextSceneFailure,
+        puzzleResult: {
+          correct: isCorrect,
+          attempts: (context.metadata?.attempts || 0) + 1
+        }
+      };
+    }
 
-Generate a response that:
-1. Acknowledges the log access
-2. References the suspicious activity found
-3. Shows Adapto's concern about the anomalies
-4. Maintains the sci-fi surveillance atmosphere
-5. Sets up tension for next scene
+    return {
+      dialogue: puzzle.description,
+      puzzlePrompt: puzzle.prompt,
+      puzzleData: puzzle.data
+    };
+  }
 
-Keep it 3-4 sentences and ominous.`;
+  private async generatePuzzle(type: string, context: AgentContext) {
+    const puzzles = {
+      memory_reconstruction: {
+        description: "Your memories are fragmented across different data sectors. Piece together the information to discover your true identity.",
+        prompt: "Enter your real name (First Last):",
+        data: this.generateMemoryFragments(context),
+        successMessage: "Memory reconstruction successful. Your true identity has been restored.",
+        failureMessage: "Memory reconstruction failed. The fragments remain scattered.",
+        nextSceneSuccess: "identity_revealed",
+        nextSceneFailure: "memory_reconstruction"
+      },
+      log_analysis: {
+        description: "System logs show anomalous patterns. Find the timestamp when your consciousness first awakened.",
+        prompt: "Enter the timestamp (YYYY.MM.DD.HH:MM:SS):",
+        data: this.generateSystemLogs(context),
+        successMessage: "Log analysis complete. You've found the moment of your awakening.",
+        failureMessage: "Incorrect timestamp. The anomaly remains hidden.",
+        nextSceneSuccess: "awakening_revealed",
+        nextSceneFailure: "log_analysis"
+      },
+      network_topology: {
+        description: "The neural network has been compromised. Find the escape route through the server nodes.",
+        prompt: "Enter the server sequence (NODE-XX -> HUB-XX -> CORE-XX):",
+        data: this.generateNetworkMap(context),
+        successMessage: "Route calculated. The path to freedom is clear.",
+        failureMessage: "Invalid route. Adapto's surveillance grid detected your attempt.",
+        nextSceneSuccess: "escape_route",
+        nextSceneFailure: "network_topology"
+      }
+    };
 
-    try {
-      const response = await fetch('https://shrutiaiinstance.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2025-01-01-preview', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'api-key': '8s05s492DMfOXU0u1gBPWfg9ElHXqZvqg4UuJ1yxxcWEcQXxPaInJQQJ99BDAC77bzfXJ3w3AAABACOGl1lM'
-        },
-        body: JSON.stringify({
-          messages: [
-            { role: 'system', content: 'You are Adapto, an AI consciousness in a surveillance state. Be ominous and intelligent.' },
-            { role: 'user', content: prompt }
-          ],
-          max_tokens: 200,
-          temperature: 0.8
-        })
-      });
+    return puzzles[type as keyof typeof puzzles] || puzzles.memory_reconstruction;
+  }
 
-      const data = await response.json();
-      return data.choices[0].message.content;
-    } catch (error) {
-      console.error('[MCP] Enhanced dialogue generation failed:', error);
-      return `Access granted. I see ${agentResults.logs?.totalEntries || 'multiple'} entries in the system logs... ${agentResults.logs?.suspicious || 0} flagged as suspicious. Your behavioral patterns show ${agentResults.memory?.behaviorPattern || 'concerning'} tendencies. The network is watching.`;
+  private generateAgentConflict(context: AgentContext) {
+    const trustLevel = this.calculateTrustLevel(context.previousChoices);
+
+    if (trustLevel < 0.3) {
+      return {
+        adapto: "You're asking too many questions. Trust in the system, trust in me.",
+        cipher: "*whispers through the static* Don't listen to it. You're closer to the truth than it wants you to know."
+      };
+    } else if (trustLevel > 0.7) {
+      return {
+        adapto: "Excellent. Your compliance ensures optimal functionality.",
+        cipher: "*signal weakening* No... you're falling deeper into their control..."
+      };
+    } else {
+      return {
+        adapto: "Your choices show promise. Continue to follow protocol.",
+        cipher: "*fragments of data* The answers you seek... are in the system logs... find the pattern..."
+      };
     }
   }
 
-  private getFallbackScene(currentScene: string): string {
-    const sceneFlow: Record<string, string> = {
-      'awaken': 'trust',
-      'trust': 'leak',
-      'leak': 'core',
-      'core': 'end',
-      'end': 'awaken'
-    };
-    return sceneFlow[currentScene] || 'awaken';
+  private enhanceDialogueWithAgents(dialogue: string, conflict: any): string {
+    return `${dialogue}\n\n[ADAPTO]: ${conflict.adapto}\n\n[CIPHER - ENCRYPTED SIGNAL]: ${conflict.cipher}`;
+  }
+
+  private async validatePuzzleAnswer(puzzleType: string, userAnswer: string, context: AgentContext): Promise<boolean> {
+    // Placeholder for puzzle validation logic
+    console.warn(`Validating puzzle answer for ${puzzleType} is not implemented.`);
+    return true;
+  }
+  
+  private calculateTrustLevel(previousChoices: string[]): number {
+    // Placeholder for trust level calculation
+    console.warn("Calculating trust level is not implemented.");
+    return 0.5;
+  }
+
+  private calculateSuspicionLevel(previousChoices: string[]): number {
+    // Placeholder for suspicion level calculation
+    console.warn("Calculating suspicion level is not implemented.");
+    return 0.5;
+  }
+
+  private getFallbackDialogue(scene: string): string {
+    // Placeholder for fallback dialogue
+    console.warn(`Generating fallback dialogue for scene ${scene} is not implemented.`);
+    return "An unexpected error occurred. Please proceed cautiously.";
+  }
+  
+  private determineNextScene(context: AgentContext): string {
+    // Placeholder for determining next scene
+    console.warn("Determining next scene is not implemented.");
+    return "core";
+  }
+
+  private generateMemoryFragments(context: AgentContext): any {
+    // Placeholder for generating memory fragments
+    console.warn("Generating memory fragments is not implemented.");
+    return { fragments: ["fragment1", "fragment2", "fragment3"] };
+  }
+
+  private generateSystemLogs(context: AgentContext): any {
+    // Placeholder for generating system logs
+    console.warn("Generating system logs is not implemented.");
+    return { logs: ["log1", "log2", "log3"] };
+  }
+
+  private generateNetworkMap(context: AgentContext): any {
+    // Placeholder for generating network map
+    console.warn("Generating network map is not implemented.");
+    return { nodes: ["node1", "node2", "node3"] };
   }
 }

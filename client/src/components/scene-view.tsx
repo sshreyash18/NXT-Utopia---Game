@@ -25,6 +25,48 @@ const staticSceneData = {
       }
     ]
   },
+  memory_reconstruction: {
+    title: "MEMORY RECONSTRUCTION",
+    background: bgCorePath, // Will replace with custom image
+    dialogue: "",
+    showChoices: false,
+    puzzlePrompt: "MEMORY_SCAN > Enter your real name:"
+  },
+  log_analysis: {
+    title: "SYSTEM LOG ANALYSIS", 
+    background: bgCorePath, // Will replace with custom image
+    dialogue: "",
+    showChoices: false,
+    puzzlePrompt: "LOG_ANALYZER > Enter awakening timestamp:"
+  },
+  network_topology: {
+    title: "NETWORK ESCAPE",
+    background: bgCorePath, // Will replace with custom image  
+    dialogue: "",
+    showChoices: false,
+    puzzlePrompt: "ROUTE_PLANNER > Enter server sequence:"
+  },
+  identity_revealed: {
+    title: "IDENTITY RESTORED",
+    background: bgCorePath,
+    dialogue: "",
+    showChoices: true,
+    choices: []
+  },
+  awakening_revealed: {
+    title: "MOMENT OF TRUTH",
+    background: bgCorePath,
+    dialogue: "",
+    showChoices: true, 
+    choices: []
+  },
+  escape_route: {
+    title: "FREEDOM PATH",
+    background: bgCorePath,
+    dialogue: "",
+    showChoices: true,
+    choices: []
+  },
   awaken: {
     title: "NEURAL AWAKENING",
     background: bgAwakenPath,
