@@ -78,7 +78,7 @@ export class MultiAgentControlPanel {
       const agentConflict = this.generateAgentConflict(context);
 
       return {
-        dialogue: this.enhanceDialogueWithAgents(mainDialogue.dialogue || mainDialogue, agentConflict),
+        dialogue: mainDialogue.dialogue || mainDialogue,
         choices: mainDialogue.choices,
         nextScene: this.determineNextScene(context),
         glitchEffects: glitchResult.data,

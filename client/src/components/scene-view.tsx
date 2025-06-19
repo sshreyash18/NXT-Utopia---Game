@@ -3,6 +3,7 @@ import DialogueContainer from "./dialogue-container";
 import DelayedDialogue from "./delayed-dialogue";
 import AudioSystem from "./audio-system";
 import CloseEyesScene from "./close-eyes-scene";
+import BreakSilenceScene from "./break-silence-scene";
 import { useGameState } from "@/hooks/use-game-state";
 import introImagePath from "@assets/crazy ending image_1750273353548.png";
 import bgAwakenPath from "@assets/bg_awaken.jpg_1750271414978.png";
@@ -180,6 +181,8 @@ export default function SceneView({ scene, onSceneChange }: SceneViewProps) {
       <div className="relative z-10 min-h-screen flex items-center justify-center p-6">
         {scene === 'close_eyes' ? (
           <CloseEyesScene onReturn={() => onSceneChange('awaken')} />
+        ) : scene === 'break_silence' ? (
+          <BreakSilenceScene onContinue={() => onSceneChange('trust')} />
         ) : scene === 'outside_view' ? (
           <DelayedDialogue
             title={currentSceneData.title}

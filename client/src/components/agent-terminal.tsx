@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Terminal, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAudio } from "@/hooks/use-audio";
 
 interface AgentMessage {
   agent: 'adapto' | 'cipher';

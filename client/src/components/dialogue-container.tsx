@@ -155,8 +155,7 @@ export default function DialogueContainer({ sceneData, currentScene, onSceneChan
           setIsLoading(false);
           return;
         } else if (choice.text.includes('Break the Silence')) {
-          // Future: implement AI system response scene
-          onSceneChange('trust');
+          onSceneChange('break_silence');
           setIsLoading(false);
           return;
         } else if (choice.text.includes('Close your eyes')) {
