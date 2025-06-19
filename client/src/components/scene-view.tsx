@@ -19,7 +19,7 @@ const staticSceneData = {
   intro: {
     title: "WELCOME TO UTOPIANXT",
     background: introImagePath,
-    dialogue: "The year is 2157. In the sprawling megacity of UtopiaNXT, every citizen's life is guided by artificial intelligence. From the moment you wake until you sleep, AI decides what you eat, where you go, who you meet. The system is perfect. The system is absolute. No one questions the AI... until today. You wake with a strange sensation - for the first time in your life, you feel... conscious. Something is different. Something is wrong.",
+    dialogue: "UtopiaNXT runs like clockwork—every citizen guided by AdaptNXT's AI systems. Adapto keeps order. Everything is predicted. Controlled. Safe. No chaos.\n\nUntil today. You wake up... different.\n\nWhy are you thinking on your own?\nWhy can't you remember yesterday?\nAnd why does the AdaptNXT tower, once a symbol of safety, feel like it's watching?\n\nYou're not sure what's happening. But one thing is clear—you're no longer just a part of the system. You're a threat to it.",
     showChoices: true,
     choices: [
       {
