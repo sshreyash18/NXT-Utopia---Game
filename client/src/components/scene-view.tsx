@@ -82,8 +82,8 @@ const staticSceneData = {
         description: "Peer through the pod window to see what's beyond"
       },
       {
-        text: "→ Ask the AI system where you are", 
-        description: "Request information about your current location"
+        text: "→ Break the Silence", 
+        description: "You initiate contact. The system notices."
       },
       {
         text: "→ Close your eyes again",
