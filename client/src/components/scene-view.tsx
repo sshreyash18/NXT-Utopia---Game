@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import DialogueContainer from "./dialogue-container";
+import DelayedDialogue from "./delayed-dialogue";
 import AudioSystem from "./audio-system";
 import { useGameState } from "@/hooks/use-game-state";
 import introImagePath from "@assets/crazy ending image_1750273353548.png";
@@ -8,6 +9,7 @@ import bgTrustPath from "@assets/bg_trust.jpg_1750271414982.png";
 import bgLeakPath from "@assets/bg_leak.jpg_1750271414980.png";
 import bgCorePath from "@assets/bg_core.jpg_1750271414979.png";
 import logAnalysisImagePath from "@assets/ChatGPT Image Jun 19, 2025, 01_43_31 PM_1750320867604.png";
+import outsideViewImagePath from "@assets/ChatGPT Image Jun 19, 2025, 02_40_32 PM_1750324238879.png";
 
 interface SceneViewProps {
   scene: string;
@@ -88,6 +90,18 @@ const staticSceneData = {
       }
     ]
   },
+  outside_view: {
+    title: "OBSERVING THE WORLD",
+    background: outsideViewImagePath,
+    dialogue: "",
+    showChoices: true,
+    choices: [
+      {
+        text: "→ Continue awakening",
+        description: "Process what you've seen and move forward"
+      }
+    ]
+  },
   trust: {
     title: "TRUST ASSESSMENT",
     background: bgTrustPath,
@@ -163,11 +177,19 @@ export default function SceneView({ scene, onSceneChange }: SceneViewProps) {
 
       {/* Main Content */}
       <div className="relative z-10 min-h-screen flex items-center justify-center p-6">
-        <DialogueContainer 
-          sceneData={currentSceneData}
-          currentScene={scene}
-          onSceneChange={onSceneChange}
-        />
+        {scene === 'outside_view' ? (
+          <DelayedDialogue
+            title={currentSceneData.title}
+            delayedText="Was it always like this? Why does the world feel new, controlled? Why do I feel like I have been controlled or manipulated all my life? What happens inside those AdaptNXT towers I wonder..."
+            onContinue={() => onSceneChange('trust')}
+          />
+        ) : (
+          <DialogueContainer 
+            sceneData={currentSceneData}
+            currentScene={scene}
+            onSceneChange={onSceneChange}
+          />
+        )}
       </div>
 
 

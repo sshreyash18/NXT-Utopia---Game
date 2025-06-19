@@ -148,7 +148,26 @@ export default function DialogueContainer({ sceneData, currentScene, onSceneChan
         return;
       }
       
-      const staticScenes = ['intro', 'awaken'];
+      // Handle specific choice routing from awaken scene
+      if (currentScene === 'awaken') {
+        if (choice.text.includes('Look outside')) {
+          onSceneChange('outside_view');
+          setIsLoading(false);
+          return;
+        } else if (choice.text.includes('Ask the AI system')) {
+          // Future: implement AI system response scene
+          onSceneChange('trust');
+          setIsLoading(false);
+          return;
+        } else if (choice.text.includes('Close your eyes')) {
+          // Future: implement return to unconsciousness scene
+          onSceneChange('trust');
+          setIsLoading(false);
+          return;
+        }
+      }
+      
+      const staticScenes = ['intro', 'awaken', 'outside_view'];
       
       // For static scenes, just transition directly
       if (staticScenes.includes(currentScene)) {
@@ -209,6 +228,7 @@ export default function DialogueContainer({ sceneData, currentScene, onSceneChan
     const sceneFlow: Record<string, string> = {
       'intro': 'awaken',
       'awaken': 'trust',
+      'outside_view': 'trust',
       'trust': 'leak', 
       'leak': 'core',
       'core': 'end'
