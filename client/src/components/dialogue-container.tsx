@@ -43,7 +43,7 @@ export default function DialogueContainer({ sceneData, currentScene, onSceneChan
   // Load AI-generated content for dynamic scenes
   useEffect(() => {
     const staticScenes = ['intro', 'awaken', 'end'];
-    if (!staticScenes.includes(currentScene) && (!dynamicSceneData.dialogue || dynamicSceneData.choices?.length === 0)) {
+    if (!staticScenes.includes(currentScene)) {
       loadAIContent();
     }
   }, [currentScene]);

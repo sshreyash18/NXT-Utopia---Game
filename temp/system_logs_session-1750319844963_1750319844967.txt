@@ -1,0 +1,30 @@
+[2025-06-19T07:57:24.964Z] [INFO] neural_interface: Player choice: Begin trust assessment
+  Metadata: {
+  "scene": "trust",
+  "userId": 1,
+  "sessionId": "session-1750319844963"
+}
+
+[2025-06-19T07:57:19.964Z] [WARN] behavior_monitor: Anomalous decision pattern detected
+  Metadata: {
+  "pattern": "question_identity",
+  "confidence": 0.9952560273506807
+}
+
+[2025-06-19T07:57:14.964Z] [ERROR] security_scanner: Unauthorized access attempt to core systems
+  Metadata: {
+  "threat_level": "HIGH",
+  "source_ip": "192.168.1.42"
+}
+
+[2025-06-19T07:57:09.964Z] [INFO] network_monitor: Neural link established
+  Metadata: {
+  "bandwidth": "1.2GB/s",
+  "latency": "0.3ms"
+}
+
+[2025-06-19T07:57:04.964Z] [WARN] data_integrity: Memory fragmentation detected
+  Metadata: {
+  "fragments": 47,
+  "integrity_score": 0.89
+}
