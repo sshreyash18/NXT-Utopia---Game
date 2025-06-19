@@ -233,9 +233,9 @@ export default function DialogueContainer({ sceneData, currentScene, onSceneChan
         }
       }
       
-      // Add Cipher warning for leak scene
-      if (currentScene === 'leak' && !choice.text) {
-        // First time entering leak scene, add Cipher warning
+      // Add Cipher warning for leak_choices scene
+      if (currentScene === 'leak_choices' && !choice.text) {
+        // First time entering leak_choices scene, add Cipher warning
         const cipherWarning = {
           agent: 'cipher' as const,
           message: '[glitch] "They\'ll twist your will... if you let them." —Cipher',

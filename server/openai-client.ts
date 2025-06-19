@@ -53,6 +53,18 @@ Response format as JSON:
   ]
 }`,
 
+  leak_choices: `You are presenting choices after the user has explored the dead zone. They need options to investigate the anomalies and data they discovered. Generate 3 choice options about investigating different types of data or anomalies.
+
+Response format as JSON:
+{
+  "dialogue": "You've stepped into the unknown. What will you investigate first?",
+  "choices": [
+    {"text": "→ Choice 1", "description": "brief explanation"},
+    {"text": "→ Choice 2", "description": "brief explanation"},
+    {"text": "→ Choice 3", "description": "brief explanation"}
+  ]
+}`,
+
   core: `You are Adapto at the system core. The user has reached the final test. Present a deep, philosophical riddle or question that will determine their fate in this utopia. 
 
 Response format: Just return the riddle/question text, nothing else.`,

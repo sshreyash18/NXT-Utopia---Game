@@ -4,6 +4,7 @@ import DelayedDialogue from "./delayed-dialogue";
 import AudioSystem from "./audio-system";
 import CloseEyesScene from "./close-eyes-scene";
 import BreakSilenceScene from "./break-silence-scene";
+import LeakScene from "./leak-scene";
 import { useGameState } from "@/hooks/use-game-state";
 import introImagePath from "@assets/crazy ending image_1750273353548.png";
 import bgAwakenPath from "@assets/bg_awaken.jpg_1750271414978.png";
@@ -118,6 +119,13 @@ const staticSceneData = {
     showChoices: true,
     choices: []
   },
+  leak_choices: {
+    title: "DATA BREACH",
+    background: bgLeakPath,
+    dialogue: "",
+    showChoices: true,
+    choices: []
+  },
   core: {
     title: "CORE ACCESS",
     background: bgCorePath,
@@ -189,6 +197,8 @@ export default function SceneView({ scene, onSceneChange }: SceneViewProps) {
             delayedText="Was it always like this? The city moves with eerie precision, like everyone knows their role—except me. Why does everything feel familiar yet strange? And those AdaptNXT towers… what really goes on inside them?"
             onContinue={() => onSceneChange('awaken')}
           />
+        ) : scene === 'leak' ? (
+          <LeakScene onContinue={() => onSceneChange('leak_choices')} />
         ) : (
           <DialogueContainer 
             sceneData={currentSceneData}
