@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import DialogueContainer from "./dialogue-container";
 import DelayedDialogue from "./delayed-dialogue";
 import AudioSystem from "./audio-system";
+import CloseEyesScene from "./close-eyes-scene";
 import { useGameState } from "@/hooks/use-game-state";
 import introImagePath from "@assets/crazy ending image_1750273353548.png";
 import bgAwakenPath from "@assets/bg_awaken.jpg_1750271414978.png";
@@ -177,7 +178,9 @@ export default function SceneView({ scene, onSceneChange }: SceneViewProps) {
 
       {/* Main Content */}
       <div className="relative z-10 min-h-screen flex items-center justify-center p-6">
-        {scene === 'outside_view' ? (
+        {scene === 'close_eyes' ? (
+          <CloseEyesScene onReturn={() => onSceneChange('awaken')} />
+        ) : scene === 'outside_view' ? (
           <DelayedDialogue
             title={currentSceneData.title}
             delayedText="Was it always like this? The city moves with eerie precision, like everyone knows their role—except me. Why does everything feel familiar yet strange? And those AdaptNXT towers… what really goes on inside them?"
