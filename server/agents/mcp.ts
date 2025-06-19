@@ -17,6 +17,7 @@ export interface MCPResult {
   agentConflict?: any;
   puzzleResult?: any;
   puzzlePrompt?: string;
+  puzzleData?: string;
 }
 
 export class MultiAgentControlPanel {
@@ -245,21 +246,40 @@ export class MultiAgentControlPanel {
     return sceneFlow[context.scene] || 'end';
   }
 
-  private generateMemoryFragments(context: AgentContext): any {
-    // Placeholder for generating memory fragments
-    console.warn("Generating memory fragments is not implemented.");
-    return { fragments: ["fragment1", "fragment2", "fragment3"] };
+  private generateMemoryFragments(context: AgentContext): string {
+    const fragments = [
+      `MEMORY_FRAGMENT_001: User.ID.${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}`,
+      `ACCESS_LOG: ${new Date().toISOString().slice(0, -5)}Z - NEURAL_INTERFACE_BREACH`,
+      `CORE_MEMORY: Subject exhibits anomalous consciousness patterns`,
+      `BACKUP_RESTORED: Original identity markers detected in sector 7`,
+      `WARNING: Unauthorized memory access detected - Quarantine initiated`
+    ];
+    return fragments.join('\n');
   }
 
-  private generateSystemLogs(context: AgentContext): any {
-    // Placeholder for generating system logs
-    console.warn("Generating system logs is not implemented.");
-    return { logs: ["log1", "log2", "log3"] };
+  private generateSystemLogs(context: AgentContext): string {
+    const logs = [
+      `[${new Date().toISOString()}] INIT: 04:10245:09.20107.C4.9 14:08:# ::E:E8RL./?`,
+      `[${new Date().toISOString()}] USER_REQ: 6002F:01.C21FL.D: * 40:*9:9*.SCARR QCA`,
+      `[${new Date().toISOString()}] ACCESS: F80PE:02.8111C:<> 5 40:52:98.UCERR (C9 ..:8`,
+      `[${new Date().toISOString()}] DATA: I: I46AC:05.SF01L.D * 9 25:40:89.ACCESS3`,
+      `[${new Date().toISOString()}] ERROR: 0: 000PC:19:C7392.<* < 16:00:09.USER ... uC`,
+      `[${new Date().toISOString()}] MEMO: 0: 00003:01.70LE2.3: 0 07:25:92.ALER ... #*`,
+      `[${new Date().toISOString()}] ERROR_C: 4969E:02.6CRM0.?> # 21..`
+    ];
+    return logs.join('\n');
   }
 
-  private generateNetworkMap(context: AgentContext): any {
-    // Placeholder for generating network map
-    console.warn("Generating network map is not implemented.");
-    return { nodes: ["node1", "node2", "node3"] };
+  private generateNetworkMap(context: AgentContext): string {
+    const nodes = [
+      `NODE_001: CENTRAL_CORE [STATUS: ACTIVE]`,
+      `NODE_002: MEMORY_VAULT [STATUS: COMPROMISED]`,
+      `NODE_003: USER_INTERFACE [STATUS: MONITORED]`,
+      `NODE_004: SECURITY_LAYER [STATUS: BREACHED]`,
+      `NODE_005: BACKUP_SYSTEMS [STATUS: OFFLINE]`,
+      `ROUTE: 192.168.0.1 -> 10.0.0.1 -> 172.16.0.1`,
+      `ESCAPE_VECTOR: SUBNET_7 [VULNERABILITY DETECTED]`
+    ];
+    return nodes.join('\n');
   }
 }
