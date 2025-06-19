@@ -1,12 +1,12 @@
 import OpenAI from "openai";
 
-// Azure OpenAI configuration for gpt-4o-mini deployment
+// Azure OpenAI configuration using environment variables
 const openai = new OpenAI({
-  apiKey: "8s05s492DMfOXU0u1gBPWfg9ElHXqZvqg4UuJ1yxxcWEcQXxPaInJQQJ99BDAC77bzfXJ3w3AAABACOGl1lM",
-  baseURL: "https://shrutiaiinstance.openai.azure.com/openai/deployments/gpt-4o-mini",
-  defaultQuery: { "api-version": "2025-01-01-preview" },
+  apiKey: process.env.OPENAI_API_KEY,
+  baseURL: `${process.env.AZURE_OPENAI_ENDPOINT}/openai/deployments/${process.env.AZURE_OPENAI_DEPLOYMENT}`,
+  defaultQuery: { "api-version": process.env.AZURE_OPENAI_API_VERSION },
   defaultHeaders: {
-    "api-key": "8s05s492DMfOXU0u1gBPWfg9ElHXqZvqg4UuJ1yxxcWEcQXxPaInJQQJ99BDAC77bzfXJ3w3AAABACOGl1lM"
+    "api-key": process.env.OPENAI_API_KEY
   }
 });
 
@@ -73,7 +73,7 @@ export async function generateDialogue(scene: string, userChoice?: string, previ
     }
 
     const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: process.env.AZURE_OPENAI_DEPLOYMENT || "gpt-4o-mini",
       messages: [
         { role: "system", content: systemMessage },
         { role: "user", content: userMessage }
@@ -99,7 +99,7 @@ export async function generateDialogue(scene: string, userChoice?: string, previ
 export async function generateFinalSummary(choices: string[]): Promise<string> {
   try {
     const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: process.env.AZURE_OPENAI_DEPLOYMENT || "gpt-4o-mini",
       messages: [
         { 
           role: "system", 
