@@ -19,11 +19,15 @@ export default function AgentTerminal({ isOpen, onClose, messages }: AgentTermin
   const [displayedMessages, setDisplayedMessages] = useState<AgentMessage[]>([]);
   const [currentTyping, setCurrentTyping] = useState<{ index: number; charIndex: number } | null>(null);
   const terminalRef = useRef<HTMLDivElement>(null);
+  const { playTypingSound, stopTypingSound } = useAudio();
 
   useEffect(() => {
     if (messages.length > displayedMessages.length) {
       const newMessage = messages[displayedMessages.length];
       setCurrentTyping({ index: displayedMessages.length, charIndex: 0 });
+      
+      // Start typing sound
+      playTypingSound();
       
       const typeMessage = () => {
         setCurrentTyping(prev => {
@@ -33,6 +37,7 @@ export default function AgentTerminal({ isOpen, onClose, messages }: AgentTermin
           
           if (nextCharIndex >= newMessage.message.length) {
             setDisplayedMessages(prev => [...prev, newMessage]);
+            stopTypingSound(); // Stop typing sound when message is complete
             return null;
           }
           
@@ -41,9 +46,12 @@ export default function AgentTerminal({ isOpen, onClose, messages }: AgentTermin
       };
 
       const interval = setInterval(typeMessage, 30);
-      return () => clearInterval(interval);
+      return () => {
+        clearInterval(interval);
+        stopTypingSound(); // Ensure sound stops if component unmounts
+      };
     }
-  }, [messages, displayedMessages]);
+  }, [messages, displayedMessages, playTypingSound, stopTypingSound]);
 
   useEffect(() => {
     if (terminalRef.current) {

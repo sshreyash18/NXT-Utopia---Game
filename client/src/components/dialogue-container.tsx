@@ -227,6 +227,7 @@ export default function DialogueContainer({ sceneData, currentScene, onSceneChan
       'intro': 'awaken',
       'awaken': 'trust',
       'outside_view': 'awaken',
+      'break_silence': 'trust',
       'trust': 'leak', 
       'leak': 'core',
       'core': 'end'
