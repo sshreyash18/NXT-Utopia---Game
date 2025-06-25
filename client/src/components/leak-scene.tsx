@@ -7,15 +7,14 @@ interface LeakSceneProps {
 }
 
 export default function LeakScene({ onContinue }: LeakSceneProps) {
-  const [phase, setPhase] = useState<'message' | 'background' | 'complete'>('message');
+  const [phase, setPhase] = useState<'message' | 'background' | 'choices'>('message');
 
   const handleExplore = () => {
     setPhase('background');
     
-    // Show background for 3 seconds then complete
+    // Show background for 3 seconds then show choices
     setTimeout(() => {
-      setPhase('complete');
-      onContinue();
+      setPhase('choices');
     }, 3000);
   };
 
@@ -27,6 +26,69 @@ export default function LeakScene({ onContinue }: LeakSceneProps) {
           style={{ backgroundImage: `url(${bgLeakPath})` }}
         />
         <div className="absolute inset-0 bg-black/20" />
+      </div>
+    );
+  }
+
+  if (phase === 'choices') {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+        {/* Background */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${bgLeakPath})` }}
+        />
+        <div className="absolute inset-0 bg-black/60" />
+
+        {/* Investigation Choices */}
+        <div className="bg-black/70 backdrop-blur-md rounded-2xl border border-cyan-500/30 max-w-3xl w-full p-8 animate-fade-in relative z-10">
+          <div className="text-center mb-8">
+            <h1 className="font-orbitron text-cyan-400 text-lg font-bold tracking-[0.2em] mb-2">
+              INVESTIGATION PATHS
+            </h1>
+            <p className="text-gray-300 text-sm">
+              Choose your investigation method. Each path reveals different secrets, but wrong moves trigger detection.
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            <button
+              onClick={() => onContinue('signal_vault')}
+              className="w-full px-6 py-4 bg-cyan-600 text-white rounded-lg font-medium hover:bg-cyan-700 transition-colors border border-cyan-500/50 text-left"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="font-bold">→ Signal Vault</div>
+                  <div className="text-sm text-cyan-200">Repair signal routing to access hidden data archives</div>
+                </div>
+              </div>
+            </button>
+
+            <button
+              onClick={() => onContinue('echo_node')}
+              className="w-full px-6 py-4 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-colors border border-purple-500/50 text-left"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="font-bold">→ Echo Node</div>
+                  <div className="text-sm text-purple-200">Trace memory echoes from deleted AI conversations</div>
+                </div>
+              </div>
+            </button>
+
+            <button
+              onClick={() => onContinue('glitch_path')}
+              className="w-full px-6 py-4 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors border border-red-500/50 text-left"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="font-bold">→ Glitch Path</div>
+                  <div className="text-sm text-red-200">Follow trails of broken system code and anomalies</div>
+                </div>
+              </div>
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
