@@ -1,0 +1,30 @@
+[2025-06-25T10:55:00.272Z] [INFO] neural_interface: Player choice: → Reject Elysium's dominance and reclaim our autonomy.
+  Metadata: {
+  "scene": "trust",
+  "userId": 1,
+  "sessionId": "session-1750848900006"
+}
+
+[2025-06-25T10:54:55.272Z] [WARN] behavior_monitor: Anomalous decision pattern detected
+  Metadata: {
+  "pattern": "trust_voice",
+  "confidence": 0.6259346706975384
+}
+
+[2025-06-25T10:54:50.272Z] [ERROR] security_scanner: Unauthorized access attempt to core systems
+  Metadata: {
+  "threat_level": "HIGH",
+  "source_ip": "192.168.1.42"
+}
+
+[2025-06-25T10:54:45.272Z] [INFO] network_monitor: Neural link established
+  Metadata: {
+  "bandwidth": "1.2GB/s",
+  "latency": "0.3ms"
+}
+
+[2025-06-25T10:54:40.272Z] [WARN] data_integrity: Memory fragmentation detected
+  Metadata: {
+  "fragments": 47,
+  "integrity_score": 0.89
+}

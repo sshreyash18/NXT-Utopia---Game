@@ -237,7 +237,7 @@ export default function SceneView({ scene, onSceneChange }: SceneViewProps) {
           <LeakScene onContinue={() => onSceneChange('leak_choices')} />
         ) : scene === 'glitch_path' ? (
           <GlitchPathScene 
-            onComplete={() => onSceneChange('core')} 
+            onComplete={() => onSceneChange('leak_choices')} 
             onDetected={() => {
               console.log('onDetected called - changing to detected scene');
               onSceneChange('detected');
@@ -245,7 +245,7 @@ export default function SceneView({ scene, onSceneChange }: SceneViewProps) {
           />
         ) : scene === 'echo_node' ? (
           <EchoNodeScene 
-            onComplete={() => onSceneChange('core')} 
+            onComplete={() => onSceneChange('leak_choices')} 
             onReturnToChoices={() => onSceneChange('leak_choices')}
           />
         ) : scene === 'core' ? (

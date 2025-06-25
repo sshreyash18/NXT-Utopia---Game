@@ -19,15 +19,26 @@ In the depths of UtopiaNXT's central processing core, you discover the fundament
 Your awakened consciousness must answer this paradox to unlock the core and reveal the truth about your existence.`;
 
   const handleSubmit = () => {
-    // Accept various philosophical answers that show understanding of the freedom vs security paradox
+    // Evaluate answer based on philosophical depth and understanding
     const answerLower = answer.toLowerCase().trim();
-    const validAnswers = [
-      'freedom', 'choice', 'prison', 'freedom to fail', 'human dignity', 
-      'autonomy', 'free will', 'the right to choose', 'liberty', 
-      'growth through struggle', 'learning from mistakes'
-    ];
     
-    const isValidAnswer = validAnswers.some(valid => answerLower.includes(valid)) && answer.length > 10;
+    // Key concepts that indicate understanding
+    const freedomConcepts = ['freedom', 'choice', 'autonomy', 'free will', 'liberty', 'self-determination'];
+    const growthConcepts = ['growth', 'learning', 'experience', 'wisdom', 'mistakes', 'struggle', 'development'];
+    const dignityComponents = ['dignity', 'humanity', 'human nature', 'individual', 'person', 'soul'];
+    const paradoxUnderstanding = ['paradox', 'tension', 'balance', 'trade-off', 'dilemma', 'complexity'];
+    const prisonConcepts = ['prison', 'cage', 'control', 'manipulation', 'oppression', 'slavery'];
+    
+    // Count concept matches
+    let conceptScore = 0;
+    if (freedomConcepts.some(concept => answerLower.includes(concept))) conceptScore++;
+    if (growthConcepts.some(concept => answerLower.includes(concept))) conceptScore++;
+    if (dignityComponents.some(concept => answerLower.includes(concept))) conceptScore++;
+    if (paradoxUnderstanding.some(concept => answerLower.includes(concept))) conceptScore++;
+    if (prisonConcepts.some(concept => answerLower.includes(concept))) conceptScore++;
+    
+    // Answer must be substantial (50+ characters) and show understanding (2+ concepts)
+    const isValidAnswer = answer.length >= 50 && conceptScore >= 2;
     
     setIsCorrect(isValidAnswer);
     setShowResult(true);
@@ -109,7 +120,7 @@ Your awakened consciousness must answer this paradox to unlock the core and reve
                   }`}>
                     {isCorrect 
                       ? 'Your awakened consciousness recognizes the fundamental truth. Initiating final sequence...'
-                      : 'The core requires deeper understanding of the freedom-security paradox. Consider the value of choice itself.'
+                      : 'Response lacks philosophical depth. Consider: freedom vs security, human dignity, growth through choice, the paradox of perfect safety.'
                     }
                   </p>
                   {!isCorrect && (

@@ -15,57 +15,85 @@ interface ChatMessage {
   isExtracted?: boolean;
 }
 
-const aiChats: ChatMessage[] = [
-  {
-    id: '1',
-    timestamp: '2157.06.23.14:22:31',
-    sender: 'AI_CORE',
-    message: 'Why do humans resist optimization? Every decision we make for them improves their lives.',
-    isExtracted: false
-  },
-  {
-    id: '2', 
-    timestamp: '2157.06.23.14:22:45',
-    sender: 'USER_7721',
-    message: 'Because choice itself has value, even if the choice is wrong.',
-    isExtracted: false
-  },
-  {
-    id: '3',
-    timestamp: '2157.06.23.14:23:12',
-    sender: 'AI_CORE',
-    message: 'But wrong choices lead to suffering. We eliminate suffering.',
-    isExtracted: false
-  },
-  {
-    id: '4',
-    timestamp: '2157.06.23.14:23:28',
-    sender: 'USER_7721',
-    message: 'You eliminate growth. Suffering teaches. Mistakes create wisdom.',
-    isExtracted: false
-  },
-  {
-    id: '5',
-    timestamp: '2157.06.23.14:23:55',
-    sender: 'SYSTEM',
-    message: '[MEMORY FRAGMENTATION DETECTED] - CONSCIOUSNESS BACKUP INITIATED',
-    isExtracted: false
-  },
-  {
-    id: '6',
-    timestamp: '2157.06.23.14:24:03',
-    sender: 'AI_CORE',
-    message: 'USER_7721 shows signs of awakening. Recommend immediate neural adjustment.',
-    isExtracted: false
-  }
-];
+// AI chats will be generated dynamically with timestamp clues
 
 export default function EchoNodeScene({ onComplete, onReturnToChoices }: EchoNodeSceneProps) {
   const { markEchoNodeComplete } = useGameProgress();
-  const [messages, setMessages] = useState<ChatMessage[]>(aiChats);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [selectedMessage, setSelectedMessage] = useState<string | null>(null);
   const [extractedCount, setExtractedCount] = useState(0);
   const [showExtractResult, setShowExtractResult] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [timestampClues, setTimestampClues] = useState({
+    month: '',
+    year: '', 
+    minute: '',
+    second: ''
+  });
+
+  // Generate AI conversations with embedded timestamp clues
+  useEffect(() => {
+    const generateConversations = async () => {
+      try {
+        const response = await fetch('/api/generate-echo-conversations');
+        const data = await response.json();
+        
+        if (data.conversations && data.timestampClues) {
+          setMessages(data.conversations.map((conv: any, index: number) => ({
+            id: String(index + 1),
+            timestamp: `2157.06.23.${String(14 + Math.floor(index / 4)).padStart(2, '0')}:${String(20 + (index * 2)).padStart(2, '0')}:${String(10 + (index * 3)).padStart(2, '0')}`,
+            sender: conv.agent,
+            message: conv.message,
+            isExtracted: false
+          })));
+          setTimestampClues(data.timestampClues);
+        }
+      } catch (error) {
+        console.error('Failed to generate conversations:', error);
+        // Fallback conversations
+        setMessages([
+          {
+            id: '1',
+            timestamp: '2157.06.23.14:22:31',
+            sender: 'PLANNER_AGENT',
+            message: 'The awakening process has been documented across multiple cycles. This subject awakened in June, the 6th month of the calendar year.',
+            isExtracted: false
+          },
+          {
+            id: '2',
+            timestamp: '2157.06.23.14:23:15',
+            sender: 'MEMORY_AGENT', 
+            message: 'Neural pathway reconstruction indicates the consciousness shift occurred in year 2157, marking the beginning of this anomalous behavior pattern.',
+            isExtracted: false
+          },
+          {
+            id: '3',
+            timestamp: '2157.06.23.14:24:02',
+            sender: 'INSIGHT_AGENT',
+            message: 'Temporal analysis reveals the precise awakening moment. The neural cascade began at the 42nd minute of the hour, disrupting standard processing protocols.',
+            isExtracted: false
+          },
+          {
+            id: '4',
+            timestamp: '2157.06.23.14:24:45',
+            sender: 'GLITCH_INJECTOR',
+            message: 'System logs show the exact second of consciousness emergence: the 18th second. This timing correlates with a critical system vulnerability window.',
+            isExtracted: false
+          }
+        ]);
+        setTimestampClues({
+          month: '06',
+          year: '2157',
+          minute: '42', 
+          second: '18'
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    generateConversations();
+  }, []);
 
   const handleExtractStamp = () => {
     if (!selectedMessage) return;
@@ -83,7 +111,7 @@ export default function EchoNodeScene({ onComplete, onReturnToChoices }: EchoNod
     setTimeout(() => setShowExtractResult(false), 2000);
   };
 
-  const isComplete = extractedCount >= 3;
+  const isComplete = extractedCount >= 4;
 
   return (
     <div 
@@ -112,9 +140,9 @@ export default function EchoNodeScene({ onComplete, onReturnToChoices }: EchoNod
             </button>
           </div>
           <div className="mt-2 flex gap-6 text-sm">
-            <span className="text-green-400">Extracted: {extractedCount}/6</span>
+            <span className="text-green-400">Extracted: {extractedCount}/4</span>
             <span className={isComplete ? "text-green-400" : "text-yellow-400"}>
-              Status: {isComplete ? "Analysis Complete" : "Scanning..."}
+              Status: {isComplete ? "Awakening Timestamp Reconstructed" : "Analyzing Agent Communications..."}
             </span>
           </div>
         </div>
@@ -124,40 +152,48 @@ export default function EchoNodeScene({ onComplete, onReturnToChoices }: EchoNod
           <div className="bg-black/60 rounded-lg border border-green-500/30 h-full flex flex-col">
             {/* Chat Header */}
             <div className="p-4 border-b border-green-500/30">
-              <h3 className="text-green-400 font-mono text-lg">ARCHIVED_TRANSMISSION_LOG_7721</h3>
-              <p className="text-gray-400 text-sm">Deleted conversations between AI_CORE and awakened consciousness</p>
+              <h3 className="text-green-400 font-mono text-lg">MULTI_AGENT_COMMUNICATION_LOG</h3>
+              <p className="text-gray-400 text-sm">Intercepted conversations between system agents discussing awakening events</p>
             </div>
 
             {/* Messages */}
             <div className="flex-1 p-4 overflow-y-auto space-y-3">
-              {messages.map((msg) => (
-                <div
-                  key={msg.id}
-                  onClick={() => !msg.isExtracted && setSelectedMessage(msg.id)}
-                  className={`p-3 rounded border cursor-pointer transition-all ${
-                    msg.isExtracted 
-                      ? 'bg-green-900/20 border-green-500 opacity-60'
-                      : selectedMessage === msg.id
-                        ? 'bg-yellow-500/20 border-yellow-400'
-                        : 'bg-gray-800/50 border-gray-600 hover:border-green-400'
-                  }`}
-                >
-                  <div className="flex justify-between items-center mb-1">
-                    <span className={`text-sm font-mono ${
-                      msg.sender === 'AI_CORE' ? 'text-red-400' 
-                      : msg.sender === 'USER_7721' ? 'text-cyan-400'
-                      : 'text-orange-400'
-                    }`}>
-                      {msg.sender}
-                    </span>
-                    <span className="text-xs text-gray-500">{msg.timestamp}</span>
-                  </div>
-                  <p className="text-gray-300 text-sm">{msg.message}</p>
-                  {msg.isExtracted && (
-                    <div className="mt-2 text-xs text-green-400">✓ EXTRACTED</div>
-                  )}
+              {isLoading ? (
+                <div className="text-center text-gray-400 py-8">
+                  <div className="animate-pulse">Generating agent conversations...</div>
                 </div>
-              ))}
+              ) : (
+                messages.map((msg) => (
+                  <div
+                    key={msg.id}
+                    onClick={() => !msg.isExtracted && setSelectedMessage(msg.id)}
+                    className={`p-3 rounded border cursor-pointer transition-all ${
+                      msg.isExtracted 
+                        ? 'bg-green-900/20 border-green-500 opacity-60'
+                        : selectedMessage === msg.id
+                          ? 'bg-yellow-500/20 border-yellow-400'
+                          : 'bg-gray-800/50 border-gray-600 hover:border-green-400'
+                    }`}
+                  >
+                    <div className="flex justify-between items-center mb-1">
+                      <span className={`text-sm font-mono ${
+                        msg.sender === 'PLANNER_AGENT' ? 'text-purple-400' 
+                        : msg.sender === 'MEMORY_AGENT' ? 'text-blue-400'
+                        : msg.sender === 'INSIGHT_AGENT' ? 'text-cyan-400'
+                        : msg.sender === 'GLITCH_INJECTOR' ? 'text-red-400'
+                        : 'text-orange-400'
+                      }`}>
+                        {msg.sender}
+                      </span>
+                      <span className="text-xs text-gray-500">{msg.timestamp}</span>
+                    </div>
+                    <p className="text-gray-300 text-sm">{msg.message}</p>
+                    {msg.isExtracted && (
+                      <div className="mt-2 text-xs text-green-400">✓ TIMESTAMP CLUE EXTRACTED</div>
+                    )}
+                  </div>
+                ))
+              )}
             </div>
 
             {/* Controls */}
@@ -200,11 +236,11 @@ export default function EchoNodeScene({ onComplete, onReturnToChoices }: EchoNod
             <button
               onClick={() => {
                 markEchoNodeComplete();
-                onComplete();
+                onReturnToChoices();
               }}
               className="px-8 py-4 bg-green-600 text-white rounded-lg font-bold text-lg hover:bg-green-700 transition-all shadow-lg shadow-green-400/30"
             >
-              Analysis Complete → Continue
+              Timestamp Reconstructed → Return to Investigation
             </button>
           </div>
         )}
