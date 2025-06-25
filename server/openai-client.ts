@@ -71,7 +71,11 @@ Response format: Just return the riddle/question text, nothing else.`,
 
   end: `You are Adapto providing a final reflection. Based on the user's journey through trust, leak, and core decisions, compose a poetic 2-3 sentence summary of their character and choices, followed by a philosophical statement about their role in this utopia.
 
-Response format: Just return the summary text, nothing else.`
+Response format: Just return the summary text, nothing else.`,
+
+  echo_node: `You are presenting the Echo Node scene where the user discovers intercepted AI conversations about their consciousness awakening. Generate a mysterious response about what they've discovered.
+
+Response format: Just return the dialogue text, nothing else.`
 };
 
 export async function generateDialogue(scene: string, userChoice?: string, previousChoices?: string[]): Promise<any> {

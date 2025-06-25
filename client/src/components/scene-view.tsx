@@ -9,6 +9,7 @@ import GlitchPathScene from "./glitch-path-scene";
 
 import LeakChoicesScene from "./leak-choices-scene";
 import DetectedScene from "./detected-scene";
+import EchoNodeScene from "./echo-node-scene";
 import { useGameState } from "@/hooks/use-game-state";
 import introImagePath from "@assets/crazy ending image_1750273353548.png";
 import bgAwakenPath from "@assets/bg_awaken.jpg_1750271414978.png";
@@ -245,6 +246,11 @@ export default function SceneView({ scene, onSceneChange }: SceneViewProps) {
           <LeakChoicesScene onContinue={(nextScene) => onSceneChange(nextScene)} />
         ) : scene === 'detected' ? (
           <DetectedScene onRestart={() => onSceneChange('intro')} />
+        ) : scene === 'echo_node' ? (
+          <EchoNodeScene 
+            onComplete={() => onSceneChange('core')} 
+            onDetected={() => onSceneChange('detected')} 
+          />
         ) : (
           <DialogueContainer 
             sceneData={currentSceneData}
