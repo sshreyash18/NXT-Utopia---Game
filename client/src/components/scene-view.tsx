@@ -7,6 +7,8 @@ import BreakSilenceScene from "./break-silence-scene";
 import LeakScene from "./leak-scene";
 import GlitchPathScene from "./glitch-path-scene";
 
+import EchoNodeScene from "./echo-node-scene";
+import CoreScene from "./core-scene";
 import LeakChoicesScene from "./leak-choices-scene";
 import DetectedScene from "./detected-scene";
 import EchoNodeScene from "./echo-node-scene";
@@ -242,6 +244,13 @@ export default function SceneView({ scene, onSceneChange }: SceneViewProps) {
               onSceneChange('detected');
             }} 
           />
+        ) : scene === 'echo_node' ? (
+          <EchoNodeScene 
+            onComplete={() => onSceneChange('core')} 
+            onReturnToChoices={() => onSceneChange('leak_choices')}
+          />
+        ) : scene === 'core' ? (
+          <CoreScene onComplete={() => onSceneChange('end')} />
         ) : scene === 'leak_choices' ? (
           <LeakChoicesScene onContinue={(nextScene) => onSceneChange(nextScene)} />
         ) : scene === 'detected' ? (

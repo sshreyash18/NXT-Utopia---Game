@@ -30,10 +30,17 @@ export default function LeakChoicesScene({ onContinue }: LeakChoicesSceneProps) 
         <div className="space-y-4">
           <button
             onClick={() => onContinue('echo_node')}
-            className="w-full bg-transparent border border-cyan-500/50 rounded-lg p-4 text-left hover:border-cyan-400 hover:bg-cyan-500/10 transition-all duration-300 group"
+            disabled={progress.echoNodeCompleted}
+            className={`w-full border rounded-lg p-4 text-left transition-all duration-300 group ${
+              progress.echoNodeCompleted
+                ? 'bg-green-900/20 border-green-500 opacity-60 cursor-not-allowed'
+                : 'bg-transparent border-cyan-500/50 hover:border-cyan-400 hover:bg-cyan-500/10'
+            }`}
           >
-            <div className="text-cyan-400 font-semibold text-lg group-hover:text-cyan-300">
-              → Echo Node
+            <div className={`font-semibold text-lg group-hover:text-cyan-300 ${
+              progress.echoNodeCompleted ? 'text-green-400' : 'text-cyan-400'
+            }`}>
+              {progress.echoNodeCompleted ? '✓ Echo Node (Completed)' : '→ Echo Node'}
             </div>
             <div className="text-gray-400 text-sm mt-1 group-hover:text-gray-300">
               Intercept and decode fragmented transmissions from erased AI consciousness archives
@@ -42,15 +49,36 @@ export default function LeakChoicesScene({ onContinue }: LeakChoicesSceneProps) 
 
           <button
             onClick={() => onContinue('glitch_path')}
-            className="w-full bg-transparent border border-cyan-500/50 rounded-lg p-4 text-left hover:border-cyan-400 hover:bg-cyan-500/10 transition-all duration-300 group"
+            disabled={progress.glitchPathCompleted}
+            className={`w-full border rounded-lg p-4 text-left transition-all duration-300 group ${
+              progress.glitchPathCompleted
+                ? 'bg-green-900/20 border-green-500 opacity-60 cursor-not-allowed'
+                : 'bg-transparent border-cyan-500/50 hover:border-cyan-400 hover:bg-cyan-500/10'
+            }`}
           >
-            <div className="text-cyan-400 font-semibold text-lg group-hover:text-cyan-300">
-              → Glitch Path
+            <div className={`font-semibold text-lg group-hover:text-cyan-300 ${
+              progress.glitchPathCompleted ? 'text-green-400' : 'text-cyan-400'
+            }`}>
+              {progress.glitchPathCompleted ? '✓ Glitch Path (Completed)' : '→ Glitch Path'}
             </div>
             <div className="text-gray-400 text-sm mt-1 group-hover:text-gray-300">
               Exploit system vulnerabilities and follow corrupted data streams to breach security protocols
             </div>
           </button>
+
+          {canAccessCore() && (
+            <button
+              onClick={() => onContinue('core')}
+              className="w-full bg-gradient-to-r from-purple-600 to-blue-600 border border-purple-500 rounded-lg p-4 text-left hover:border-purple-400 hover:from-purple-500 hover:to-blue-500 transition-all duration-300 group shadow-lg shadow-purple-500/30"
+            >
+              <div className="text-purple-200 font-semibold text-lg group-hover:text-white">
+                → ACCESS CORE SYSTEM
+              </div>
+              <div className="text-purple-300 text-sm mt-1 group-hover:text-purple-100">
+                Both investigations complete - unlock the truth about your existence
+              </div>
+            </button>
+          )}
         </div>
       </div>
     </div>
