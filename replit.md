@@ -120,6 +120,7 @@ Changelog:
 - June 25, 2025. Redesigned Echo Node with manual timestamp entry and 8 AI agent conversations
 - June 25, 2025. Added game progress tracking with disabled buttons and green checkmarks
 - June 25, 2025. Implemented auto-navigation to Core after completing both investigation paths
+- June 25, 2025. Fixed Glitch Path puzzles with three distinct types: alphabet-based, binary conversion, and AdaptNXT lore
 ```
 
 ## User Preferences
