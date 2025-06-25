@@ -125,10 +125,10 @@ export async function generateGlitchPuzzle(puzzleNumber: number): Promise<any> {
     let prompt = "";
     
     if (puzzleNumber === 1) {
-      prompt = `Generate a pattern recognition puzzle similar to: "If APPLE = 11616125, what is CIPHER?"
+      prompt = `Generate a simple pattern recognition puzzle. Use a 3-letter word where each letter = its alphabet position (A=1, B=2, etc.).
 
-The pattern should be: each letter = its alphabet position (A=1, B=2, etc.)
-Create a 4-5 letter word example and ask for a 5-6 letter target word.
+Example: "If CAT = 3120, what is DOG?"
+Make the target word also 3 letters and simple.
 
 Response format as JSON:
 {
@@ -139,7 +139,7 @@ Response format as JSON:
     {"text": "[wrong answer]", "letter": "C"}
   ],
   "correctAnswer": "B",
-  "explanation": "Brief explanation of the pattern"
+  "explanation": "Each letter equals its position in the alphabet: A=1, B=2, C=3..."
 }`;
     } else if (puzzleNumber === 2) {
       prompt = `Generate a binary-to-ASCII puzzle. Give an 8-bit binary number that converts to a single ASCII character.
@@ -189,14 +189,14 @@ Response format as JSON:
     // Fallback puzzles
     const fallbacks = [
       {
-        question: "If WORD = 23151518, what is CODE?",
+        question: "If CAT = 3120, what is DOG?",
         choices: [
-          { text: "3154", letter: "A" },
-          { text: "315405", letter: "B" },
-          { text: "3151405", letter: "C" }
+          { text: "4157", letter: "A" },
+          { text: "4715", letter: "B" },
+          { text: "4157", letter: "C" }
         ],
-        correctAnswer: "C",
-        explanation: "Each letter = alphabet position: C(3), O(15), D(4), E(5) = 3151405"
+        correctAnswer: "A",
+        explanation: "Each letter = alphabet position: D(4), O(15), G(7) = 4157"
       },
       {
         question: "The system blinks: 01001000\n\nWhat does it mean?",
