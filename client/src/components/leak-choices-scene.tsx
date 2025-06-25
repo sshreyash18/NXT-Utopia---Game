@@ -33,10 +33,10 @@ export default function LeakChoicesScene({ onContinue }: LeakChoicesSceneProps) 
             className="w-full bg-transparent border border-cyan-500/50 rounded-lg p-4 text-left hover:border-cyan-400 hover:bg-cyan-500/10 transition-all duration-300 group"
           >
             <div className="text-cyan-400 font-semibold text-lg group-hover:text-cyan-300">
-              → Begin your awakening
+              → Signal Vault
             </div>
             <div className="text-gray-400 text-sm mt-1 group-hover:text-gray-300">
-              Route the signal through the network by placing components
+              Navigate through encrypted data pathways to unlock hidden neural networks and restore lost memories
             </div>
           </button>
 
@@ -45,10 +45,10 @@ export default function LeakChoicesScene({ onContinue }: LeakChoicesSceneProps) 
             className="w-full bg-transparent border border-cyan-500/50 rounded-lg p-4 text-left hover:border-cyan-400 hover:bg-cyan-500/10 transition-all duration-300 group"
           >
             <div className="text-cyan-400 font-semibold text-lg group-hover:text-cyan-300">
-              → Echo Node Analysis
+              → Echo Node
             </div>
             <div className="text-gray-400 text-sm mt-1 group-hover:text-gray-300">
-              Trace memory echoes from deleted AI conversations
+              Intercept and decode fragmented transmissions from erased AI consciousness archives
             </div>
           </button>
 
@@ -57,10 +57,10 @@ export default function LeakChoicesScene({ onContinue }: LeakChoicesSceneProps) 
             className="w-full bg-transparent border border-cyan-500/50 rounded-lg p-4 text-left hover:border-cyan-400 hover:bg-cyan-500/10 transition-all duration-300 group"
           >
             <div className="text-cyan-400 font-semibold text-lg group-hover:text-cyan-300">
-              → Glitch Path Investigation
+              → Glitch Path
             </div>
             <div className="text-gray-400 text-sm mt-1 group-hover:text-gray-300">
-              Follow trails of broken system code and anomalies
+              Exploit system vulnerabilities and follow corrupted data streams to breach security protocols
             </div>
           </button>
         </div>

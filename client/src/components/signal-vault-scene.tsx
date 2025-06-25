@@ -186,7 +186,14 @@ export default function SignalVaultScene({ onComplete, onDetected, onReturnToCho
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-black">
+    <div 
+      className="relative min-h-screen overflow-hidden"
+      style={{ 
+        backgroundImage: `url('${signalVaultBg}')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center'
+      }}
+    >
       {gameOver && (
         <div className="absolute inset-0 bg-black/80 flex items-center justify-center z-50">
           <div className="bg-red-900/20 border border-red-500 rounded-lg p-8 text-center max-w-md">
@@ -202,7 +209,7 @@ export default function SignalVaultScene({ onComplete, onDetected, onReturnToCho
         </div>
       )}
       
-      <div className="relative z-10 h-screen flex flex-col">
+      <div className="relative z-10 h-screen flex flex-col bg-black/50">
         <div className="text-center py-4 bg-black/80">
           <h1 className="text-4xl font-bold text-green-400 mb-2">SIGNAL VAULT</h1>
           <h2 className="text-2xl text-cyan-400">Level {level}/3</h2>
@@ -225,13 +232,7 @@ export default function SignalVaultScene({ onComplete, onDetected, onReturnToCho
 
         <div 
           ref={containerRef}
-          className="relative flex-1 bg-black/90 border border-cyan-500/30 overflow-hidden"
-          style={{ 
-            backgroundImage: `url('${signalVaultBg}')`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundBlendMode: 'overlay'
-          }}
+          className="relative flex-1 border border-cyan-500/30 overflow-hidden bg-black/20"
         >
           {/* SVG for connections */}
           <svg className="absolute inset-0 w-full h-full pointer-events-none">
