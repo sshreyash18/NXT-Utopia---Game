@@ -116,6 +116,10 @@ Changelog:
 - June 19, 2025. Improved typing sound with background music volume ducking
 - June 19, 2025. Created Glitch Path puzzle system with three progressive challenges
 - June 19, 2025. Added detection/game over screen for wrong puzzle answers
+- June 25, 2025. Enhanced Core Access Protocol with sophisticated philosophical answer validation
+- June 25, 2025. Redesigned Echo Node with manual timestamp entry and 8 AI agent conversations
+- June 25, 2025. Added game progress tracking with disabled buttons and green checkmarks
+- June 25, 2025. Implemented auto-navigation to Core after completing both investigation paths
 ```
 
 ## User Preferences
