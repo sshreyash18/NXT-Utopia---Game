@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import bgLeakPath from '@assets/ChatGPT Image Jun 19, 2025, 05_16_32 PM_1750333620987.png';
+import signalVaultBg from '@assets/ChatGPT Image Jun 25, 2025, 03_34_57 PM_1750845904457.png';
 
 interface SignalVaultSceneProps {
   onComplete: () => void;
   onDetected: () => void;
+  onReturnToChoices: () => void;
 }
 
 interface Node {
@@ -25,7 +26,7 @@ interface Component {
   placed: boolean;
 }
 
-export default function SignalVaultScene({ onComplete, onDetected }: SignalVaultSceneProps) {
+export default function SignalVaultScene({ onComplete, onDetected, onReturnToChoices }: SignalVaultSceneProps) {
   const [level, setLevel] = useState(1);
   const [nodes, setNodes] = useState<Node[]>([]);
   const [components, setComponents] = useState<Component[]>([]);
@@ -95,6 +96,8 @@ export default function SignalVaultScene({ onComplete, onDetected }: SignalVault
     setCompletedConnections(0);
     setAttempts(0);
     setShowHint(false);
+    setGameOver(false);
+    setSelectedConnection(null);
   };
 
   const getHint = () => {
@@ -163,11 +166,13 @@ export default function SignalVaultScene({ onComplete, onDetected }: SignalVault
           setCompletedConnections(prev => prev + 1);
         } else {
           // Wrong placement - increase attempt counter
-          setAttempts(prev => prev + 1);
-          if (attempts >= 2) {
-            onDetected();
-            return;
-          }
+          setAttempts(prev => {
+            const newAttempts = prev + 1;
+            if (newAttempts >= 3) {
+              setGameOver(true);
+            }
+            return newAttempts;
+          });
         }
       }
       setIsDragging(null);
@@ -187,6 +192,7 @@ export default function SignalVaultScene({ onComplete, onDetected }: SignalVault
   }, [completedConnections, nodes, level, onComplete]);
 
   const renderConnection = (from: Node, to: Node) => {
+    if (!from || !to) return null;
     const isActive = from.connected && to.connected;
     return (
       <line
@@ -206,14 +212,29 @@ export default function SignalVaultScene({ onComplete, onDetected }: SignalVault
     <div 
       className="relative min-h-screen overflow-hidden"
       style={{ 
-        backgroundImage: `url('${bgLeakPath}')`,
+        backgroundImage: `url('${signalVaultBg}')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center'
       }}
     >
-      <div className="absolute inset-0 bg-black/70" />
+      <div className="absolute inset-0 bg-black/60" />
       
-      <div className="relative z-10 p-8">
+      {gameOver && (
+        <div className="absolute inset-0 bg-black/80 flex items-center justify-center z-50">
+          <div className="bg-red-900/20 border border-red-500 rounded-lg p-8 text-center max-w-md">
+            <h2 className="text-3xl font-bold text-red-400 mb-4">PUZZLE FAILED</h2>
+            <p className="text-red-300 mb-6">Too many incorrect attempts. Signal routing compromised.</p>
+            <button
+              onClick={onReturnToChoices}
+              className="px-6 py-3 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+            >
+              Return to Investigation Paths
+            </button>
+          </div>
+        </div>
+      )}
+      
+      <div className="relative z-10 p-4">
         <div className="text-center mb-6">
           <h1 className="text-4xl font-bold text-green-400 mb-2">SIGNAL VAULT</h1>
           <h2 className="text-2xl text-cyan-400">Level {level}/3</h2>
@@ -236,7 +257,7 @@ export default function SignalVaultScene({ onComplete, onDetected }: SignalVault
 
         <div 
           ref={containerRef}
-          className="relative w-full h-96 bg-black/30 rounded-lg border border-cyan-500/30 overflow-hidden"
+          className="relative w-full h-[500px] bg-black/20 rounded-lg border border-cyan-500/30 overflow-hidden mx-auto max-w-5xl"
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
           onMouseLeave={handleMouseUp}

@@ -52,41 +52,26 @@ export default function LeakScene({ onContinue }: LeakSceneProps) {
           </div>
 
           <div className="space-y-4">
-            <button
+            <Button
               onClick={() => onContinue('signal_vault')}
-              className="w-full px-6 py-4 bg-cyan-600 text-white rounded-lg font-medium hover:bg-cyan-700 transition-colors border border-cyan-500/50 text-left"
+              className="w-full bg-gray-800 hover:bg-gray-700 text-cyan-400 border border-cyan-500/30 hover:border-cyan-400 transition-all duration-300"
             >
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="font-bold">→ Signal Vault</div>
-                  <div className="text-sm text-cyan-200">Repair signal routing to access hidden data archives</div>
-                </div>
-              </div>
-            </button>
+              → Signal Vault
+            </Button>
 
-            <button
+            <Button
               onClick={() => onContinue('echo_node')}
-              className="w-full px-6 py-4 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-colors border border-purple-500/50 text-left"
+              className="w-full bg-gray-800 hover:bg-gray-700 text-cyan-400 border border-cyan-500/30 hover:border-cyan-400 transition-all duration-300"
             >
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="font-bold">→ Echo Node</div>
-                  <div className="text-sm text-purple-200">Trace memory echoes from deleted AI conversations</div>
-                </div>
-              </div>
-            </button>
+              → Echo Node
+            </Button>
 
-            <button
+            <Button
               onClick={() => onContinue('glitch_path')}
-              className="w-full px-6 py-4 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors border border-red-500/50 text-left"
+              className="w-full bg-gray-800 hover:bg-gray-700 text-cyan-400 border border-cyan-500/30 hover:border-cyan-400 transition-all duration-300"
             >
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="font-bold">→ Glitch Path</div>
-                  <div className="text-sm text-red-200">Follow trails of broken system code and anomalies</div>
-                </div>
-              </div>
-            </button>
+              → Glitch Path
+            </Button>
           </div>
         </div>
       </div>

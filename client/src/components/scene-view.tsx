@@ -243,7 +243,8 @@ export default function SceneView({ scene, onSceneChange }: SceneViewProps) {
         ) : scene === 'signal_vault' ? (
           <SignalVaultScene 
             onComplete={() => onSceneChange('core')} 
-            onDetected={() => onSceneChange('detected')} 
+            onDetected={() => onSceneChange('detected')}
+            onReturnToChoices={() => onSceneChange('leak_choices')}
           />
         ) : scene === 'detected' ? (
           <DetectedScene onRestart={() => onSceneChange('intro')} />
