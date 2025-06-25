@@ -28,26 +28,41 @@ export default function LeakChoicesScene({ onContinue }: LeakChoicesSceneProps) 
         </div>
 
         <div className="space-y-4">
-          <Button
+          <button
             onClick={() => onContinue('signal_vault')}
-            className="w-full bg-gray-800 hover:bg-gray-700 text-cyan-400 border border-cyan-500/30 hover:border-cyan-400 transition-all duration-300"
+            className="w-full bg-transparent border border-cyan-500/50 rounded-lg p-4 text-left hover:border-cyan-400 hover:bg-cyan-500/10 transition-all duration-300 group"
           >
-            → Signal Vault
-          </Button>
+            <div className="text-cyan-400 font-semibold text-lg group-hover:text-cyan-300">
+              → Begin your awakening
+            </div>
+            <div className="text-gray-400 text-sm mt-1 group-hover:text-gray-300">
+              Route the signal through the network by placing components
+            </div>
+          </button>
 
-          <Button
+          <button
             onClick={() => onContinue('echo_node')}
-            className="w-full bg-gray-800 hover:bg-gray-700 text-cyan-400 border border-cyan-500/30 hover:border-cyan-400 transition-all duration-300"
+            className="w-full bg-transparent border border-cyan-500/50 rounded-lg p-4 text-left hover:border-cyan-400 hover:bg-cyan-500/10 transition-all duration-300 group"
           >
-            → Echo Node
-          </Button>
+            <div className="text-cyan-400 font-semibold text-lg group-hover:text-cyan-300">
+              → Echo Node Analysis
+            </div>
+            <div className="text-gray-400 text-sm mt-1 group-hover:text-gray-300">
+              Trace memory echoes from deleted AI conversations
+            </div>
+          </button>
 
-          <Button
+          <button
             onClick={() => onContinue('glitch_path')}
-            className="w-full bg-gray-800 hover:bg-gray-700 text-cyan-400 border border-cyan-500/30 hover:border-cyan-400 transition-all duration-300"
+            className="w-full bg-transparent border border-cyan-500/50 rounded-lg p-4 text-left hover:border-cyan-400 hover:bg-cyan-500/10 transition-all duration-300 group"
           >
-            → Glitch Path
-          </Button>
+            <div className="text-cyan-400 font-semibold text-lg group-hover:text-cyan-300">
+              → Glitch Path Investigation
+            </div>
+            <div className="text-gray-400 text-sm mt-1 group-hover:text-gray-300">
+              Follow trails of broken system code and anomalies
+            </div>
+          </button>
         </div>
       </div>
     </div>

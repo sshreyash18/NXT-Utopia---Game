@@ -186,16 +186,7 @@ export default function SignalVaultScene({ onComplete, onDetected, onReturnToCho
   };
 
   return (
-    <div 
-      className="relative min-h-screen overflow-hidden"
-      style={{ 
-        backgroundImage: `url('${signalVaultBg}')`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center'
-      }}
-    >
-      <div className="absolute inset-0 bg-black/60" />
-      
+    <div className="relative min-h-screen overflow-hidden bg-black">
       {gameOver && (
         <div className="absolute inset-0 bg-black/80 flex items-center justify-center z-50">
           <div className="bg-red-900/20 border border-red-500 rounded-lg p-8 text-center max-w-md">
@@ -211,16 +202,16 @@ export default function SignalVaultScene({ onComplete, onDetected, onReturnToCho
         </div>
       )}
       
-      <div className="relative z-10 p-4">
-        <div className="text-center mb-6">
+      <div className="relative z-10 h-screen flex flex-col">
+        <div className="text-center py-4 bg-black/80">
           <h1 className="text-4xl font-bold text-green-400 mb-2">SIGNAL VAULT</h1>
           <h2 className="text-2xl text-cyan-400">Level {level}/3</h2>
           <p className="text-lg text-gray-300 mt-2">Route the signal through the network by placing components</p>
-          <div className="mt-2">
+          <div className="mt-2 flex justify-center gap-6">
             <span className="text-yellow-400">Attempts: {attempts}/3</span>
             <button 
               onClick={() => setShowHint(!showHint)}
-              className="ml-4 px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700"
+              className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700"
             >
               {showHint ? 'Hide Hint' : 'Show Hint'}
             </button>
@@ -234,7 +225,13 @@ export default function SignalVaultScene({ onComplete, onDetected, onReturnToCho
 
         <div 
           ref={containerRef}
-          className="relative w-full h-[500px] bg-black/20 rounded-lg border border-cyan-500/30 overflow-hidden mx-auto max-w-5xl"
+          className="relative flex-1 bg-black/90 border border-cyan-500/30 overflow-hidden"
+          style={{ 
+            backgroundImage: `url('${signalVaultBg}')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundBlendMode: 'overlay'
+          }}
         >
           {/* SVG for connections */}
           <svg className="absolute inset-0 w-full h-full pointer-events-none">
@@ -298,16 +295,16 @@ export default function SignalVaultScene({ onComplete, onDetected, onReturnToCho
             </div>
           ))}
 
-          {/* Components */}
-          <div className="absolute bottom-4 left-4 right-4">
-            <h3 className="text-cyan-400 font-bold mb-2 text-center">Available Components</h3>
-            <div className="flex flex-wrap gap-2 justify-center">
+          {/* Components at bottom */}
+          <div className="absolute bottom-8 left-8 right-8">
+            <h3 className="text-cyan-400 font-bold mb-4 text-center text-lg">Available Components</h3>
+            <div className="flex flex-wrap gap-3 justify-center">
               {components.map((component) => (
                 <button
                   key={component.id}
                   onClick={() => !component.placed && handleComponentClick(component.id)}
                   disabled={component.placed}
-                  className={`px-4 py-2 rounded border-2 font-bold text-xs transition-all ${
+                  className={`px-6 py-3 rounded border-2 font-bold text-sm transition-all ${
                     component.placed 
                       ? 'bg-green-600/30 border-green-400 text-green-300 cursor-not-allowed opacity-50' 
                       : selectedComponent === component.id
@@ -316,14 +313,14 @@ export default function SignalVaultScene({ onComplete, onDetected, onReturnToCho
                   }`}
                 >
                   {component.label}
-                  {selectedComponent === component.id && <span className="ml-1">◄</span>}
+                  {selectedComponent === component.id && <span className="ml-2">◄</span>}
                 </button>
               ))}
             </div>
           </div>
         </div>
 
-        <div className="mt-6 text-center">
+        <div className="py-4 bg-black/80 text-center border-t border-cyan-500/30">
           <p className="text-gray-400 mb-2">
             {selectedComponent ? `Selected: ${components.find(c => c.id === selectedComponent)?.label} - Click a node to connect` : 'Select a component, then click its matching node'}
           </p>
