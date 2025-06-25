@@ -86,14 +86,30 @@ export default function GlitchPathScene({ onComplete, onDetected }: GlitchPathSc
     playTypingSound();
     setShowResult(true);
     
-    const correct = selectedAnswer === puzzles[currentPuzzle].correctAnswer;
+    const currentPuzzleData = puzzles[currentPuzzle];
+    const correct = selectedAnswer === currentPuzzleData.correctAnswer;
+    
+    console.log('Answer validation:', {
+      currentPuzzle,
+      selectedAnswer,
+      correctAnswer: currentPuzzleData.correctAnswer,
+      correct,
+      puzzleQuestion: currentPuzzleData.question,
+      options: currentPuzzleData.options
+    });
+    
     setIsCorrect(correct);
 
     setTimeout(() => {
       stopTypingSound();
       
       if (!correct) {
-        console.log('Wrong answer - calling onDetected()', { currentPuzzle, selectedAnswer, correctAnswer: puzzles[currentPuzzle].correctAnswer });
+        console.log('Wrong answer - calling onDetected()', { 
+          currentPuzzle, 
+          selectedAnswer, 
+          correctAnswer: puzzles[currentPuzzle].correctAnswer,
+          puzzle: puzzles[currentPuzzle]
+        });
         onDetected();
         return;
       } else if (currentPuzzle < puzzles.length - 1) {
