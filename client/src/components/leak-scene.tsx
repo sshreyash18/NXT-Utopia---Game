@@ -18,6 +18,12 @@ export default function LeakScene({ onContinue }: LeakSceneProps) {
     }, 3000);
   };
 
+  useEffect(() => {
+    if (phase === 'choices') {
+      onContinue();
+    }
+  }, [phase, onContinue]);
+
   if (phase === 'background') {
     return (
       <div className="min-h-screen relative overflow-hidden">
@@ -29,12 +35,6 @@ export default function LeakScene({ onContinue }: LeakSceneProps) {
       </div>
     );
   }
-
-  useEffect(() => {
-    if (phase === 'choices') {
-      onContinue();
-    }
-  }, [phase, onContinue]);
 
   if (phase === 'choices') {
     return null;
