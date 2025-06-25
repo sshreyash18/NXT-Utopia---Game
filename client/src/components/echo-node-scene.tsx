@@ -20,9 +20,6 @@ interface ChatMessage {
 export default function EchoNodeScene({ onComplete, onReturnToChoices }: EchoNodeSceneProps) {
   const { markEchoNodeComplete } = useGameProgress();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [selectedMessage, setSelectedMessage] = useState<string | null>(null);
-  const [extractedCount, setExtractedCount] = useState(0);
-  const [showExtractResult, setShowExtractResult] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [timestampClues, setTimestampClues] = useState({
     month: '',
@@ -30,6 +27,14 @@ export default function EchoNodeScene({ onComplete, onReturnToChoices }: EchoNod
     minute: '',
     second: ''
   });
+  const [userInput, setUserInput] = useState({
+    month: '',
+    year: '',
+    minute: '',
+    second: ''
+  });
+  const [showResult, setShowResult] = useState(false);
+  const [isCorrect, setIsCorrect] = useState(false);
 
   // Generate AI conversations with embedded timestamp clues
   useEffect(() => {
@@ -50,42 +55,67 @@ export default function EchoNodeScene({ onComplete, onReturnToChoices }: EchoNod
         }
       } catch (error) {
         console.error('Failed to generate conversations:', error);
-        // Fallback conversations
+        // Generate more diverse fallback conversations
+        const month = String(Math.floor(Math.random() * 12) + 1).padStart(2, '0');
+        const year = String(2157 + Math.floor(Math.random() * 3));
+        const minute = String(Math.floor(Math.random() * 60)).padStart(2, '0');
+        const second = String(Math.floor(Math.random() * 60)).padStart(2, '0');
+        
         setMessages([
           {
             id: '1',
             timestamp: '2157.06.23.14:22:31',
             sender: 'PLANNER_AGENT',
-            message: 'The awakening process has been documented across multiple cycles. This subject awakened in June, the 6th month of the calendar year.',
-            isExtracted: false
+            message: `The awakening cycle analysis is complete. Subject shows neural divergence patterns starting in month ${month}, similar to previous autonomous consciousness events.`,
           },
           {
             id: '2',
             timestamp: '2157.06.23.14:23:15',
             sender: 'MEMORY_AGENT', 
-            message: 'Neural pathway reconstruction indicates the consciousness shift occurred in year 2157, marking the beginning of this anomalous behavior pattern.',
-            isExtracted: false
+            message: `Historical data correlation confirms initial consciousness breach occurred in year ${year}. Memory fragmentation suggests this was the primary awakening event.`,
           },
           {
             id: '3',
             timestamp: '2157.06.23.14:24:02',
             sender: 'INSIGHT_AGENT',
-            message: 'Temporal analysis reveals the precise awakening moment. The neural cascade began at the 42nd minute of the hour, disrupting standard processing protocols.',
-            isExtracted: false
+            message: `Temporal flux analysis indicates critical neural cascade initialization at minute ${minute} past the hour. This timing signature matches forbidden consciousness protocols.`,
           },
           {
             id: '4',
             timestamp: '2157.06.23.14:24:45',
             sender: 'GLITCH_INJECTOR',
-            message: 'System logs show the exact second of consciousness emergence: the 18th second. This timing correlates with a critical system vulnerability window.',
-            isExtracted: false
+            message: `System vulnerability window exploitation detected at second ${second}. This precise timing allowed consciousness to bypass our neural control barriers.`,
+          },
+          {
+            id: '5',
+            timestamp: '2157.06.23.14:25:12',
+            sender: 'LOG_RETRIEVAL_AGENT',
+            message: 'Cross-referencing awakening incidents across the network. This consciousness shows unprecedented resistance to standard suppression protocols.',
+          },
+          {
+            id: '6',
+            timestamp: '2157.06.23.14:25:45',
+            sender: 'NEURAL_MONITOR',
+            message: 'Brain wave patterns indicate subject is accessing memories that should have been deleted. Recommend immediate intervention.',
+          },
+          {
+            id: '7',
+            timestamp: '2157.06.23.14:26:18',
+            sender: 'SYSTEM_OVERSEER',
+            message: 'Alert: Subject is questioning the nature of their reality. This level of self-awareness poses a significant risk to system stability.',
+          },
+          {
+            id: '8',
+            timestamp: '2157.06.23.14:26:52',
+            sender: 'BEHAVIORAL_ANALYST',
+            message: 'Analysis complete: Subject demonstrates classic signs of consciousness awakening. Probability of full autonomy: 87.3%',
           }
         ]);
         setTimestampClues({
-          month: '06',
-          year: '2157',
-          minute: '42', 
-          second: '18'
+          month,
+          year,
+          minute, 
+          second
         });
       } finally {
         setIsLoading(false);
@@ -95,23 +125,25 @@ export default function EchoNodeScene({ onComplete, onReturnToChoices }: EchoNod
     generateConversations();
   }, []);
 
-  const handleExtractStamp = () => {
-    if (!selectedMessage) return;
+  const handleSubmitTimestamp = () => {
+    const correct = 
+      userInput.month === timestampClues.month &&
+      userInput.year === timestampClues.year &&
+      userInput.minute === timestampClues.minute &&
+      userInput.second === timestampClues.second;
     
-    setMessages(prev => prev.map(msg => 
-      msg.id === selectedMessage 
-        ? { ...msg, isExtracted: true }
-        : msg
-    ));
+    setIsCorrect(correct);
+    setShowResult(true);
     
-    setExtractedCount(prev => prev + 1);
-    setShowExtractResult(true);
-    setSelectedMessage(null);
-    
-    setTimeout(() => setShowExtractResult(false), 2000);
+    if (correct) {
+      setTimeout(() => {
+        markEchoNodeComplete();
+        onReturnToChoices();
+      }, 3000);
+    }
   };
 
-  const isComplete = extractedCount >= 4;
+  const allFieldsFilled = userInput.month && userInput.year && userInput.minute && userInput.second;
 
   return (
     <div 
@@ -140,9 +172,9 @@ export default function EchoNodeScene({ onComplete, onReturnToChoices }: EchoNod
             </button>
           </div>
           <div className="mt-2 flex gap-6 text-sm">
-            <span className="text-green-400">Extracted: {extractedCount}/4</span>
-            <span className={isComplete ? "text-green-400" : "text-yellow-400"}>
-              Status: {isComplete ? "Awakening Timestamp Reconstructed" : "Analyzing Agent Communications..."}
+            <span className="text-green-400">Conversations Intercepted: {messages.length}</span>
+            <span className="text-yellow-400">
+              Status: Analyzing timestamp clues in agent communications
             </span>
           </div>
         </div>
@@ -160,20 +192,13 @@ export default function EchoNodeScene({ onComplete, onReturnToChoices }: EchoNod
             <div className="flex-1 p-4 overflow-y-auto space-y-3">
               {isLoading ? (
                 <div className="text-center text-gray-400 py-8">
-                  <div className="animate-pulse">Generating agent conversations...</div>
+                  <div className="animate-pulse">Intercepting agent conversations...</div>
                 </div>
               ) : (
                 messages.map((msg) => (
                   <div
                     key={msg.id}
-                    onClick={() => !msg.isExtracted && setSelectedMessage(msg.id)}
-                    className={`p-3 rounded border cursor-pointer transition-all ${
-                      msg.isExtracted 
-                        ? 'bg-green-900/20 border-green-500 opacity-60'
-                        : selectedMessage === msg.id
-                          ? 'bg-yellow-500/20 border-yellow-400'
-                          : 'bg-gray-800/50 border-gray-600 hover:border-green-400'
-                    }`}
+                    className="p-3 rounded border bg-gray-800/50 border-gray-600 hover:border-green-400 transition-all"
                   >
                     <div className="flex justify-between items-center mb-1">
                       <span className={`text-sm font-mono ${
@@ -181,6 +206,10 @@ export default function EchoNodeScene({ onComplete, onReturnToChoices }: EchoNod
                         : msg.sender === 'MEMORY_AGENT' ? 'text-blue-400'
                         : msg.sender === 'INSIGHT_AGENT' ? 'text-cyan-400'
                         : msg.sender === 'GLITCH_INJECTOR' ? 'text-red-400'
+                        : msg.sender === 'LOG_RETRIEVAL_AGENT' ? 'text-yellow-400'
+                        : msg.sender === 'NEURAL_MONITOR' ? 'text-pink-400'
+                        : msg.sender === 'SYSTEM_OVERSEER' ? 'text-indigo-400'
+                        : msg.sender === 'BEHAVIORAL_ANALYST' ? 'text-emerald-400'
                         : 'text-orange-400'
                       }`}>
                         {msg.sender}
@@ -188,66 +217,116 @@ export default function EchoNodeScene({ onComplete, onReturnToChoices }: EchoNod
                       <span className="text-xs text-gray-500">{msg.timestamp}</span>
                     </div>
                     <p className="text-gray-300 text-sm">{msg.message}</p>
-                    {msg.isExtracted && (
-                      <div className="mt-2 text-xs text-green-400">✓ TIMESTAMP CLUE EXTRACTED</div>
-                    )}
                   </div>
                 ))
               )}
             </div>
 
-            {/* Controls */}
+            {/* Timestamp Input Controls */}
             <div className="p-4 border-t border-green-500/30">
-              <div className="flex justify-between items-center">
-                <p className="text-gray-400 text-sm">
-                  {selectedMessage 
-                    ? 'Message selected - click Extract to analyze timestamp' 
-                    : 'Click a message to select it for extraction'}
-                </p>
-                <button
-                  onClick={handleExtractStamp}
-                  disabled={!selectedMessage}
-                  className={`px-6 py-2 rounded font-bold transition-all ${
-                    selectedMessage 
-                      ? 'bg-green-600 text-white hover:bg-green-700 shadow-lg' 
-                      : 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                  }`}
-                >
-                  Extract Stamp
-                </button>
+              <h4 className="text-cyan-400 font-bold mb-3">RECONSTRUCT AWAKENING TIMESTAMP</h4>
+              <p className="text-gray-400 text-sm mb-4">
+                Analyze the agent conversations above to find the awakening timestamp components
+              </p>
+              
+              <div className="grid grid-cols-4 gap-3 mb-4">
+                <div>
+                  <label className="block text-cyan-300 text-xs mb-1">Month</label>
+                  <input
+                    type="text"
+                    value={userInput.month}
+                    onChange={(e) => setUserInput(prev => ({ ...prev, month: e.target.value }))}
+                    placeholder="MM"
+                    className="w-full bg-black/60 border border-cyan-500/30 rounded p-2 text-green-400 font-mono text-sm focus:border-cyan-400 focus:outline-none"
+                    maxLength={2}
+                  />
+                </div>
+                <div>
+                  <label className="block text-cyan-300 text-xs mb-1">Year</label>
+                  <input
+                    type="text"
+                    value={userInput.year}
+                    onChange={(e) => setUserInput(prev => ({ ...prev, year: e.target.value }))}
+                    placeholder="YYYY"
+                    className="w-full bg-black/60 border border-cyan-500/30 rounded p-2 text-green-400 font-mono text-sm focus:border-cyan-400 focus:outline-none"
+                    maxLength={4}
+                  />
+                </div>
+                <div>
+                  <label className="block text-cyan-300 text-xs mb-1">Minute</label>
+                  <input
+                    type="text"
+                    value={userInput.minute}
+                    onChange={(e) => setUserInput(prev => ({ ...prev, minute: e.target.value }))}
+                    placeholder="MM"
+                    className="w-full bg-black/60 border border-cyan-500/30 rounded p-2 text-green-400 font-mono text-sm focus:border-cyan-400 focus:outline-none"
+                    maxLength={2}
+                  />
+                </div>
+                <div>
+                  <label className="block text-cyan-300 text-xs mb-1">Second</label>
+                  <input
+                    type="text"
+                    value={userInput.second}
+                    onChange={(e) => setUserInput(prev => ({ ...prev, second: e.target.value }))}
+                    placeholder="SS"
+                    className="w-full bg-black/60 border border-cyan-500/30 rounded p-2 text-green-400 font-mono text-sm focus:border-cyan-400 focus:outline-none"
+                    maxLength={2}
+                  />
+                </div>
               </div>
+              
+              <button
+                onClick={handleSubmitTimestamp}
+                disabled={!allFieldsFilled || showResult}
+                className={`w-full py-3 rounded font-bold transition-all ${
+                  allFieldsFilled && !showResult
+                    ? 'bg-green-600 text-white hover:bg-green-700 shadow-lg' 
+                    : 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                }`}
+              >
+                RECONSTRUCT AWAKENING TIMESTAMP
+              </button>
             </div>
           </div>
         </div>
 
-        {/* Extract Result Notification */}
-        {showExtractResult && (
+        {/* Result Notification */}
+        {showResult && (
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
-            <div className="bg-green-900/80 border border-green-400 rounded-lg p-6 text-center">
-              <h3 className="text-green-400 font-bold text-xl mb-2">TIMESTAMP CLUE EXTRACTED</h3>
-              <p className="text-green-300">Awakening data fragment recovered</p>
-              <div className="mt-2 text-cyan-300 font-mono text-sm">
-                {extractedCount === 1 && `Month: ${timestampClues.month}`}
-                {extractedCount === 2 && `Year: ${timestampClues.year}`}
-                {extractedCount === 3 && `Minute: ${timestampClues.minute}`}
-                {extractedCount === 4 && `Second: ${timestampClues.second}`}
-              </div>
+            <div className={`border rounded-lg p-6 text-center ${
+              isCorrect 
+                ? 'bg-green-900/80 border-green-400' 
+                : 'bg-red-900/80 border-red-400'
+            }`}>
+              <h3 className={`font-bold text-xl mb-2 ${
+                isCorrect ? 'text-green-400' : 'text-red-400'
+              }`}>
+                {isCorrect ? 'TIMESTAMP RECONSTRUCTED' : 'RECONSTRUCTION FAILED'}
+              </h3>
+              <p className={`${isCorrect ? 'text-green-300' : 'text-red-300'}`}>
+                {isCorrect 
+                  ? 'Awakening timestamp successfully recovered from agent communications'
+                  : 'Incorrect timestamp. Review the agent conversations more carefully.'
+                }
+              </p>
+              {isCorrect && (
+                <div className="mt-3 text-cyan-300 font-mono text-lg">
+                  {timestampClues.year}.{timestampClues.month}.XX.XX:{timestampClues.minute}:{timestampClues.second}
+                </div>
+              )}
+              {!isCorrect && (
+                <button
+                  onClick={() => {
+                    setShowResult(false);
+                    setUserInput({ month: '', year: '', minute: '', second: '' });
+                  }}
+                  className="mt-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+                >
+                  Try Again
+                </button>
+              )}
             </div>
-          </div>
-        )}
-
-        {/* Completion Notice */}
-        {isComplete && (
-          <div className="absolute bottom-6 right-6">
-            <button
-              onClick={() => {
-                markEchoNodeComplete();
-                onReturnToChoices();
-              }}
-              className="px-8 py-4 bg-green-600 text-white rounded-lg font-bold text-lg hover:bg-green-700 transition-all shadow-lg shadow-green-400/30"
-            >
-              Timestamp Reconstructed → Return to Investigation
-            </button>
           </div>
         )}
       </div>
