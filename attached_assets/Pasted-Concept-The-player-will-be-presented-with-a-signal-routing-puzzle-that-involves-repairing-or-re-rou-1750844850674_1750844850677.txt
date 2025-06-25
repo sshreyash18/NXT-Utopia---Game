@@ -1,0 +1,41 @@
+Concept:
+The player will be presented with a signal routing puzzle that involves repairing or re-routing a malfunctioning AI system to uncover hidden information in the vault. This will involve interacting with a network diagram, clicking and dragging components to complete the path and gain access to the next vault section.
+
+🧠 Gameplay:
+Signal Flow Diagram
+The player sees a digital circuit diagram with different nodes, paths, and connections, but some paths are broken or incomplete. There are several "routes" through the diagram, and the player must find the correct way to make the signal flow properly.
+
+Broken Paths:
+There are broken paths where the signal isn’t flowing correctly. The player has to rearrange the paths by dragging components or nodes to their correct locations, ensuring the signal reaches its destination.
+
+🎮 How the Player Interacts:
+The player will need to reconnect broken pathways using clues provided by the AI system.
+
+Each broken segment represents a failed or blocked connection that the player must identify and resolve.
+
+AI-generated Clues:
+The AI provides hints in the form of keywords or instructions related to the system’s components (e.g., “To connect, try using access” or “Firewall node requires cipher input”).
+
+🔍 Clue Example (for Re-routing the Signal):
+Signal Flow Puzzle:
+You see a signal that begins at the Firewall Node but gets blocked at a Security Checkpoint.
+There are several paths with various labels like:
+"Access", "Decrypt", "Cipher", "Passcode".
+
+The player must click and drag the "Cipher" node to the Security Checkpoint to reroute the signal.
+
+Clue (from AI):
+“The breach can only pass when cipher is correctly applied. Use access at the correct junction.”
+
+Action:
+The player drags "Cipher" to the Security Checkpoint, completing the path. The signal now flows through successfully.
+
+🧩 Puzzle Difficulty:
+The puzzle should have multiple layers of difficulty:
+
+Level 1 (Easy): The player just needs to match keywords or concepts that connect logically (e.g., “decrypt” matches with “key”).
+
+Level 2 (Medium): The player will have to connect more abstract concepts based on system behavior (e.g., "cipher" and "firewall" node need to be linked to continue the flow).
+
+Level 3 (Hard): The player must decipher AI's obscure instructions and possibly decode encrypted paths with the use of system commands.
+

@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import bgLeakPath from "@assets/bg_leak.jpg_1750271414980.png";
 
 interface LeakSceneProps {
-  onContinue: () => void;
+  onContinue: (scene: string) => void;
 }
 
 export default function LeakScene({ onContinue }: LeakSceneProps) {

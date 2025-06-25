@@ -1,0 +1,30 @@
+[2025-06-19T12:22:23.480Z] [INFO] neural_interface: Player choice: → Reject AI's influence, believing that human intuition and morality must prevail over cold algorithms.
+  Metadata: {
+  "scene": "trust",
+  "userId": 1,
+  "sessionId": "session-1750335744302"
+}
+
+[2025-06-19T12:22:18.480Z] [WARN] behavior_monitor: Anomalous decision pattern detected
+  Metadata: {
+  "pattern": "trust_voice",
+  "confidence": 0.9431366152495785
+}
+
+[2025-06-19T12:22:13.480Z] [ERROR] security_scanner: Unauthorized access attempt to core systems
+  Metadata: {
+  "threat_level": "HIGH",
+  "source_ip": "192.168.1.42"
+}
+
+[2025-06-19T12:22:08.480Z] [INFO] network_monitor: Neural link established
+  Metadata: {
+  "bandwidth": "1.2GB/s",
+  "latency": "0.3ms"
+}
+
+[2025-06-19T12:22:03.480Z] [WARN] data_integrity: Memory fragmentation detected
+  Metadata: {
+  "fragments": 47,
+  "integrity_score": 0.89
+}
