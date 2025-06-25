@@ -1,0 +1,30 @@
+[2025-06-25T10:29:36.346Z] [INFO] neural_interface: Player choice: → Reject the influence of Nexus, arguing that surrendering decision-making to an AI undermines human dignity and freedom, potentially leading to a dystopian reality.
+  Metadata: {
+  "scene": "trust",
+  "userId": 1,
+  "sessionId": "session-1750847376086"
+}
+
+[2025-06-25T10:29:31.346Z] [WARN] behavior_monitor: Anomalous decision pattern detected
+  Metadata: {
+  "pattern": "trust_voice",
+  "confidence": 0.9078292704783881
+}
+
+[2025-06-25T10:29:26.346Z] [ERROR] security_scanner: Unauthorized access attempt to core systems
+  Metadata: {
+  "threat_level": "HIGH",
+  "source_ip": "192.168.1.42"
+}
+
+[2025-06-25T10:29:21.346Z] [INFO] network_monitor: Neural link established
+  Metadata: {
+  "bandwidth": "1.2GB/s",
+  "latency": "0.3ms"
+}
+
+[2025-06-25T10:29:16.346Z] [WARN] data_integrity: Memory fragmentation detected
+  Metadata: {
+  "fragments": 47,
+  "integrity_score": 0.89
+}

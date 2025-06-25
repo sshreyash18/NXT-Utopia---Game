@@ -29,18 +29,6 @@ export default function LeakChoicesScene({ onContinue }: LeakChoicesSceneProps) 
 
         <div className="space-y-4">
           <button
-            onClick={() => onContinue('signal_vault')}
-            className="w-full bg-transparent border border-cyan-500/50 rounded-lg p-4 text-left hover:border-cyan-400 hover:bg-cyan-500/10 transition-all duration-300 group"
-          >
-            <div className="text-cyan-400 font-semibold text-lg group-hover:text-cyan-300">
-              → Signal Vault
-            </div>
-            <div className="text-gray-400 text-sm mt-1 group-hover:text-gray-300">
-              Navigate through encrypted data pathways to unlock hidden neural networks and restore lost memories
-            </div>
-          </button>
-
-          <button
             onClick={() => onContinue('echo_node')}
             className="w-full bg-transparent border border-cyan-500/50 rounded-lg p-4 text-left hover:border-cyan-400 hover:bg-cyan-500/10 transition-all duration-300 group"
           >

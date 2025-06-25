@@ -6,7 +6,7 @@ import CloseEyesScene from "./close-eyes-scene";
 import BreakSilenceScene from "./break-silence-scene";
 import LeakScene from "./leak-scene";
 import GlitchPathScene from "./glitch-path-scene";
-import SignalVaultScene from "./signal-vault-scene";
+
 import LeakChoicesScene from "./leak-choices-scene";
 import DetectedScene from "./detected-scene";
 import { useGameState } from "@/hooks/use-game-state";
@@ -240,12 +240,6 @@ export default function SceneView({ scene, onSceneChange }: SceneViewProps) {
               console.log('onDetected called - changing to detected scene');
               onSceneChange('detected');
             }} 
-          />
-        ) : scene === 'signal_vault' ? (
-          <SignalVaultScene 
-            onComplete={() => onSceneChange('core')} 
-            onDetected={() => onSceneChange('detected')}
-            onReturnToChoices={() => onSceneChange('leak_choices')}
           />
         ) : scene === 'leak_choices' ? (
           <LeakChoicesScene onContinue={(nextScene) => onSceneChange(nextScene)} />
