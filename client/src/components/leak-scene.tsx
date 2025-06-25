@@ -30,9 +30,13 @@ export default function LeakScene({ onContinue }: LeakSceneProps) {
     );
   }
 
+  useEffect(() => {
+    if (phase === 'choices') {
+      onContinue();
+    }
+  }, [phase, onContinue]);
+
   if (phase === 'choices') {
-    // Transition to separate choices scene
-    onContinue();
     return null;
   }
 

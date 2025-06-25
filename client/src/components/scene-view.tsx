@@ -232,7 +232,7 @@ export default function SceneView({ scene, onSceneChange }: SceneViewProps) {
             onContinue={() => onSceneChange('awaken')}
           />
         ) : scene === 'leak' ? (
-          <LeakScene onContinue={(nextScene) => onSceneChange(nextScene)} />
+          <LeakScene onContinue={() => onSceneChange('leak_choices')} />
         ) : scene === 'glitch_path' ? (
           <GlitchPathScene 
             onComplete={() => onSceneChange('core')} 
