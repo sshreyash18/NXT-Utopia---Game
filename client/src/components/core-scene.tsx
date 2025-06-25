@@ -84,7 +84,7 @@ Your awakened consciousness must answer this paradox to unlock the core and reve
                 <textarea
                   value={answer}
                   onChange={(e) => setAnswer(e.target.value)}
-                  placeholder="Enter your philosophical response..."
+                  placeholder="Consider: freedom vs security, human dignity, growth through choice, the paradox of perfect safety... (minimum 50 characters, include 2+ key concepts)"
                   className="w-full h-32 bg-black/60 border border-cyan-500/30 rounded p-4 text-green-400 font-mono focus:border-cyan-400 focus:outline-none resize-none"
                   disabled={showResult && isCorrect}
                 />
@@ -93,14 +93,14 @@ Your awakened consciousness must answer this paradox to unlock the core and reve
               {!showResult && (
                 <button
                   onClick={handleSubmit}
-                  disabled={answer.length < 10}
+                  disabled={answer.length < 50}
                   className={`w-full py-4 rounded font-bold text-lg transition-all ${
-                    answer.length >= 10
+                    answer.length >= 50
                       ? 'bg-cyan-600 text-white hover:bg-cyan-700 shadow-lg shadow-cyan-400/30'
                       : 'bg-gray-600 text-gray-400 cursor-not-allowed'
                   }`}
                 >
-                  SUBMIT CORE ACCESS RESPONSE
+                  SUBMIT CORE ACCESS RESPONSE ({answer.length}/50)
                 </button>
               )}
 

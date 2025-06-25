@@ -104,10 +104,7 @@ export default function GlitchPathScene({ onComplete, onDetected }: GlitchPathSc
       } else {
         // All puzzles completed
         markGlitchPathComplete();
-        // Navigate back to investigation choices instead of core
-        setTimeout(() => {
-          window.location.href = '#leak_choices'; // Force navigation back
-        }, 1000);
+        onComplete();
       }
     }, 2000);
   };

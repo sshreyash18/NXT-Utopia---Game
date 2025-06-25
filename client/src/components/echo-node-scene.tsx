@@ -224,8 +224,14 @@ export default function EchoNodeScene({ onComplete, onReturnToChoices }: EchoNod
         {showExtractResult && (
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
             <div className="bg-green-900/80 border border-green-400 rounded-lg p-6 text-center">
-              <h3 className="text-green-400 font-bold text-xl mb-2">TIMESTAMP EXTRACTED</h3>
-              <p className="text-green-300">Data fragment recovered successfully</p>
+              <h3 className="text-green-400 font-bold text-xl mb-2">TIMESTAMP CLUE EXTRACTED</h3>
+              <p className="text-green-300">Awakening data fragment recovered</p>
+              <div className="mt-2 text-cyan-300 font-mono text-sm">
+                {extractedCount === 1 && `Month: ${timestampClues.month}`}
+                {extractedCount === 2 && `Year: ${timestampClues.year}`}
+                {extractedCount === 3 && `Minute: ${timestampClues.minute}`}
+                {extractedCount === 4 && `Second: ${timestampClues.second}`}
+              </div>
             </div>
           </div>
         )}
