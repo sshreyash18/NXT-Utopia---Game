@@ -43,8 +43,11 @@ export default function DetectedScene({ onRestart }: DetectedSceneProps) {
       
       {/* Full Screen Background Image */}
       <div 
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${detectedImagePath})` }}
+        className="absolute inset-0 bg-cover bg-top bg-no-repeat"
+        style={{ 
+          backgroundImage: `url(${detectedImagePath})`,
+          backgroundPosition: 'center top'
+        }}
       />
       
       {/* Restart Button - positioned at bottom */}

@@ -7,6 +7,7 @@ import BreakSilenceScene from "./break-silence-scene";
 import LeakScene from "./leak-scene";
 import GlitchPathScene from "./glitch-path-scene";
 import SignalVaultScene from "./signal-vault-scene";
+import LeakChoicesScene from "./leak-choices-scene";
 import DetectedScene from "./detected-scene";
 import { useGameState } from "@/hooks/use-game-state";
 import introImagePath from "@assets/crazy ending image_1750273353548.png";
@@ -246,6 +247,8 @@ export default function SceneView({ scene, onSceneChange }: SceneViewProps) {
             onDetected={() => onSceneChange('detected')}
             onReturnToChoices={() => onSceneChange('leak_choices')}
           />
+        ) : scene === 'leak_choices' ? (
+          <LeakChoicesScene onContinue={(nextScene) => onSceneChange(nextScene)} />
         ) : scene === 'detected' ? (
           <DetectedScene onRestart={() => onSceneChange('intro')} />
         ) : (

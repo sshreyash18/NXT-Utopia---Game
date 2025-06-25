@@ -35,6 +35,8 @@ export default function SignalVaultScene({ onComplete, onDetected, onReturnToCho
   const [completedConnections, setCompletedConnections] = useState(0);
   const [showHint, setShowHint] = useState(false);
   const [attempts, setAttempts] = useState(0);
+  const [gameOver, setGameOver] = useState(false);
+  const [selectedComponent, setSelectedComponent] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -97,7 +99,7 @@ export default function SignalVaultScene({ onComplete, onDetected, onReturnToCho
     setAttempts(0);
     setShowHint(false);
     setGameOver(false);
-    setSelectedConnection(null);
+    setSelectedComponent(null);
   };
 
   const getHint = () => {
@@ -113,70 +115,45 @@ export default function SignalVaultScene({ onComplete, onDetected, onReturnToCho
     }
   };
 
-  const handleMouseDown = (e: React.MouseEvent, componentId: string) => {
-    setIsDragging(componentId);
-    const rect = containerRef.current?.getBoundingClientRect();
-    if (rect) {
-      const component = components.find(c => c.id === componentId);
-      if (component) {
-        setDragOffset({
-          x: e.clientX - rect.left - component.x,
-          y: e.clientY - rect.top - component.y
-        });
-      }
+  const handleComponentClick = (componentId: string) => {
+    if (selectedComponent === componentId) {
+      setSelectedComponent(null);
+    } else {
+      setSelectedComponent(componentId);
     }
   };
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (isDragging) {
-      const rect = containerRef.current?.getBoundingClientRect();
-      if (rect) {
-        const newX = e.clientX - rect.left - dragOffset.x;
-        const newY = e.clientY - rect.top - dragOffset.y;
-        
-        setComponents(prev => prev.map(component => 
-          component.id === isDragging 
-            ? { ...component, x: newX, y: newY, isDragging: true }
-            : component
+  const handleNodeClick = (nodeId: string) => {
+    if (!selectedComponent) return;
+    
+    const component = components.find(c => c.id === selectedComponent);
+    const node = nodes.find(n => n.id === nodeId);
+    
+    if (component && node && !component.placed && !node.connected) {
+      if (node.requiredComponent === component.id) {
+        // Correct connection
+        setNodes(prev => prev.map(n => 
+          n.id === nodeId ? { ...n, connected: true } : n
         ));
-      }
-    }
-  };
-
-  const handleMouseUp = () => {
-    if (isDragging) {
-      const component = components.find(c => c.id === isDragging);
-      if (component) {
-        // Check if component is dropped on a compatible node
-        const targetNode = nodes.find(node => {
-          const distance = Math.sqrt(
-            Math.pow(node.x - component.x, 2) + Math.pow(node.y - component.y, 2)
-          );
-          return distance < 60 && node.requiredComponent === component.id && !node.connected;
+        setComponents(prev => prev.map(c => 
+          c.id === selectedComponent ? { ...c, placed: true } : c
+        ));
+        setCompletedConnections(prev => prev + 1);
+        setSelectedComponent(null);
+      } else {
+        // Wrong connection - play siren sound and increase attempts
+        setAttempts(prev => {
+          const newAttempts = prev + 1;
+          if (newAttempts >= 3) {
+            setGameOver(true);
+          }
+          return newAttempts;
         });
-
-        if (targetNode) {
-          // Successful connection
-          setNodes(prev => prev.map(node => 
-            node.id === targetNode.id ? { ...node, connected: true } : node
-          ));
-          setComponents(prev => prev.map(comp => 
-            comp.id === component.id ? { ...comp, placed: true, x: targetNode.x, y: targetNode.y } : comp
-          ));
-          setCompletedConnections(prev => prev + 1);
-        } else {
-          // Wrong placement - increase attempt counter
-          setAttempts(prev => {
-            const newAttempts = prev + 1;
-            if (newAttempts >= 3) {
-              setGameOver(true);
-            }
-            return newAttempts;
-          });
-        }
+        // Play siren sound
+        const audio = new Audio('/sounds/siren.mp3');
+        audio.play().catch(() => {}); // Ignore audio errors
+        setSelectedComponent(null);
       }
-      setIsDragging(null);
-      setComponents(prev => prev.map(component => ({ ...component, isDragging: false })));
     }
   };
 
@@ -258,9 +235,6 @@ export default function SignalVaultScene({ onComplete, onDetected, onReturnToCho
         <div 
           ref={containerRef}
           className="relative w-full h-[500px] bg-black/20 rounded-lg border border-cyan-500/30 overflow-hidden mx-auto max-w-5xl"
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseUp}
         >
           {/* SVG for connections */}
           <svg className="absolute inset-0 w-full h-full pointer-events-none">
@@ -308,14 +282,15 @@ export default function SignalVaultScene({ onComplete, onDetected, onReturnToCho
           {nodes.map((node) => (
             <div
               key={node.id}
-              className={`absolute w-24 h-12 rounded border-2 flex items-center justify-center text-xs font-bold cursor-pointer transition-all ${
+              onClick={() => handleNodeClick(node.id)}
+              className={`absolute w-32 h-16 rounded border-2 flex items-center justify-center text-xs font-bold cursor-pointer transition-all hover:scale-105 ${
                 node.connected 
-                  ? 'bg-green-500/20 border-green-400 text-green-300' 
+                  ? 'bg-green-500/30 border-green-400 text-green-300 shadow-lg shadow-green-400/20' 
                   : node.type === 'start' 
-                    ? 'bg-blue-500/20 border-blue-400 text-blue-300'
+                    ? 'bg-blue-500/30 border-blue-400 text-blue-300 shadow-lg shadow-blue-400/20'
                     : node.type === 'end'
-                      ? 'bg-purple-500/20 border-purple-400 text-purple-300'
-                      : 'bg-red-500/20 border-red-400 text-red-300'
+                      ? 'bg-purple-500/30 border-purple-400 text-purple-300 shadow-lg shadow-purple-400/20'
+                      : 'bg-red-500/30 border-red-400 text-red-300 hover:bg-red-400/30 shadow-lg shadow-red-400/20'
               }`}
               style={{ left: node.x, top: node.y }}
             >
@@ -324,30 +299,37 @@ export default function SignalVaultScene({ onComplete, onDetected, onReturnToCho
           ))}
 
           {/* Components */}
-          {components.map((component) => (
-            <div
-              key={component.id}
-              className={`absolute w-20 h-10 rounded border-2 flex items-center justify-center text-xs font-bold cursor-grab transition-all ${
-                component.placed 
-                  ? 'bg-green-600/30 border-green-400 text-green-300 cursor-not-allowed' 
-                  : component.isDragging
-                    ? 'bg-yellow-500/30 border-yellow-400 text-yellow-300 cursor-grabbing z-50'
-                    : 'bg-cyan-500/30 border-cyan-400 text-cyan-300 hover:bg-cyan-400/40'
-              }`}
-              style={{ left: component.x, top: component.y }}
-              onMouseDown={(e) => !component.placed && handleMouseDown(e, component.id)}
-            >
-              {component.label}
+          <div className="absolute bottom-4 left-4 right-4">
+            <h3 className="text-cyan-400 font-bold mb-2 text-center">Available Components</h3>
+            <div className="flex flex-wrap gap-2 justify-center">
+              {components.map((component) => (
+                <button
+                  key={component.id}
+                  onClick={() => !component.placed && handleComponentClick(component.id)}
+                  disabled={component.placed}
+                  className={`px-4 py-2 rounded border-2 font-bold text-xs transition-all ${
+                    component.placed 
+                      ? 'bg-green-600/30 border-green-400 text-green-300 cursor-not-allowed opacity-50' 
+                      : selectedComponent === component.id
+                        ? 'bg-yellow-500/40 border-yellow-400 text-yellow-300 shadow-lg shadow-yellow-400/30 scale-105'
+                        : 'bg-cyan-500/30 border-cyan-400 text-cyan-300 hover:bg-cyan-400/40 hover:scale-105 shadow-lg shadow-cyan-400/20'
+                  }`}
+                >
+                  {component.label}
+                  {selectedComponent === component.id && <span className="ml-1">◄</span>}
+                </button>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
 
         <div className="mt-6 text-center">
-          <p className="text-gray-400">
-            Drag components from the bottom to their matching checkpoints to complete the signal path
+          <p className="text-gray-400 mb-2">
+            {selectedComponent ? `Selected: ${components.find(c => c.id === selectedComponent)?.label} - Click a node to connect` : 'Select a component, then click its matching node'}
           </p>
-          <div className="mt-2">
+          <div className="flex justify-center gap-6">
             <span className="text-green-400">Connections: {completedConnections}/{nodes.filter(n => n.requiredComponent).length}</span>
+            <span className="text-yellow-400">Failed Attempts: {attempts}/3</span>
           </div>
         </div>
       </div>
