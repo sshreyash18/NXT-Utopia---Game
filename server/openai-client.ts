@@ -121,45 +121,40 @@ export async function generateDialogue(scene: string, userChoice?: string, previ
 }
 
 export async function generateGlitchPuzzle(puzzleNumber: number): Promise<any> {
-  // Fixed alphabet-based puzzles with guaranteed correct calculations
-  const alphabetPuzzles = [
-    {
-      question: "If CAT = 3120, what is DOG?",
-      options: ["A: 4157", "B: 4715", "C: 7154", "D: 1574"],
-      correctAnswer: "A",
-      explanation: "Each letter = alphabet position: C(3), A(1), T(20) = 3120. D(4), O(15), G(7) = 4157"
-    },
-    {
-      question: "If BAT = 2120, what is COW?",
-      options: ["A: 31523", "B: 32315", "C: 31523", "D: 23153"],
-      correctAnswer: "A", 
-      explanation: "Each letter = alphabet position: B(2), A(1), T(20) = 2120. C(3), O(15), W(23) = 31523"
-    },
-    {
-      question: "If SUN = 211421, what is FOG?",
-      options: ["A: 61507", "B: 67152", "C: 61507", "D: 71506"],
-      correctAnswer: "A",
-      explanation: "Each letter = alphabet position: S(19), U(21), N(14) = 192114. F(6), O(15), G(7) = 61507"
-    }
-  ];
 
-  // Fix the calculations to be consistent
+
+  // Fix the calculations and data structure to match client expectations
   const fixedPuzzles = [
     {
       question: "If CAT = 3120, what is DOG?",
-      options: ["A: 4157", "B: 4715", "C: 7154", "D: 1574"],
+      choices: [
+        { text: "4157", letter: "A" },
+        { text: "4715", letter: "B" },
+        { text: "7154", letter: "C" },
+        { text: "1574", letter: "D" }
+      ],
       correctAnswer: "A",
       explanation: "Each letter = alphabet position: C(3), A(1), T(20) = 3120. D(4), O(15), G(7) = 4157"
     },
     {
       question: "If BAT = 2120, what is COW?",
-      options: ["A: 31523", "B: 32315", "C: 23153", "D: 15323"],
+      choices: [
+        { text: "31523", letter: "A" },
+        { text: "32315", letter: "B" },
+        { text: "23153", letter: "C" },
+        { text: "15323", letter: "D" }
+      ],
       correctAnswer: "A",
       explanation: "Each letter = alphabet position: B(2), A(1), T(20) = 2120. C(3), O(15), W(23) = 31523"
     },
     {
       question: "If SUN = 192114, what is FOG?",
-      options: ["A: 61507", "B: 67152", "C: 71506", "D: 15607"],
+      choices: [
+        { text: "61507", letter: "A" },
+        { text: "67152", letter: "B" },
+        { text: "71506", letter: "C" },
+        { text: "15607", letter: "D" }
+      ],
       correctAnswer: "A",
       explanation: "Each letter = alphabet position: S(19), U(21), N(14) = 192114. F(6), O(15), G(7) = 61507"
     }
