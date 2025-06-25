@@ -134,11 +134,11 @@ Response format as JSON:
 {
   "question": "If [WORD] = [NUMBERS], what is [TARGET]?",
   "choices": [
-    {"text": "[wrong answer]", "letter": "A"},
-    {"text": "[correct answer]", "letter": "B"}, 
-    {"text": "[wrong answer]", "letter": "C"}
+    {"text": "[correct or wrong answer]", "letter": "A"},
+    {"text": "[correct or wrong answer]", "letter": "B"}, 
+    {"text": "[correct or wrong answer]", "letter": "C"}
   ],
-  "correctAnswer": "B",
+  "correctAnswer": "[A, B, or C - whichever has the correct answer]",
   "explanation": "Each letter equals its position in the alphabet: A=1, B=2, C=3..."
 }`;
     } else if (puzzleNumber === 2) {
