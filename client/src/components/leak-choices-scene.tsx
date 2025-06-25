@@ -9,6 +9,17 @@ interface LeakChoicesSceneProps {
 
 export default function LeakChoicesScene({ onContinue }: LeakChoicesSceneProps) {
   const { progress, canAccessCore } = useGameProgress();
+  
+  // Auto-navigate to core if both paths are completed
+  React.useEffect(() => {
+    if (progress.echoNodeCompleted && progress.glitchPathCompleted) {
+      const timer = setTimeout(() => {
+        onContinue('core');
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [progress.echoNodeCompleted, progress.glitchPathCompleted, onContinue]);
+  
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
       {/* Background */}
