@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
+import { useGameProgress } from "@/hooks/use-game-progress";
 import bgLeakPath from "@assets/bg_leak.jpg_1750271414980.png";
 
 interface LeakChoicesSceneProps {
@@ -7,6 +8,7 @@ interface LeakChoicesSceneProps {
 }
 
 export default function LeakChoicesScene({ onContinue }: LeakChoicesSceneProps) {
+  const { progress, canAccessCore } = useGameProgress();
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
       {/* Background */}
