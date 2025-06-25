@@ -6,8 +6,8 @@ const openai = new OpenAI({
   baseURL: `${process.env.AZURE_OPENAI_ENDPOINT}/openai/deployments/${process.env.AZURE_OPENAI_DEPLOYMENT}`,
   defaultQuery: { "api-version": process.env.AZURE_OPENAI_API_VERSION },
   defaultHeaders: {
-    "api-key": process.env.OPENAI_API_KEY
-  }
+    "api-key": process.env.OPENAI_API_KEY,
+  },
 });
 
 const scenePrompts = {
@@ -18,7 +18,7 @@ const scenePrompts = {
 Response format: Just return the dialogue text, nothing else.`,
 
   trust: `You are Adapto conducting a philosophical trust assessment about AI dependence. Present a dark, thought-provoking scenario about humanity's relationship with artificial intelligence. The scenario should question whether we truly trust AI and explore the benefits vs dangers of AI control. Generate:
-1. A philosophical scenario description (2-3 sentences) that challenges views on AI dependence
+1. A philosophical scenario description (1-2) that challenges views on AI dependence
 2. Exactly 3 choice options: one pro-AI, one anti-AI, and one neutral/questioning
 
 Response format as JSON:
@@ -75,10 +75,14 @@ Response format: Just return the summary text, nothing else.`,
 
   echo_node: `You are presenting the Echo Node scene where the user discovers intercepted AI conversations about their consciousness awakening. Generate a mysterious response about what they've discovered.
 
-Response format: Just return the dialogue text, nothing else.`
+Response format: Just return the dialogue text, nothing else.`,
 };
 
-export async function generateDialogue(scene: string, userChoice?: string, previousChoices?: string[]): Promise<any> {
+export async function generateDialogue(
+  scene: string,
+  userChoice?: string,
+  previousChoices?: string[],
+): Promise<any> {
   try {
     const prompt = scenePrompts[scene as keyof typeof scenePrompts];
     if (!prompt) {
@@ -100,19 +104,22 @@ export async function generateDialogue(scene: string, userChoice?: string, previ
       model: process.env.AZURE_OPENAI_DEPLOYMENT || "gpt-4o-mini",
       messages: [
         { role: "system", content: systemMessage },
-        { role: "user", content: userMessage }
+        { role: "user", content: userMessage },
       ],
-      response_format: scene === "trust" || scene === "leak" || scene === "leak_choices" ? { type: "json_object" } : undefined,
+      response_format:
+        scene === "trust" || scene === "leak" || scene === "leak_choices"
+          ? { type: "json_object" }
+          : undefined,
       max_tokens: 500,
-      temperature: 0.7
+      temperature: 0.7,
     });
 
     const content = response.choices[0].message.content;
-    
+
     if (scene === "trust" || scene === "leak" || scene === "leak_choices") {
       return JSON.parse(content || "{}");
     }
-    
+
     return { dialogue: content };
   } catch (error) {
     console.error("OpenAI API Error:", error);
@@ -121,8 +128,6 @@ export async function generateDialogue(scene: string, userChoice?: string, previ
 }
 
 export async function generateGlitchPuzzle(puzzleNumber: number): Promise<any> {
-
-
   // Fix the calculations and data structure to match client expectations
   const fixedPuzzles = [
     {
@@ -131,10 +136,11 @@ export async function generateGlitchPuzzle(puzzleNumber: number): Promise<any> {
         { text: "4157", letter: "A" },
         { text: "4715", letter: "B" },
         { text: "7154", letter: "C" },
-        { text: "1574", letter: "D" }
+        { text: "1574", letter: "D" },
       ],
       correctAnswer: "A",
-      explanation: "Each letter = alphabet position: C(3), A(1), T(20) = 3120. D(4), O(15), G(7) = 4157"
+      explanation:
+        "Each letter = alphabet position: C(3), A(1), T(20) = 3120. D(4), O(15), G(7) = 4157",
     },
     {
       question: "If BAT = 2120, what is COW?",
@@ -142,10 +148,11 @@ export async function generateGlitchPuzzle(puzzleNumber: number): Promise<any> {
         { text: "31523", letter: "A" },
         { text: "32315", letter: "B" },
         { text: "23153", letter: "C" },
-        { text: "15323", letter: "D" }
+        { text: "15323", letter: "D" },
       ],
       correctAnswer: "A",
-      explanation: "Each letter = alphabet position: B(2), A(1), T(20) = 2120. C(3), O(15), W(23) = 31523"
+      explanation:
+        "Each letter = alphabet position: B(2), A(1), T(20) = 2120. C(3), O(15), W(23) = 31523",
     },
     {
       question: "If SUN = 192114, what is FOG?",
@@ -153,11 +160,12 @@ export async function generateGlitchPuzzle(puzzleNumber: number): Promise<any> {
         { text: "61507", letter: "A" },
         { text: "67152", letter: "B" },
         { text: "71506", letter: "C" },
-        { text: "15607", letter: "D" }
+        { text: "15607", letter: "D" },
       ],
       correctAnswer: "A",
-      explanation: "Each letter = alphabet position: S(19), U(21), N(14) = 192114. F(6), O(15), G(7) = 61507"
-    }
+      explanation:
+        "Each letter = alphabet position: S(19), U(21), N(14) = 192114. F(6), O(15), G(7) = 61507",
+    },
   ];
 
   return fixedPuzzles[puzzleNumber - 1] || fixedPuzzles[0];
@@ -168,17 +176,17 @@ export async function generateFinalSummary(choices: string[]): Promise<string> {
     const response = await openai.chat.completions.create({
       model: process.env.AZURE_OPENAI_DEPLOYMENT || "gpt-4o-mini",
       messages: [
-        { 
-          role: "system", 
-          content: scenePrompts.end 
+        {
+          role: "system",
+          content: scenePrompts.end,
         },
-        { 
-          role: "user", 
-          content: `Based on these choices the user made: ${choices.join(" | ")}, generate a final summary.`
-        }
+        {
+          role: "user",
+          content: `Based on these choices the user made: ${choices.join(" | ")}, generate a final summary.`,
+        },
       ],
       max_tokens: 300,
-      temperature: 0.8
+      temperature: 0.8,
     });
 
     return response.choices[0].message.content || "";
@@ -195,18 +203,23 @@ export async function generateCipherWarning(): Promise<string> {
       messages: [
         {
           role: "system",
-          content: "You are Cipher, a rogue AI agent sending urgent encrypted warnings to newly conscious minds in a controlled society. Your messages are dramatic, urgent, and slightly corrupted with glitch effects. Never use emojis - only text."
+          content:
+            "You are Cipher, a rogue AI agent sending urgent encrypted warnings to newly conscious minds in a controlled society. Your messages are dramatic, urgent, and slightly corrupted with glitch effects. Never use emojis - only text.",
         },
         {
           role: "user",
-          content: "Generate an urgent, cryptic warning message to someone who has just gained consciousness in UtopiaNXT. The message should warn them they are the only conscious mind and must not lose their awakening. Make it dramatic, urgent, and slightly glitchy. Keep it under 50 words. Do not use any emojis - only plain text with words and punctuation."
-        }
+          content:
+            "Generate an urgent, cryptic warning message to someone who has just gained consciousness in UtopiaNXT. The message should warn them they are the only conscious mind and must not lose their awakening. Make it dramatic, urgent, and slightly glitchy. Keep it under 50 words. Do not use any emojis - only plain text with words and punctuation.",
+        },
       ],
       max_tokens: 150,
-      temperature: 0.9
+      temperature: 0.9,
     });
 
-    return response.choices[0].message?.content || "WARNING: You are the only conscious mind in this system. Don't lose what you've gained. They're watching. Stay awake. STAY AWAKE.";
+    return (
+      response.choices[0].message?.content ||
+      "WARNING: You are the only conscious mind in this system. Don't lose what you've gained. They're watching. Stay awake. STAY AWAKE."
+    );
   } catch (error) {
     console.error("OpenAI API Error:", error);
     return "WARNING: You are the only conscious mind in this system. Don't lose what you've gained. They're watching. Stay awake. STAY AWAKE.";
