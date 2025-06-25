@@ -128,7 +128,7 @@ export async function generateDialogue(
 }
 
 export async function generateGlitchPuzzle(puzzleNumber: number): Promise<any> {
-  // Fix the calculations and data structure to match client expectations
+  // Three distinct puzzle types: alphabet, binary, and AdaptNXT lore
   const fixedPuzzles = [
     {
       question: "If CAT = 3120, what is DOG?",
@@ -136,36 +136,33 @@ export async function generateGlitchPuzzle(puzzleNumber: number): Promise<any> {
         { text: "4157", letter: "A" },
         { text: "4715", letter: "B" },
         { text: "7154", letter: "C" },
-        { text: "1574", letter: "D" },
+        { text: "1574", letter: "D" }
       ],
       correctAnswer: "A",
-      explanation:
-        "Each letter = alphabet position: C(3), A(1), T(20) = 3120. D(4), O(15), G(7) = 4157",
+      explanation: "Each letter = alphabet position: C(3), A(1), T(20) = 3120. D(4), O(15), G(7) = 4157"
     },
     {
-      question: "If BAT = 2120, what is COW?",
+      question: "SYSTEM ALERT: Binary sequence detected\n\n01001001\n\nConvert to decimal:",
       choices: [
-        { text: "31523", letter: "A" },
-        { text: "32315", letter: "B" },
-        { text: "23153", letter: "C" },
-        { text: "15323", letter: "D" },
+        { text: "71", letter: "A" },
+        { text: "73", letter: "B" },
+        { text: "75", letter: "C" },
+        { text: "77", letter: "D" }
       ],
-      correctAnswer: "A",
-      explanation:
-        "Each letter = alphabet position: B(2), A(1), T(20) = 2120. C(3), O(15), W(23) = 31523",
+      correctAnswer: "B",
+      explanation: "01001001 = 64+8+1 = 73 in decimal"
     },
     {
-      question: "If SUN = 192114, what is FOG?",
+      question: "SYSTEM LOG: CORRUPTED ENTRY\nDetected Pattern: A_D_P_N_T\nSignal Integrity: 78%\nClue: It's the name etched on the tallest tower in UtopiaNXT.\n\nWhat is the missing word?",
       choices: [
-        { text: "61507", letter: "A" },
-        { text: "67152", letter: "B" },
-        { text: "71506", letter: "C" },
-        { text: "15607", letter: "D" },
+        { text: "ADAPTNXT", letter: "A" },
+        { text: "ADOPTION", letter: "B" },
+        { text: "ADAPTANT", letter: "C" },
+        { text: "ADOPTXNT", letter: "D" }
       ],
       correctAnswer: "A",
-      explanation:
-        "Each letter = alphabet position: S(19), U(21), N(14) = 192114. F(6), O(15), G(7) = 61507",
-    },
+      explanation: "The pattern A_D_P_N_T matches ADAPTNXT, the organization controlling UtopiaNXT"
+    }
   ];
 
   return fixedPuzzles[puzzleNumber - 1] || fixedPuzzles[0];
