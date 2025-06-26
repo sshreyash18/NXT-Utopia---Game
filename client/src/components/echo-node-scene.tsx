@@ -137,10 +137,13 @@ export default function EchoNodeScene({ onComplete, onReturnToChoices }: EchoNod
     setShowResult(true);
     
     if (correct) {
+      console.log('Echo Node completed successfully - marking as complete');
+      markEchoNodeComplete();
       setTimeout(() => {
-        markEchoNodeComplete();
         onReturnToChoices();
       }, 3000);
+    } else {
+      console.log('Echo Node answer incorrect - no completion marked');
     }
   };
 
