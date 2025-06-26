@@ -57,6 +57,10 @@ export function useGameProgress() {
     localStorage.removeItem('adapto-game-progress');
   };
 
+  const resetDetection = () => {
+    setProgress(prev => ({ ...prev, detectionCount: 0 }));
+  };
+
   const canAccessCore = () => {
     return progress.echoNodeCompleted && progress.glitchPathCompleted;
   };
@@ -73,6 +77,7 @@ export function useGameProgress() {
     markCoreAccessGranted,
     increaseDetection,
     resetProgress,
+    resetDetection,
     canAccessCore,
     isDetected
   };

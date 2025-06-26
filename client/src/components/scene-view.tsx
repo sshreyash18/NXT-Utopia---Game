@@ -180,7 +180,16 @@ interface SceneViewProps {
 
 // Trust Scene with Detection Counter Component
 function TrustSceneWithCounter({ sceneData, onSceneChange }: { sceneData: any, onSceneChange: (scene: string) => void }) {
-  const { detectionCount, increaseDetection, isDetected } = useGameProgress();
+  const { detectionCount, increaseDetection, isDetected, resetDetection } = useGameProgress();
+  
+  // Reset detection counter when entering trust scene for debugging
+  useEffect(() => {
+    console.log('Trust scene - current detection count:', detectionCount);
+    if (detectionCount >= 5) {
+      console.log('Resetting detection count from', detectionCount, 'to 0');
+      resetDetection();
+    }
+  }, []);
   
   const handleTrustChoice = (choice: any) => {
     // Update detection based on choice type
