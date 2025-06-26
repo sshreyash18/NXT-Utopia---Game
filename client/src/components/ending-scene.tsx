@@ -18,11 +18,7 @@ export default function EndingScene({ choices, onRestart }: EndingSceneProps) {
 
   const generateSummary = async () => {
     try {
-      const response = await apiRequest("/api/generate-final-summary", {
-        method: "POST",
-        body: { choices },
-      });
-
+      const response = await apiRequest("POST", "/api/generate-final-summary", { choices });
       setSummary(response.summary);
       
       // Start typing animation
