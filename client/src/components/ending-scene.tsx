@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 import { apiRequest } from "@/lib/queryClient";
 
 interface EndingSceneProps {
-  userResponses: string[];
+  choices: string[];
   onRestart: () => void;
 }
 
-export default function EndingScene({ userResponses, onRestart }: EndingSceneProps) {
+export default function EndingScene({ choices, onRestart }: EndingSceneProps) {
   const [summary, setSummary] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [displayedText, setDisplayedText] = useState("");
@@ -14,14 +14,16 @@ export default function EndingScene({ userResponses, onRestart }: EndingScenePro
 
   useEffect(() => {
     generateSummary();
-  }, [userResponses]);
+  }, [choices]);
 
   const generateSummary = async () => {
     try {
-      const response = await apiRequest('POST', '/api/generate-summary', { choices });
-      const data = await response.json();
-      setSummary(data.summary || "You've navigated trust, resisted control, and answered the unknown. In this Utopia, you're not just a citizen — you're a story.");
-      setIsLoading(false);
+      const response = await apiRequest("/api/generate-final-summary", {
+        method: "POST",
+        body: { choices },
+      });
+
+      setSummary(response.summary);
       
       // Start typing animation
       setTimeout(() => {
@@ -105,16 +107,16 @@ export default function EndingScene({ userResponses, onRestart }: EndingScenePro
         </div>
       )}
 
-      {/* Response History (Optional Debug) */}
-      {userResponses.length > 0 && (
+      {/* Choice History (Optional Debug) */}
+      {choices.length > 0 && (
         <details className="mt-8 text-left">
           <summary className="text-cyan-400 font-mono text-sm cursor-pointer hover:text-cyan-300">
-            Journey Log ({userResponses.length} responses)
+            Journey Log ({choices.length} decisions)
           </summary>
           <div className="mt-4 space-y-2">
-            {userResponses.map((response, index) => (
+            {choices.map((choice, index) => (
               <div key={index} className="text-gray-400 font-mono text-xs bg-gray-900/30 p-2 rounded">
-                <span className="text-cyan-500">{String(index + 1).padStart(2, '0')}.</span> {response}
+                <span className="text-cyan-500">{String(index + 1).padStart(2, '0')}.</span> {choice}
               </div>
             ))}
           </div>

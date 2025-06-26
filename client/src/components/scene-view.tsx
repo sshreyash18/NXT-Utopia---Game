@@ -325,19 +325,17 @@ export default function SceneView({ scene, onSceneChange, onRestart }: SceneView
             onReturnToChoices={() => onSceneChange('leak_choices')}
           />
         ) : scene === 'core' ? (
-          <CoreScene onComplete={(responses) => {
-            console.log('Core completed with responses:', responses);
-            setEndingData(responses);
-            onSceneChange('end');
+          <CoreScene onComplete={() => {
+            onSceneChange('ending');
           }} />
         ) : scene === 'leak_choices' ? (
           <LeakChoicesScene onContinue={(nextScene) => onSceneChange(nextScene)} />
         ) : scene === 'detected' ? (
           <DetectedScene onRestart={() => onSceneChange('intro')} />
-        ) : scene === 'end' ? (
+        ) : scene === 'ending' ? (
           <EndingScene 
+            choices={[]}
             onRestart={onRestart}
-            userResponses={endingData || []}
           />
         ) : scene === 'trust' ? (
           <TrustSceneWithCounter 
