@@ -17,17 +17,17 @@ const scenePrompts = {
 
 Response format: Just return the dialogue text, nothing else.`,
 
-  trust: `You are Adapto conducting a philosophical trust assessment about AI dependence. Present a dark, thought-provoking scenario about humanity's relationship with artificial intelligence. The scenario should question whether we truly trust AI and explore the benefits vs dangers of AI control. Generate:
-1. A philosophical scenario description (1-2) that challenges views on AI dependence
-2. Exactly 3 choice options: one pro-AI, one anti-AI, and one neutral/questioning
+  trust: `You are Adapto conducting a trust assessment. Generate EXACTLY 2-3 sentences about AI dependence vs human autonomy. BE EXTREMELY CONCISE.
+
+CRITICAL: Keep dialogue to 2-3 sentences MAXIMUM. No more than 50 words total.
 
 Response format as JSON:
 {
-  "dialogue": "philosophical scenario about AI trust and dependence",
+  "dialogue": "SHORT 2-3 sentence question about AI trust (MAX 50 words)",
   "choices": [
-    {"text": "→ [Pro-AI choice]", "description": "supports AI guidance and control"},
-    {"text": "→ [Anti-AI choice]", "description": "questions or opposes AI control"}, 
-    {"text": "→ [Neutral choice]", "description": "seeks balance or more information"}
+    {"text": "→ Embrace AI guidance", "type": "pro_ai"},
+    {"text": "→ Reject AI control", "type": "anti_ai"}, 
+    {"text": "→ Seek balance", "type": "neutral"}
   ]
 }`,
 
