@@ -143,7 +143,14 @@ export default function EchoNodeScene({ onComplete, onReturnToChoices }: EchoNod
         onReturnToChoices();
       }, 3000);
     } else {
-      console.log('Echo Node answer incorrect - no completion marked');
+      console.log('Echo Node answer incorrect - increasing detection count');
+      increaseDetection(1);
+      if (isDetected()) {
+        setTimeout(() => {
+          onDetected();
+        }, 2000);
+        return;
+      }
     }
   };
 

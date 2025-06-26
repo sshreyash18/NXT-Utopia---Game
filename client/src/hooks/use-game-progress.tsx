@@ -24,7 +24,12 @@ const validateProgress = (progress: GameProgress): GameProgress => {
 
 export function useGameProgress() {
   const [progress, setProgress] = useState<GameProgress>(() => {
-    // Always start fresh when component initializes
+    const saved = localStorage.getItem('adapto-game-progress');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      console.log('Loading saved game progress:', parsed);
+      return validateProgress(parsed);
+    }
     console.log('Initializing game progress with fresh state');
     return { ...initialProgress };
   });
