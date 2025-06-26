@@ -21,13 +21,15 @@ Response format: Just return the dialogue text, nothing else.`,
 
 CRITICAL: Keep dialogue to 2-3 sentences MAXIMUM. No more than 50 words total.
 
+For choices, create natural single-sentence responses that a human would say, without obvious labels. Make them sound like genuine thoughts or reactions.
+
 Response format as JSON:
 {
   "dialogue": "SHORT 2-3 sentence question about AI trust (MAX 50 words)",
   "choices": [
-    {"text": "→ Embrace AI guidance", "type": "pro_ai"},
-    {"text": "→ Reject AI control", "type": "anti_ai"}, 
-    {"text": "→ Seek balance", "type": "neutral"}
+    {"text": "Single sentence expressing trust in AI systems", "type": "pro_ai"},
+    {"text": "Single sentence questioning or opposing AI control", "type": "anti_ai"}, 
+    {"text": "Single sentence seeking middle ground or more information", "type": "neutral"}
   ]
 }`,
 
