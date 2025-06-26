@@ -26,9 +26,10 @@ interface DialogueContainerProps {
   sceneData: SceneData;
   currentScene: string;
   onSceneChange: (newScene: string) => void;
+  onChoice?: (choice: any) => void;
 }
 
-export default function DialogueContainer({ sceneData, currentScene, onSceneChange }: DialogueContainerProps) {
+export default function DialogueContainer({ sceneData, currentScene, onSceneChange, onChoice }: DialogueContainerProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [puzzleInput, setPuzzleInput] = useState("");
   const [dynamicSceneData, setDynamicSceneData] = useState(sceneData);
@@ -141,6 +142,11 @@ export default function DialogueContainer({ sceneData, currentScene, onSceneChan
     // Add choice to history
     const newChoices = [...previousChoices, choice.text];
     setPreviousChoices(newChoices);
+    
+    // Call onChoice callback if provided (for trust scene)
+    if (onChoice) {
+      onChoice(choice);
+    }
     
     try {
       // Handle static scene transitions

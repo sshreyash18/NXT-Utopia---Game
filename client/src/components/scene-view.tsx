@@ -177,6 +177,63 @@ interface SceneViewProps {
   onSceneChange: (newScene: string) => void;
 }
 
+// Trust Scene with Detection Counter Component
+function TrustSceneWithCounter({ sceneData, onSceneChange }: { sceneData: any, onSceneChange: (scene: string) => void }) {
+  const { detectionCount, increaseDetection, isDetected } = useGameProgress();
+  
+  const handleTrustChoice = (choice: any) => {
+    // Update detection based on choice type
+    if (choice.type === 'anti_ai') {
+      increaseDetection(2); // Anti-AI increases detection by 2
+    } else if (choice.type === 'neutral') {
+      increaseDetection(1); // Neutral increases detection by 1
+    }
+    // Pro-AI choices don't increase detection
+
+    // Check if detected after choice
+    if (isDetected()) {
+      onSceneChange('detected');
+      return;
+    }
+  };
+
+  const livesRemaining = Math.max(0, 5 - detectionCount);
+
+  return (
+    <div className="relative w-full">
+      {/* Detection Counter */}
+      <div className="fixed top-6 right-6 z-50">
+        <div className="bg-black/80 backdrop-blur-md border border-red-500/50 rounded-lg p-4 min-w-[200px]">
+          <div className="text-center">
+            <h3 className="text-red-400 font-mono text-sm font-bold mb-2">DETECTION STATUS</h3>
+            <div className="flex justify-center items-center space-x-1 mb-2">
+              {[...Array(5)].map((_, i) => (
+                <div
+                  key={i}
+                  className={`w-3 h-3 rounded-full border ${
+                    i < livesRemaining 
+                      ? 'bg-green-500 border-green-400' 
+                      : 'bg-red-500 border-red-400'
+                  }`}
+                />
+              ))}
+            </div>
+            <div className="text-xs text-gray-400">
+              Lives: {livesRemaining}/5
+            </div>
+          </div>
+        </div>
+      </div>
+      <DialogueContainer 
+        sceneData={sceneData}
+        currentScene="trust"
+        onSceneChange={onSceneChange}
+        onChoice={handleTrustChoice}
+      />
+    </div>
+  );
+}
+
 export default function SceneView({ scene, onSceneChange }: SceneViewProps) {
   const [backgroundOpacity, setBackgroundOpacity] = useState(1);
   const currentSceneData = staticSceneData[scene as keyof typeof staticSceneData] || staticSceneData.intro;
@@ -254,6 +311,13 @@ export default function SceneView({ scene, onSceneChange }: SceneViewProps) {
           <LeakChoicesScene onContinue={(nextScene) => onSceneChange(nextScene)} />
         ) : scene === 'detected' ? (
           <DetectedScene onRestart={() => onSceneChange('intro')} />
+        ) : scene === 'ending' ? (
+          <EndingScene onRestart={() => onSceneChange('intro')} />
+        ) : scene === 'trust' ? (
+          <TrustSceneWithCounter 
+            sceneData={currentSceneData}
+            onSceneChange={onSceneChange}
+          />
         ) : scene === 'echo_node' ? (
           <EchoNodeScene 
             onComplete={() => onSceneChange('core')} 
