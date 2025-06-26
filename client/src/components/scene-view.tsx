@@ -252,8 +252,9 @@ function TrustSceneWithCounter({ sceneData, onSceneChange }: { sceneData: any, o
   );
 }
 
-export default function SceneView({ scene, onSceneChange }: SceneViewProps) {
+export default function SceneView({ scene, onSceneChange, onRestart }: SceneViewProps) {
   const [backgroundOpacity, setBackgroundOpacity] = useState(1);
+  const [endingData, setEndingData] = useState<string[] | null>(null);
   const currentSceneData = staticSceneData[scene as keyof typeof staticSceneData] || staticSceneData.intro;
 
   useEffect(() => {
