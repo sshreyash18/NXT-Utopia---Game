@@ -201,8 +201,8 @@ function TrustSceneWithCounter({ sceneData, onSceneChange }: { sceneData: any, o
   const livesRemaining = Math.max(0, 5 - detectionCount);
 
   return (
-    <div className="relative w-full">
-      {/* Detection Counter */}
+    <div className="relative w-full min-h-screen">
+      {/* Detection Counter - Fixed Position */}
       <div className="fixed top-6 right-6 z-50">
         <div className="bg-black/80 backdrop-blur-md border border-red-500/50 rounded-lg p-4 min-w-[200px]">
           <div className="text-center">
@@ -225,12 +225,18 @@ function TrustSceneWithCounter({ sceneData, onSceneChange }: { sceneData: any, o
           </div>
         </div>
       </div>
-      <DialogueContainer 
-        sceneData={sceneData}
-        currentScene="trust"
-        onSceneChange={onSceneChange}
-        onChoice={handleTrustChoice}
-      />
+      
+      {/* Centered Dialogue Container */}
+      <div className="flex items-center justify-center min-h-screen p-6">
+        <div className="w-full max-w-4xl">
+          <DialogueContainer 
+            sceneData={sceneData}
+            currentScene="trust"
+            onSceneChange={onSceneChange}
+            onChoice={handleTrustChoice}
+          />
+        </div>
+      </div>
     </div>
   );
 }
