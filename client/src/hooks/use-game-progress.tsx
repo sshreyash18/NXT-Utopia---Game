@@ -53,8 +53,10 @@ export function useGameProgress() {
   };
 
   const resetProgress = () => {
-    setProgress(initialProgress);
-    localStorage.removeItem('adapto-game-progress');
+    console.log('Resetting game progress to initial state');
+    const freshProgress = { ...initialProgress };
+    setProgress(freshProgress);
+    localStorage.setItem('adapto-game-progress', JSON.stringify(freshProgress));
   };
 
   const resetDetection = () => {
