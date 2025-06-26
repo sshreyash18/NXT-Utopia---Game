@@ -6,12 +6,13 @@ import CloseEyesScene from "./close-eyes-scene";
 import BreakSilenceScene from "./break-silence-scene";
 import LeakScene from "./leak-scene";
 import GlitchPathScene from "./glitch-path-scene";
-
 import EchoNodeScene from "./echo-node-scene";
 import CoreScene from "./core-scene";
 import LeakChoicesScene from "./leak-choices-scene";
 import DetectedScene from "./detected-scene";
+import EndingScene from "./ending-scene";
 import { useGameState } from "@/hooks/use-game-state";
+import { useGameProgress } from "@/hooks/use-game-progress";
 import introImagePath from "@assets/crazy ending image_1750273353548.png";
 import bgAwakenPath from "@assets/bg_awaken.jpg_1750271414978.png";
 import bgTrustPath from "@assets/bg_trust.jpg_1750271414982.png";
@@ -321,7 +322,7 @@ export default function SceneView({ scene, onSceneChange }: SceneViewProps) {
         ) : scene === 'echo_node' ? (
           <EchoNodeScene 
             onComplete={() => onSceneChange('core')} 
-            onDetected={() => onSceneChange('detected')} 
+            onReturnToChoices={() => onSceneChange('leak_choices')} 
           />
         ) : (
           <DialogueContainer 
