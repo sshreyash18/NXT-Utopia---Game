@@ -124,8 +124,11 @@ export default function GlitchPathScene({ onComplete, onDetected }: GlitchPathSc
         setShowResult(false);
       } else {
         // All puzzles completed
+        console.log('Glitch Path completed successfully - marking as complete');
         markGlitchPathComplete();
-        onComplete();
+        setTimeout(() => {
+          onComplete();
+        }, 3000);
       }
     }, 2000);
   };

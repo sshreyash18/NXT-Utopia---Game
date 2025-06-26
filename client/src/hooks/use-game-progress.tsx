@@ -43,6 +43,7 @@ export function useGameProgress() {
   };
 
   const markGlitchPathComplete = () => {
+    console.log('Marking Glitch Path as completed');
     setProgress(prev => ({ ...prev, glitchPathCompleted: true }));
   };
 

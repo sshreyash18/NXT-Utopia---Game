@@ -21,8 +21,14 @@ export default function LeakChoicesScene({ onContinue }: LeakChoicesSceneProps) 
   
   // Auto-navigate to core if both paths are completed
   React.useEffect(() => {
+    console.log('Progress check:', { 
+      echoNodeCompleted: progress.echoNodeCompleted, 
+      glitchPathCompleted: progress.glitchPathCompleted,
+      canAccessCore: canAccessCore()
+    });
+    
     if (progress.echoNodeCompleted && progress.glitchPathCompleted && canAccessCore()) {
-      console.log('Both paths completed - auto-navigating to core');
+      console.log('Both paths completed - auto-navigating to core in 2 seconds');
       const timer = setTimeout(() => {
         onContinue('core');
       }, 2000);
