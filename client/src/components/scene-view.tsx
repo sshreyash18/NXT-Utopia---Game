@@ -23,6 +23,8 @@ import outsideViewImagePath from "@assets/ChatGPT Image Jun 19, 2025, 02_40_32 P
 
 interface SceneViewProps {
   scene: string;
+  onSceneChange: (newScene: string) => void;
+  onRestart: () => void;
 }
 
 const staticSceneData = {
@@ -331,8 +333,11 @@ export default function SceneView({ scene, onSceneChange }: SceneViewProps) {
           <LeakChoicesScene onContinue={(nextScene) => onSceneChange(nextScene)} />
         ) : scene === 'detected' ? (
           <DetectedScene onRestart={() => onSceneChange('intro')} />
-        ) : scene === 'ending' ? (
-          <EndingScene onRestart={() => onSceneChange('intro')} />
+        ) : scene === 'end' ? (
+          <EndingScene 
+            onRestart={onRestart}
+            userResponses={endingData || []}
+          />
         ) : scene === 'trust' ? (
           <TrustSceneWithCounter 
             sceneData={currentSceneData}

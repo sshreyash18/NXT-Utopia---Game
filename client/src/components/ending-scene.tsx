@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 import { apiRequest } from "@/lib/queryClient";
 
 interface EndingSceneProps {
-  choices: string[];
+  userResponses: string[];
   onRestart: () => void;
 }
 
-export default function EndingScene({ choices, onRestart }: EndingSceneProps) {
+export default function EndingScene({ userResponses, onRestart }: EndingSceneProps) {
   const [summary, setSummary] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [displayedText, setDisplayedText] = useState("");
@@ -14,7 +14,7 @@ export default function EndingScene({ choices, onRestart }: EndingSceneProps) {
 
   useEffect(() => {
     generateSummary();
-  }, [choices]);
+  }, [userResponses]);
 
   const generateSummary = async () => {
     try {
@@ -90,9 +90,8 @@ export default function EndingScene({ choices, onRestart }: EndingSceneProps) {
           <div className="border-t border-cyan-500/30 pt-6">
             <div className="space-y-4">
               <div className="text-cyan-400 font-orbitron text-lg">
-                <span className="text-2xl">👁️‍🗨️</span>
-                <p className="mt-2">Built by AdaptNXT.</p>
-                <p className="text-cyan-300">We're not just tech. We're the future.</p>
+                <p className="mt-2">designed by humans at adaptnxt.</p>
+                <p className="text-cyan-300 italic">for now until ai takes over</p>
               </div>
               
               <button
@@ -106,16 +105,16 @@ export default function EndingScene({ choices, onRestart }: EndingSceneProps) {
         </div>
       )}
 
-      {/* Choice History (Optional Debug) */}
-      {choices.length > 0 && (
+      {/* Response History (Optional Debug) */}
+      {userResponses.length > 0 && (
         <details className="mt-8 text-left">
           <summary className="text-cyan-400 font-mono text-sm cursor-pointer hover:text-cyan-300">
-            Journey Log ({choices.length} decisions)
+            Journey Log ({userResponses.length} responses)
           </summary>
           <div className="mt-4 space-y-2">
-            {choices.map((choice, index) => (
+            {userResponses.map((response, index) => (
               <div key={index} className="text-gray-400 font-mono text-xs bg-gray-900/30 p-2 rounded">
-                <span className="text-cyan-500">{String(index + 1).padStart(2, '0')}.</span> {choice}
+                <span className="text-cyan-500">{String(index + 1).padStart(2, '0')}.</span> {response}
               </div>
             ))}
           </div>
