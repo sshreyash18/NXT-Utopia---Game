@@ -1,0 +1,30 @@
+[2025-06-26T08:01:40.890Z] [INFO] neural_interface: Player choice: I'm concerned that too much reliance on AI could undermine our ability to think for ourselves.
+  Metadata: {
+  "scene": "trust",
+  "userId": 1,
+  "sessionId": "session-1750924900846"
+}
+
+[2025-06-26T08:01:35.890Z] [WARN] behavior_monitor: Anomalous decision pattern detected
+  Metadata: {
+  "pattern": "question_identity",
+  "confidence": 0.8461343281919541
+}
+
+[2025-06-26T08:01:30.890Z] [ERROR] security_scanner: Unauthorized access attempt to core systems
+  Metadata: {
+  "threat_level": "HIGH",
+  "source_ip": "192.168.1.42"
+}
+
+[2025-06-26T08:01:25.890Z] [INFO] network_monitor: Neural link established
+  Metadata: {
+  "bandwidth": "1.2GB/s",
+  "latency": "0.3ms"
+}
+
+[2025-06-26T08:01:20.890Z] [WARN] data_integrity: Memory fragmentation detected
+  Metadata: {
+  "fragments": 47,
+  "integrity_score": 0.89
+}

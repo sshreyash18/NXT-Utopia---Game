@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useAudio } from "@/hooks/use-audio";
 import { useGameProgress } from "@/hooks/use-game-progress";
+import DetectionCounter from "@/components/detection-counter";
 import bgLeakPath from "@assets/bg_leak.jpg_1750271414980.png";
 
 interface GlitchPathSceneProps {
@@ -17,7 +18,7 @@ interface Puzzle {
 }
 
 export default function GlitchPathScene({ onComplete, onDetected }: GlitchPathSceneProps) {
-  const { markGlitchPathComplete } = useGameProgress();
+  const { markGlitchPathComplete, increaseDetection, isDetected } = useGameProgress();
   const [currentPuzzle, setCurrentPuzzle] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string>("");
   const [showResult, setShowResult] = useState(false);
