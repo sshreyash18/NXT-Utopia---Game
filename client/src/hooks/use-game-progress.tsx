@@ -24,9 +24,9 @@ const validateProgress = (progress: GameProgress): GameProgress => {
 
 export function useGameProgress() {
   const [progress, setProgress] = useState<GameProgress>(() => {
-    const saved = localStorage.getItem('adapto-game-progress');
-    const parsed = saved ? JSON.parse(saved) : initialProgress;
-    return validateProgress(parsed);
+    // Always start fresh when component initializes
+    console.log('Initializing game progress with fresh state');
+    return { ...initialProgress };
   });
 
   useEffect(() => {
@@ -56,6 +56,7 @@ export function useGameProgress() {
     console.log('Resetting game progress to initial state');
     const freshProgress = { ...initialProgress };
     setProgress(freshProgress);
+    localStorage.removeItem('adapto-game-progress');
     localStorage.setItem('adapto-game-progress', JSON.stringify(freshProgress));
   };
 
