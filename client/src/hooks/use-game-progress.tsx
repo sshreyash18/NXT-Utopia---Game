@@ -58,6 +58,7 @@ export function useGameProgress() {
 
   return {
     progress,
+    detectionCount: progress.detectionCount,
     markEchoNodeComplete,
     markGlitchPathComplete,
     markCoreAccessGranted,
