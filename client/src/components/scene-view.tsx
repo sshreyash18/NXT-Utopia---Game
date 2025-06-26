@@ -322,7 +322,11 @@ export default function SceneView({ scene, onSceneChange }: SceneViewProps) {
             onReturnToChoices={() => onSceneChange('leak_choices')}
           />
         ) : scene === 'core' ? (
-          <CoreScene onComplete={() => onSceneChange('end')} />
+          <CoreScene onComplete={(responses) => {
+            console.log('Core completed with responses:', responses);
+            setEndingData(responses);
+            onSceneChange('end');
+          }} />
         ) : scene === 'leak_choices' ? (
           <LeakChoicesScene onContinue={(nextScene) => onSceneChange(nextScene)} />
         ) : scene === 'detected' ? (

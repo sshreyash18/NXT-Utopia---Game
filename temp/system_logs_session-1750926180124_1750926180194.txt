@@ -1,0 +1,30 @@
+[2025-06-26T08:23:00.193Z] [INFO] neural_interface: Player choice: I believe AI can enhance our lives without taking away our freedom.
+  Metadata: {
+  "scene": "trust",
+  "userId": 1,
+  "sessionId": "session-1750926180124"
+}
+
+[2025-06-26T08:22:55.193Z] [WARN] behavior_monitor: Anomalous decision pattern detected
+  Metadata: {
+  "pattern": "demand_proof",
+  "confidence": 0.6434119412918001
+}
+
+[2025-06-26T08:22:50.193Z] [ERROR] security_scanner: Unauthorized access attempt to core systems
+  Metadata: {
+  "threat_level": "HIGH",
+  "source_ip": "192.168.1.42"
+}
+
+[2025-06-26T08:22:45.193Z] [INFO] network_monitor: Neural link established
+  Metadata: {
+  "bandwidth": "1.2GB/s",
+  "latency": "0.3ms"
+}
+
+[2025-06-26T08:22:40.193Z] [WARN] data_integrity: Memory fragmentation detected
+  Metadata: {
+  "fragments": 47,
+  "integrity_score": 0.89
+}
