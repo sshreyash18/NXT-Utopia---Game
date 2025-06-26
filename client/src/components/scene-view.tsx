@@ -227,8 +227,8 @@ function TrustSceneWithCounter({ sceneData, onSceneChange }: { sceneData: any, o
       </div>
       
       {/* Centered Dialogue Container */}
-      <div className="flex items-center justify-center min-h-screen p-6">
-        <div className="w-full max-w-4xl">
+      <div className="absolute inset-0 flex items-center justify-center p-6">
+        <div className="w-full flex justify-center">
           <DialogueContainer 
             sceneData={sceneData}
             currentScene="trust"
