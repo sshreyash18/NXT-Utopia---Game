@@ -94,8 +94,7 @@ export default function GlitchPathScene({ onComplete, onDetected }: GlitchPathSc
       selectedAnswer,
       correctAnswer: currentPuzzleData.correctAnswer,
       correct,
-      puzzleQuestion: currentPuzzleData.question,
-      options: currentPuzzleData.options
+      puzzleQuestion: currentPuzzleData.question
     });
     
     setIsCorrect(correct);

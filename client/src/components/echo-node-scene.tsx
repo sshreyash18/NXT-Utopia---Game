@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useGameProgress } from "@/hooks/use-game-progress";
+import DetectionCounter from "@/components/detection-counter";
 import terminalBgPath from "@assets/ChatGPT Image Jun 19, 2025, 05_16_32 PM_1750333620987.png";
 
 interface EchoNodeSceneProps {
