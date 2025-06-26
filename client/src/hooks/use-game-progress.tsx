@@ -14,10 +14,19 @@ const initialProgress: GameProgress = {
   detectionCount: 0
 };
 
+// Reset detection count if it's corrupted
+const validateProgress = (progress: GameProgress): GameProgress => {
+  if (progress.detectionCount > 5 || progress.detectionCount < 0) {
+    return { ...progress, detectionCount: 0 };
+  }
+  return progress;
+};
+
 export function useGameProgress() {
   const [progress, setProgress] = useState<GameProgress>(() => {
     const saved = localStorage.getItem('adapto-game-progress');
-    return saved ? JSON.parse(saved) : initialProgress;
+    const parsed = saved ? JSON.parse(saved) : initialProgress;
+    return validateProgress(parsed);
   });
 
   useEffect(() => {

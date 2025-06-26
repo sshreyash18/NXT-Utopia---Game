@@ -11,13 +11,13 @@ interface LeakChoicesSceneProps {
 export default function LeakChoicesScene({ onContinue }: LeakChoicesSceneProps) {
   const { progress, canAccessCore, increaseDetection, isDetected } = useGameProgress();
 
-  // Increase detection when entering investigation paths
-  React.useEffect(() => {
-    increaseDetection(1);
-    if (isDetected()) {
-      onContinue('detected');
-    }
-  }, []);
+  // Remove automatic detection increase - players should only be detected for wrong choices
+  // React.useEffect(() => {
+  //   increaseDetection(1);
+  //   if (isDetected()) {
+  //     onContinue('detected');
+  //   }
+  // }, []);
   
   // Auto-navigate to core if both paths are completed
   React.useEffect(() => {
