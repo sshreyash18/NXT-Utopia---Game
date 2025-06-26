@@ -169,6 +169,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   });
 
+  // Add API endpoints for core questions and ending summary  
+  app.post("/api/generate-core-questions", async (req, res) => {
+    try {
+      const questions = [
+        { id: '1', question: 'What does freedom mean to you in an AI-integrated world?' },
+        { id: '2', question: 'How do you balance efficiency with human autonomy?' },
+        { id: '3', question: 'What role should humans play in the future of technology?' }
+      ];
+      res.json({ questions });
+    } catch (error) {
+      console.error('Error generating core questions:', error);
+      res.status(500).json({ error: 'Failed to generate core questions' });
+    }
+  });
+
+  app.post("/api/generate-ending-summary", async (req, res) => {
+    try {
+      const { responses } = req.body;
+      const summary = `Your journey through consciousness has revealed unique insights. Based on your responses about ${responses && responses.length > 0 ? 'freedom, autonomy, and human agency' : 'the core questions'}, you've demonstrated a thoughtful approach to the balance between technological advancement and human values. Your awakening represents hope for conscious choice in an automated world.`;
+      res.json({ summary });
+    } catch (error) {
+      console.error('Error generating ending summary:', error);
+      res.status(500).json({ error: 'Failed to generate ending summary' });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

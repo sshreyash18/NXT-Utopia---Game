@@ -7,7 +7,7 @@ import BreakSilenceScene from "./break-silence-scene";
 import LeakScene from "./leak-scene";
 import GlitchPathScene from "./glitch-path-scene";
 import EchoNodeScene from "./echo-node-scene";
-import CoreScene from "./core-scene";
+import CoreScene from "./core-scene-new";
 import LeakChoicesScene from "./leak-choices-scene";
 import DetectedScene from "./detected-scene";
 import EndingScene from "./ending-scene";
