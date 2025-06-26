@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { useGameProgress } from "@/hooks/use-game-progress";
+import DetectionCounter from "@/components/detection-counter";
 import bgLeakPath from "@assets/bg_leak.jpg_1750271414980.png";
 
 interface LeakChoicesSceneProps {
@@ -8,7 +9,15 @@ interface LeakChoicesSceneProps {
 }
 
 export default function LeakChoicesScene({ onContinue }: LeakChoicesSceneProps) {
-  const { progress, canAccessCore } = useGameProgress();
+  const { progress, canAccessCore, increaseDetection, isDetected } = useGameProgress();
+
+  // Increase detection when entering investigation paths
+  React.useEffect(() => {
+    increaseDetection(1);
+    if (isDetected()) {
+      onContinue('detected');
+    }
+  }, []);
   
   // Auto-navigate to core if both paths are completed
   React.useEffect(() => {
@@ -22,6 +31,7 @@ export default function LeakChoicesScene({ onContinue }: LeakChoicesSceneProps) 
   
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+      <DetectionCounter />
       {/* Background */}
       <div 
         className="absolute inset-0 bg-cover bg-center"

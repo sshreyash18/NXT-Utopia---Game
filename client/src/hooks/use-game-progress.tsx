@@ -4,12 +4,14 @@ interface GameProgress {
   echoNodeCompleted: boolean;
   glitchPathCompleted: boolean;
   coreAccessGranted: boolean;
+  detectionCount: number;
 }
 
 const initialProgress: GameProgress = {
   echoNodeCompleted: false,
   glitchPathCompleted: false,
-  coreAccessGranted: false
+  coreAccessGranted: false,
+  detectionCount: 0
 };
 
 export function useGameProgress() {
@@ -34,6 +36,13 @@ export function useGameProgress() {
     setProgress(prev => ({ ...prev, coreAccessGranted: true }));
   };
 
+  const increaseDetection = (amount: number = 1) => {
+    setProgress(prev => ({ 
+      ...prev, 
+      detectionCount: Math.min(prev.detectionCount + amount, 5) 
+    }));
+  };
+
   const resetProgress = () => {
     setProgress(initialProgress);
     localStorage.removeItem('adapto-game-progress');
@@ -43,12 +52,18 @@ export function useGameProgress() {
     return progress.echoNodeCompleted && progress.glitchPathCompleted;
   };
 
+  const isDetected = () => {
+    return progress.detectionCount >= 5;
+  };
+
   return {
     progress,
     markEchoNodeComplete,
     markGlitchPathComplete,
     markCoreAccessGranted,
+    increaseDetection,
     resetProgress,
-    canAccessCore
+    canAccessCore,
+    isDetected
   };
 }

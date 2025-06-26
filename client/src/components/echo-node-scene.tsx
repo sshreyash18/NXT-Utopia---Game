@@ -18,7 +18,7 @@ interface ChatMessage {
 // AI chats will be generated dynamically with timestamp clues
 
 export default function EchoNodeScene({ onComplete, onReturnToChoices }: EchoNodeSceneProps) {
-  const { markEchoNodeComplete } = useGameProgress();
+  const { markEchoNodeComplete, increaseDetection } = useGameProgress();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [timestampClues, setTimestampClues] = useState({

@@ -104,11 +104,16 @@ export default function GlitchPathScene({ onComplete, onDetected }: GlitchPathSc
       stopTypingSound();
       
       if (!correct) {
-        console.log('Wrong answer - calling onDetected()', { 
+        increaseDetection(1);
+        if (isDetected()) {
+          console.log('Detection limit reached - calling onDetected()');
+          onDetected();
+          return;
+        }
+        console.log('Wrong answer - detection increased', { 
           currentPuzzle, 
           selectedAnswer, 
-          correctAnswer: puzzles[currentPuzzle].correctAnswer,
-          puzzle: puzzles[currentPuzzle]
+          correctAnswer: puzzles[currentPuzzle].correctAnswer
         });
         onDetected();
         return;
@@ -151,6 +156,7 @@ export default function GlitchPathScene({ onComplete, onDetected }: GlitchPathSc
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+      <DetectionCounter />
       {/* Background */}
       <div 
         className="absolute inset-0 bg-cover bg-center"
