@@ -55,11 +55,18 @@ Generate a JSON response with:
 Focus on surveillance state themes and trust assessment.`;
 
     try {
-      const response = await fetch('https://shrutiaiinstance.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2025-01-01-preview', {
+      const azureEndpoint = process.env.AZURE_OPENAI_ENDPOINT || 'https://your-azure-openai-endpoint.com/v1/chat/completions';
+      const azureApiKey = process.env.AZURE_OPENAI_API_KEY || '';
+      
+      if (!azureApiKey) {
+        throw new Error('AZURE_OPENAI_API_KEY environment variable is not set');
+      }
+      
+      const response = await fetch(azureEndpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'api-key': '8s05s492DMfOXU0u1gBPWfg9ElHXqZvqg4UuJ1yxxcWEcQXxPaInJQQJ99BDAC77bzfXJ3w3AAABACOGl1lM'
+          'api-key': azureApiKey
         },
         body: JSON.stringify({
           messages: [
