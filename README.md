@@ -4,7 +4,7 @@ A cinematic browser-based puzzle game set in a dystopian AI-ruled future. You ar
 
 ---
 
-## 🧠 Features
+## Features
 
 - Dark sci-fi narrative with choice-based progression  
 - Logic & signal-routing puzzles  
@@ -13,7 +13,7 @@ A cinematic browser-based puzzle game set in a dystopian AI-ruled future. You ar
 
 ---
 
-## ⚙️ Tech Stack
+## Tech Stack
 
 - React + Vite + TypeScript  
 - TailwindCSS & Zustand  
@@ -21,12 +21,10 @@ A cinematic browser-based puzzle game set in a dystopian AI-ruled future. You ar
 
 ---
 
-Run Locally
+## Run Locally
 
-bash
-git clone https://github.com/sshreyash18/NXT-Utopia---Game.git
-cd nxt-utopia
-npm install
-npm run dev
+- git clone https://github.com/sshreyash18/NXT-Utopia---Game.git
+- npm install
+- npm run dev
 
 Open http://localhost:5173 to play.
