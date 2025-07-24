@@ -101,6 +101,9 @@ export class MemStorage implements IStorage {
 
 export class DatabaseStorage implements IStorage {
   async getUser(id: number): Promise<User | undefined> {
+    if (!db) {
+      throw new Error("Database not initialized. Set DATABASE_URL to use DatabaseStorage.");
+    }
     const [user] = await db.select().from(users).where(eq(users.id, id));
     return user || undefined;
   }

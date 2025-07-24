@@ -1,0 +1,30 @@
+[2025-06-26T10:31:48.362Z] [INFO] neural_interface: Player choice: I'm curious about how we can use AI effectively while maintaining our independence.
+  Metadata: {
+  "scene": "trust",
+  "userId": 1,
+  "sessionId": "session-1750933908045"
+}
+
+[2025-06-26T10:31:43.362Z] [WARN] behavior_monitor: Anomalous decision pattern detected
+  Metadata: {
+  "pattern": "demand_proof",
+  "confidence": 0.9110703069458161
+}
+
+[2025-06-26T10:31:38.362Z] [ERROR] security_scanner: Unauthorized access attempt to core systems
+  Metadata: {
+  "threat_level": "HIGH",
+  "source_ip": "192.168.1.42"
+}
+
+[2025-06-26T10:31:33.362Z] [INFO] network_monitor: Neural link established
+  Metadata: {
+  "bandwidth": "1.2GB/s",
+  "latency": "0.3ms"
+}
+
+[2025-06-26T10:31:28.362Z] [WARN] data_integrity: Memory fragmentation detected
+  Metadata: {
+  "fragments": 47,
+  "integrity_score": 0.89
+}

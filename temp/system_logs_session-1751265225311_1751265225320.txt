@@ -1,0 +1,30 @@
+[2025-06-30T06:33:45.318Z] [INFO] neural_interface: Player choice: I think we need a balanced approach to AI that ensures human oversight.
+  Metadata: {
+  "scene": "trust",
+  "userId": 1,
+  "sessionId": "session-1751265225311"
+}
+
+[2025-06-30T06:33:40.318Z] [WARN] behavior_monitor: Anomalous decision pattern detected
+  Metadata: {
+  "pattern": "question_identity",
+  "confidence": 0.6902651891370025
+}
+
+[2025-06-30T06:33:35.319Z] [ERROR] security_scanner: Unauthorized access attempt to core systems
+  Metadata: {
+  "threat_level": "HIGH",
+  "source_ip": "192.168.1.42"
+}
+
+[2025-06-30T06:33:30.319Z] [INFO] network_monitor: Neural link established
+  Metadata: {
+  "bandwidth": "1.2GB/s",
+  "latency": "0.3ms"
+}
+
+[2025-06-30T06:33:25.319Z] [WARN] data_integrity: Memory fragmentation detected
+  Metadata: {
+  "fragments": 47,
+  "integrity_score": 0.89
+}

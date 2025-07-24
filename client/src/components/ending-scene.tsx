@@ -16,24 +16,34 @@ export default function EndingScene({ choices, onRestart }: EndingSceneProps) {
     generateSummary();
   }, [choices]);
 
-  const generateSummary = async () => {
-    try {
-      const response = await apiRequest("POST", "/api/generate-final-summary", { choices });
-      setSummary(response.summary);
+  // const generateSummary = async () => {
+  //   try {
+  //     const response = await apiRequest("POST", "/api/generate-final-summary", { choices });
+  //     setSummary(response.summary);
       
-      // Start typing animation
-      setTimeout(() => {
-        typeText(data.summary || "You've navigated trust, resisted control, and answered the unknown. In this Utopia, you're not just a citizen — you're a story.");
-      }, 500);
-    } catch (error) {
-      console.error('Failed to generate summary:', error);
-      const fallbackSummary = "You've navigated trust, resisted control, and answered the unknown. In this Utopia, you're not just a citizen — you're a story.";
-      setSummary(fallbackSummary);
-      setIsLoading(false);
-      setTimeout(() => {
-        typeText(fallbackSummary);
-      }, 500);
-    }
+  //     // Start typing animation
+  //     setTimeout(() => {
+  //       typeText("You've navigated trust, resisted control, and answered the unknown. In this Utopia, you're not just a citizen — you're a story.");
+  //     }, 50);
+  //   } catch (error) {
+  //     console.error('Failed to generate summary:', error);
+  //     const fallbackSummary = "You've navigated trust, resisted control, and answered the unknown. In this Utopia, you're not just a citizen — you're a story.";
+  //     setSummary(fallbackSummary);
+  //     setIsLoading(false);
+  //     setTimeout(() => {
+  //       typeText(fallbackSummary);
+  //     }, 500);
+  //   }
+  // };
+
+  const generateSummary = () => {
+    const fallbackSummary = "You've navigated trust, resisted control, and answered the unknown. In this Utopia, you're not just a citizen — you're a story.";
+    setSummary(fallbackSummary);
+    setIsLoading(false);
+
+    setTimeout(() => {
+      typeText(fallbackSummary);
+    }, 300);
   };
 
   const typeText = (text: string) => {
@@ -88,8 +98,8 @@ export default function EndingScene({ choices, onRestart }: EndingSceneProps) {
           <div className="border-t border-cyan-500/30 pt-6">
             <div className="space-y-4">
               <div className="text-cyan-400 font-orbitron text-lg">
-                <p className="mt-2">designed by humans at adaptnxt.</p>
-                <p className="text-cyan-300 italic">for now until ai takes over</p>
+                <p className="mt-2">Designed by humans at AdaptNXT.</p>
+                <p className="text-cyan-300 italic">For now until AI takes over</p>
               </div>
               
               <button
